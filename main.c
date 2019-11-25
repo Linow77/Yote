@@ -21,9 +21,9 @@ typedef enum TypeJoueur {
 
 typedef struct Player {
     TypeContents JoueurT;
-    int piece_cap;
-    int piece_reserve;
-    int piece_plateau;
+    int piece_cap;// nombre de pièces capturées
+    int piece_reserve;// - dans la réserve
+    int piece_plateau;// - sur le plateau
 } Player;
 
 typedef struct Move {
@@ -31,12 +31,14 @@ typedef struct Move {
     Case nouvelle_position;
 } Move;
 
-void TireAuSortJoueur(TypeContents *joueur);
+void TireAuSortJoueur(Player joueurs[]);
 void InitPlateau();
 int VerifCaseVide(Case c);
 int VerifPionsSurPlateau(TypeContents joueur);
 int VerifDeplacementOrthogonal(Case c1, Case c2);
 void AffichePlateauCLI();
+void Init_joueur(Player *player);
+void Init_joueurs(Player players[]);
 
 TypeContents plateau[5][6];
 
@@ -46,8 +48,12 @@ int main()
     // Il faut initialiser la graine (une seule fois)
     srand(time(NULL));
     Player joueurs[2];
+
     InitPlateau();
+    Init_joueurs(joueurs);
     AffichePlateauCLI();
+    TypeContents premier_joueur;
+    TireAuSortJoueur(joueurs);
 
 
 
@@ -124,10 +130,22 @@ int VerifPionsSurPlateau(TypeContents joueur) {
 }
 
 /* Au début du jeu le 1er joueur est tiré au sort */
-void TireAuSortJoueur(TypeContents *joueur) {
-    if (rand() % 2)
-        *joueur = HOMME;
-    else
-        *joueur = DEMON;
+void TireAuSortJoueur(Player joueurs[]) {
+    if (rand() % 2) {
+        joueurs[0].JoueurT = HOMME;
+        joueurs[1].JoueurT = DEMON;
+    }
+    else {
+        joueurs[0].JoueurT = DEMON;
+        joueurs[1].JoueurT = HOMME;
+    }
 }
 
+void Init_joueur(Player *player) {
+    *player = (Player) { HOMME, 0, 12, 0 };
+}
+
+void Init_joueurs(Player players[]) {
+    Init_joueur(&(players[0]));
+    Init_joueur(&(players[1]));
+}
