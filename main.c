@@ -24,6 +24,7 @@ typedef struct Player {
     int piece_cap;// nombre de pièces capturées
     int piece_reserve;// - dans la réserve
     int piece_plateau;// - sur le plateau
+    // char nom[20];
 } Player;
 
 typedef struct Move {
@@ -39,6 +40,11 @@ int VerifDeplacementOrthogonal(Case c1, Case c2);
 void AffichePlateauCLI();
 void Init_joueur(Player *player);
 void Init_joueurs(Player players[]);
+void PlacerPion(Player *p);
+void RecupCoordonneesCLI(Case *c);
+void ChoisirPion(Player *p, Case *pion);
+void DeplacerPion(Player *p);
+int MemeType(Case c, TypeContents type);
 
 TypeContents plateau[5][6];
 
@@ -52,8 +58,14 @@ int main()
     InitPlateau();
     Init_joueurs(joueurs);
     AffichePlateauCLI();
-    TypeContents premier_joueur;
     TireAuSortJoueur(joueurs);
+    PlacerPion(&(joueurs[0]));
+    AffichePlateauCLI();
+    PlacerPion(&(joueurs[1]));
+    AffichePlateauCLI();
+    DeplacerPion(&(joueurs[1]));
+    AffichePlateauCLI();
+
 
 
 
@@ -91,6 +103,13 @@ void AffichePlateauCLI() {
         }
         printf("-\n");
     }
+}
+
+// Temporaire
+void RecupCoordonneesCLI(Case *c) {
+    printf("x,y\n");
+    scanf(" %d", &c->x);
+    scanf(" %d", &c->y);
 }
 
 /* Initialise les cases du plateau à VIDE */
@@ -148,4 +167,50 @@ void Init_joueur(Player *player) {
 void Init_joueurs(Player players[]) {
     Init_joueur(&(players[0]));
     Init_joueur(&(players[1]));
+}
+
+/* Placement d'un pion de la réserve
+ * On suppose que la réserve n'est pas vide */
+void PlacerPion(Player *p) {
+    Case c;
+
+    do {
+        RecupCoordonneesCLI(&c);// TODO: à remplacer
+    } while (!VerifCaseVide(c));
+
+    plateau[c.y][c.x] = p->JoueurT;
+    p->piece_reserve--;
+    p->piece_plateau++;
+}
+
+void ChoisirPion(Player *p, Case *pion) {
+    Case c;
+
+    do {
+        printf("Choisir pion\n");
+        RecupCoordonneesCLI(&c);// TODO: à remplacer
+        // on vérifie que le pion sélectionné est bien à soi
+    } while (!MemeType(c, p->JoueurT));
+
+    *pion = c;
+}
+
+int MemeType(Case c, TypeContents type) {
+    return plateau[c.y][c.x] == type;
+}
+
+void DeplacerPion(Player *p) {
+    Case pion, dest;
+
+    ChoisirPion(p, &pion);
+
+    do {
+        printf("Destination\n");
+        RecupCoordonneesCLI(&dest);// TODO: à remplacer
+        // on vérifie que le pion sélectionné est bien sur une case
+        // vide et que le déplacement est orthogonal
+    } while (!(VerifCaseVide(dest) && VerifDeplacementOrthogonal(pion, dest)));
+
+    plateau[pion.y][pion.x] = VIDE;
+    plateau[dest.y][dest.x] = p->JoueurT;
 }
