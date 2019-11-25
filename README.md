@@ -5,6 +5,8 @@
 - boucle de jeu
 - capture d'un pion
 - vérifier que le joueur ne fasse le même déplacement qu'au tour précédent
+- ia
+- gestion des modes (avec ou sans variante)
 
 ##	UTILISER LE MAKEFILE
 ```
