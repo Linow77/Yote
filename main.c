@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 
 typedef struct Case {
@@ -29,22 +31,42 @@ typedef struct Move {
     Case nouvelle_position;
 } Move;
 
-/*
-typedef struct Img {
-    SDL_Surface* img;
-    SDL_Rect position;
-} Img;
 
-typedef struct Input {
-    char key[SDLK_LAST];
-    int mousey;
-    int mousey;
-} Input;
-*/
+void TireAuSortJoueur(TypeContents *joueur);
+void InitPlateau();
+
+
+
+
+TypeContents plateau[5][6];
+
 
 int main()
 {
+    // Pour pouvoir tirer au sort un joueur (donc générer un nombre aléatoire)
+    // Il faut initialiser la graine (une seule fois)
+    srand(time(NULL));
+    Player joueurs[2];
+
+
 
     return 0;
+}
+
+void InitPlateau() {
+    int i, j;
+
+    for (i = 0; i != 6; i++) {
+        for (j = 0; j != 5; j++) {
+            plateau[i][j] = VIDE;
+        }
+    }
+}
+
+void TireAuSortJoueur(TypeContents *joueur) {
+    if (rand() % 2)
+        *joueur = HOMME;
+    else
+        *joueur = DEMON;
 }
 
