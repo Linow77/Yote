@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+// Structures
 
 typedef struct Case {
     int x;
@@ -32,6 +33,8 @@ typedef struct Move {
     Case nouvelle_position;
 } Move;
 
+// Prototypes
+
 void TireAuSortJoueur(Player joueurs[]);
 void InitPlateau();
 int VerifCaseVide(Case c);
@@ -46,7 +49,11 @@ void ChoisirPion(Player *p, Case *pion);
 void DeplacerPion(Player *p);
 int MemeType(Case c, TypeContents type);
 
+// Variable globale
+
 TypeContents plateau[5][6];
+
+// Main
 
 int main()
 {
@@ -57,21 +64,24 @@ int main()
 
     InitPlateau();
     Init_joueurs(joueurs);
+
+    // Test
     AffichePlateauCLI();
     TireAuSortJoueur(joueurs);
+
     PlacerPion(&(joueurs[0]));
     AffichePlateauCLI();
+
     PlacerPion(&(joueurs[1]));
     AffichePlateauCLI();
-    DeplacerPion(&(joueurs[1]));
+
+    DeplacerPion(&(joueurs[0]));
     AffichePlateauCLI();
-
-
-
 
     return 0;
 }
 
+// Définition des fonctions
 
 // Temporaire
 void AffichePlateauCLI() {
@@ -107,8 +117,10 @@ void AffichePlateauCLI() {
 
 // Temporaire
 void RecupCoordonneesCLI(Case *c) {
-    printf("x,y\n");
+    printf("Entrez les coordonnées de la case\n");
+    printf("x: ");
     scanf(" %d", &c->x);
+    printf("y: ");
     scanf(" %d", &c->y);
 }
 
@@ -183,6 +195,7 @@ void PlacerPion(Player *p) {
     p->piece_plateau++;
 }
 
+/* Le joueur choisit un pion du plateau */
 void ChoisirPion(Player *p, Case *pion) {
     Case c;
 
@@ -214,3 +227,4 @@ void DeplacerPion(Player *p) {
     plateau[pion.y][pion.x] = VIDE;
     plateau[dest.y][dest.x] = p->JoueurT;
 }
+
