@@ -13,13 +13,7 @@ typedef enum TypeContents {
     VIDE, HOMME, DEMON
 } TypeContents;
 
-/*
- * Provoque une erreur car HOMME est déjà défini dans TypeContents
-typedef enum TypeJoueur {
-    HOMME, DEMON
-} TypeJoueur;
-*/
-
+// TODO: Mouvement précédent à rajouter ?
 typedef struct Player {
     TypeContents JoueurT;
     int piece_cap;// nombre de pièces capturées
@@ -283,26 +277,30 @@ Case *VerifMouvementsValides(Case depart, int *taille)
     {
         SetCase(&c, depart.x - 2, depart.y);
         if (VerifDansPlateau(c))
-            if (VerifCaseVide(c)) mouv[i++] = c;
+            if (VerifCaseVide(c))
+                mouv[i++] = c;
     }
     else
     {
         SetCase(&c, depart.x - 1, depart.y);
         if (VerifDansPlateau(c))
-            if (VerifCaseVide(c)) mouv[i++] = c;
+            if (VerifCaseVide(c))
+                mouv[i++] = c;
     }
 
     if (plateau[depart.y][depart.x + 1] == advers)
     {
         SetCase(&c, depart.x + 2, depart.y);
         if (VerifDansPlateau(c))
-            if (VerifCaseVide(c)) mouv[i++] = c;
+            if (VerifCaseVide(c))
+                mouv[i++] = c;
     }
     else
     {
         SetCase(&c, depart.x + 1, depart.y);
         if (VerifDansPlateau(c))
-            if (VerifCaseVide(c)) mouv[i++] = c;
+            if (VerifCaseVide(c))
+                mouv[i++] = c;
     }
 
     // Vertical
@@ -310,13 +308,15 @@ Case *VerifMouvementsValides(Case depart, int *taille)
     {
         SetCase(&c, depart.x, depart.y + 2);
         if (VerifDansPlateau(c))
-            if (VerifCaseVide(c)) mouv[i++] = c;
+            if (VerifCaseVide(c))
+                mouv[i++] = c;
     }
     else
     {
         SetCase(&c, depart.x, depart.y + 1);
         if (VerifDansPlateau(c))
-            if (VerifCaseVide(c)) mouv[i++] = c;
+            if (VerifCaseVide(c))
+                mouv[i++] = c;
     }
 
     if (plateau[depart.y - 1][depart.x] == advers)
@@ -330,7 +330,8 @@ Case *VerifMouvementsValides(Case depart, int *taille)
     {
         SetCase(&c, depart.x, depart.y - 1);
         if (VerifDansPlateau(c))
-            if (VerifCaseVide(c)) mouv[i++] = c;
+            if (VerifCaseVide(c))
+                mouv[i++] = c;
     }
 
     // on re alloue le tableau avec une nouvelle taille
