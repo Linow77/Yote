@@ -37,9 +37,6 @@ typedef struct Move {
 
 void TireAuSortJoueur(Player joueurs[]);
 void InitPlateau();
-int VerifCaseVide(Case c);
-int VerifPionsSurPlateau(TypeContents joueur);
-int VerifDeplacementOrthogonal(Case c1, Case c2);
 void AffichePlateauCLI();
 void Init_joueur(Player *player);
 void Init_joueurs(Player players[]);
@@ -47,18 +44,19 @@ void PlacerPion(Player *p);
 void RecupCoordonneesCLI(Case *c);
 void ChoisirPion(Player *p, Case *pion);
 void DeplacerPion(Player *p);
-int MemeType(Case c, TypeContents type);
 Case *VerifMouvementsValides(Case depart, int *taille);
 void AppliqueCoup(Case pion, Case dest, TypeContents type);
-int eql_move(Move m1, Move m2);
-int eql(Case c1, Case c2);
-void test_mouv();
-void set_case(Case *c, int x, int y);
-TypeContents Adversaire(TypeContents joueur);
+void SetCase(Case *c, int x, int y);
+int VerifCaseVide(Case c);
+int VerifPionsSurPlateau(TypeContents joueur);
+int VerifDeplacementOrthogonal(Case c1, Case c2);
+int MemeType(Case c, TypeContents type);
+int EqlMove(Move m1, Move m2);
+int EqlCase(Case c1, Case c2);
 int VerifDansPlateau(Case c);
+TypeContents Adversaire(TypeContents joueur);
 
-void print_case(Case c);
-
+//void test_mouv();
 
 // Variable globale
 
@@ -88,7 +86,6 @@ int main()
 
     //DeplacerPion(&(joueurs[0]));
     //AffichePlateauCLI();
-
 
     return 0;
 }
@@ -125,11 +122,6 @@ void AffichePlateauCLI() {
         }
         printf("-\n");
     }
-}
-
-void print_case(Case c)
-{
-    printf("x : %d; y : %d\n", c.x, c.y);
 }
 
 // Temporaire
@@ -211,6 +203,8 @@ void PlacerPion(Player *p) {
     p->piece_reserve--;
     p->piece_plateau++;
 
+    /*
+     * test
     Case *mouv = NULL;
     int taille;
     mouv = VerifMouvementsValides(c, &taille);
@@ -218,6 +212,7 @@ void PlacerPion(Player *p) {
     for (i = 0; i < taille; i++)
         printf("%d %d\n", mouv[i].x, mouv[i].y);
     free(mouv);
+    */
 }
 
 /* Le joueur choisit un pion du plateau */
@@ -244,13 +239,16 @@ void DeplacerPion(Player *p) {
 
     ChoisirPion(p, &pion);
 
-    // ChoisirDestination() ?
+    // TODO: ChoisirDestination() ?
+    // {
     do {
         printf("Destination\n");
         RecupCoordonneesCLI(&dest);// TODO: à remplacer
-        // on vérifie que le pion sélectionné est bien sur une case
-        // vide et que le déplacement est orthogonal
+        // TODO: Conditions à remplacer par autre chose:
+        // on vérifie que la destination est dans le
+        // tableau des mouvements possibles
     } while (!(VerifCaseVide(dest) && VerifDeplacementOrthogonal(pion, dest)));
+    // }
 
     AppliqueCoup(pion, dest, p->JoueurT);
 }
@@ -267,11 +265,15 @@ void AppliqueCoup(Case pion, Case dest, TypeContents type)
 Case *VerifMouvementsValides(Case depart, int *taille)
 {
     int i = 0;
-    TypeContents joueur = plateau[depart.y][depart.x];
-    TypeContents advers = Adversaire(joueur);
-    // le nombre de déplacements possible est au plus 4
-    Case* mouv = (Case *) malloc(sizeof(Case) * 4);
+    TypeContents joueur;
+    TypeContents advers;
+    Case *mouv;
     Case c;
+
+    joueur = plateau[depart.y][depart.x];
+    advers = Adversaire(joueur);
+    // le nombre de déplacements possible est au plus 4
+    mouv = (Case *) malloc(sizeof(Case) * 4);
 
     // Horizontal
     // s'il y a un adversaire à côté du joueur,
@@ -279,26 +281,26 @@ Case *VerifMouvementsValides(Case depart, int *taille)
     // sinon il se déplace à côté
     if (plateau[depart.y][depart.x - 1] == advers)
     {
-        set_case(&c, depart.x - 2, depart.y);
+        SetCase(&c, depart.x - 2, depart.y);
         if (VerifDansPlateau(c))
             if (VerifCaseVide(c)) mouv[i++] = c;
     }
     else
     {
-        set_case(&c, depart.x - 1, depart.y);
+        SetCase(&c, depart.x - 1, depart.y);
         if (VerifDansPlateau(c))
             if (VerifCaseVide(c)) mouv[i++] = c;
     }
 
     if (plateau[depart.y][depart.x + 1] == advers)
     {
-        set_case(&c, depart.x + 2, depart.y);
+        SetCase(&c, depart.x + 2, depart.y);
         if (VerifDansPlateau(c))
             if (VerifCaseVide(c)) mouv[i++] = c;
     }
     else
     {
-        set_case(&c, depart.x + 1, depart.y);
+        SetCase(&c, depart.x + 1, depart.y);
         if (VerifDansPlateau(c))
             if (VerifCaseVide(c)) mouv[i++] = c;
     }
@@ -306,27 +308,27 @@ Case *VerifMouvementsValides(Case depart, int *taille)
     // Vertical
     if (plateau[depart.y + 1][depart.x] == advers)
     {
-        set_case(&c, depart.x, depart.y + 2);
+        SetCase(&c, depart.x, depart.y + 2);
         if (VerifDansPlateau(c))
             if (VerifCaseVide(c)) mouv[i++] = c;
     }
     else
     {
-        set_case(&c, depart.x, depart.y + 1);
+        SetCase(&c, depart.x, depart.y + 1);
         if (VerifDansPlateau(c))
             if (VerifCaseVide(c)) mouv[i++] = c;
     }
 
     if (plateau[depart.y - 1][depart.x] == advers)
     {
-        set_case(&c, depart.x, depart.y - 2);
+        SetCase(&c, depart.x, depart.y - 2);
         if (VerifDansPlateau(c))
             if (VerifCaseVide(c))
                 mouv[i++] = c;
     }
     else
     {
-        set_case(&c, depart.x, depart.y - 1);
+        SetCase(&c, depart.x, depart.y - 1);
         if (VerifDansPlateau(c))
             if (VerifCaseVide(c)) mouv[i++] = c;
     }
@@ -350,8 +352,7 @@ int VerifDansPlateau(Case c)
     return c.x >= 0 && c.x < 5 && c.y >= 0 && c.y < 6;
 }
 
-// à renommer SetCase
-void set_case(Case *c, int x, int y)
+void SetCase(Case *c, int x, int y)
 {
     c->x = x;
     c->y = y;
@@ -366,28 +367,20 @@ TypeContents Adversaire(TypeContents joueur)
 
 // Vérifie si un mouvement est égal à un autre
 // Remplacé par VerifSurSesPas
-// EqlMove
-int eql_move(Move m1, Move m2)
+int EqlMove(Move m1, Move m2)
 {
-    return eql(m1.ancienne_position, m2.nouvelle_position) && eql(m1.nouvelle_position, m2.ancienne_position);
+    return EqlCase(m1.ancienne_position, m2.nouvelle_position) && EqlCase(m1.nouvelle_position, m2.ancienne_position);
 }
 
 // Vérifie qu'une case est égale à une autre
-// EqlCase
-int eql(Case c1, Case c2)
+int EqlCase(Case c1, Case c2)
 {
     return c1.x == c2.x && c1.y == c2.y;
 }
 
-/*
-void InitMove(Mouv *mouv, Case c1, Case c2)
-{
-    *mouv = (Move) { c1, c2 };
-}
-*/
-
 // Tests
 
+/*
 void test_mouv()
 {
     Case c1 = { 3, 2 };
@@ -397,11 +390,11 @@ void test_mouv()
     Move mouv2 = (Move) { c2, c1 };
     Move mouv3 = (Move) { c3, c1 };
 
-    if (eql_move(mouv, mouv2))
+    if (EqlMove(mouv, mouv2))
         printf("meme mouvement\n");
-    if (!eql_move(mouv, mouv3))
+    if (!EqlMove(mouv, mouv3))
         printf("pas Meme mouvement2\n");
 }
-
+*/
 
 
