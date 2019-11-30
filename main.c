@@ -50,6 +50,9 @@ void DeplacerPion(Player *p);
 int MemeType(Case c, TypeContents type);
 Case *VerifMouvementValides(Case depart, int *taille);
 void AppliqueCoup(Case pion, Case dest, TypeContents type);
+int eql_move(Move m1, Move m2);
+int eql(Case c1, Case c2);
+void test_mouv();
 
 // Variable globale
 
@@ -66,6 +69,7 @@ int main()
 
     InitPlateau();
     Init_joueurs(joueurs);
+    test_mouv();
 
     // Test
     AffichePlateauCLI();
@@ -246,6 +250,7 @@ void AppliqueCoup(Case pion, Case dest, TypeContents type)
     plateau[dest.y][dest.x] = type;
 }
 
+// Renvoie les mouvements
 Case *VerifMouvementValides(Case depart, int *taille)
 {
     int i = 0, b;
@@ -300,4 +305,36 @@ Case *VerifMouvementValides(Case depart, int *taille)
     mouv = (Case *) realloc(mouv, sizeof(Case) * i);
     *taille = i;
     return mouv;
+}
+
+int eql_move(Move m1, Move m2)
+{
+    return eql(m1.ancienne_position, m2.nouvelle_position) && eql(m1.nouvelle_position, m2.ancienne_position);
+}
+
+int eql(Case c1, Case c2)
+{
+    return c1.x == c2.x && c1.y == c2.y;
+}
+
+/*
+void InitMove(Mouv *mouv, Case c1, Case c2)
+{
+    *mouv = (Move) { c1, c2 };
+}
+*/
+
+void test_mouv()
+{
+    Case c1 = { 3, 2 };
+    Case c2 = { 4, 2 };
+    Case c3 = { 5, 2 };
+    Move mouv  = (Move) { c1, c2 };
+    Move mouv2 = (Move) { c2, c1 };
+    Move mouv3 = (Move) { c3, c1 };
+
+    if (eql_move(mouv, mouv2))
+        printf("meme mouvement\n");
+    if (!eql_move(mouv, mouv3))
+        printf("pas Meme mouvement2\n");
 }
