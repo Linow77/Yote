@@ -48,11 +48,17 @@ void RecupCoordonneesCLI(Case *c);
 void ChoisirPion(Player *p, Case *pion);
 void DeplacerPion(Player *p);
 int MemeType(Case c, TypeContents type);
-Case *VerifMouvementValides(Case depart, int *taille);
+Case *VerifMouvementsValides(Case depart, int *taille);
 void AppliqueCoup(Case pion, Case dest, TypeContents type);
 int eql_move(Move m1, Move m2);
 int eql(Case c1, Case c2);
 void test_mouv();
+void set_case(Case *c, int x, int y);
+TypeContents Adversaire(TypeContents joueur);
+int VerifDansPlateau(Case c);
+
+void print_case(Case c);
+
 
 // Variable globale
 
@@ -69,7 +75,6 @@ int main()
 
     InitPlateau();
     Init_joueurs(joueurs);
-    test_mouv();
 
     // Test
     AffichePlateauCLI();
@@ -84,15 +89,6 @@ int main()
     //DeplacerPion(&(joueurs[0]));
     //AffichePlateauCLI();
 
-    Case c = { 3, 2 };
-    Case *mouv = NULL;
-    int taille;
-    mouv = VerifMouvementValides(c, &taille);
-    puts("A");
-    int i;
-    for (i = 0; i < taille; i++)
-        printf("%d %d\n", mouv[i].x, mouv[i].y);
-    free(mouv);
 
     return 0;
 }
@@ -129,6 +125,11 @@ void AffichePlateauCLI() {
         }
         printf("-\n");
     }
+}
+
+void print_case(Case c)
+{
+    printf("x : %d; y : %d\n", c.x, c.y);
 }
 
 // Temporaire
@@ -210,6 +211,13 @@ void PlacerPion(Player *p) {
     p->piece_reserve--;
     p->piece_plateau++;
 
+    Case *mouv = NULL;
+    int taille;
+    mouv = VerifMouvementsValides(c, &taille);
+    int i;
+    for (i = 0; i < taille; i++)
+        printf("%d %d\n", mouv[i].x, mouv[i].y);
+    free(mouv);
 }
 
 /* Le joueur choisit un pion du plateau */
@@ -229,11 +237,14 @@ int MemeType(Case c, TypeContents type) {
     return plateau[c.y][c.x] == type;
 }
 
+// A renommer ?
+// Dans AppliqueCoup on déplace aussi le pion...
 void DeplacerPion(Player *p) {
     Case pion, dest;
 
     ChoisirPion(p, &pion);
 
+    // ChoisirDestination() ?
     do {
         printf("Destination\n");
         RecupCoordonneesCLI(&dest);// TODO: à remplacer
@@ -250,68 +261,119 @@ void AppliqueCoup(Case pion, Case dest, TypeContents type)
     plateau[dest.y][dest.x] = type;
 }
 
-// Renvoie les mouvements
-Case *VerifMouvementValides(Case depart, int *taille)
+// Renvoie les mouvements possible que peut faire un pion
+// Ne pas oublier le free !
+// A améliorer ?
+Case *VerifMouvementsValides(Case depart, int *taille)
 {
-    int i = 0, b;
-    Case pion = depart;
-    Case* mouv = (Case *) malloc(sizeof(Case) * 9);
+    int i = 0;
+    TypeContents joueur = plateau[depart.y][depart.x];
+    TypeContents advers = Adversaire(joueur);
+    // le nombre de déplacements possible est au plus 4
+    Case* mouv = (Case *) malloc(sizeof(Case) * 4);
+    Case c;
 
-    pion.y++;
-
-    for (b = 1; pion.y < 6 && b; pion.y++)
+    // Horizontal
+    // s'il y a un adversaire à côté du joueur,
+    // le joueur peut sauter par-dessus le pion
+    // sinon il se déplace à côté
+    if (plateau[depart.y][depart.x - 1] == advers)
     {
-        if (VerifCaseVide(pion))
-        {
-            mouv[i] = pion;
-            i++;
-        }
-        else    b = 0;
+        set_case(&c, depart.x - 2, depart.y);
+        if (VerifDansPlateau(c))
+            if (VerifCaseVide(c)) mouv[i++] = c;
     }
-    pion = depart;
-    pion.y--;
-    for (b = 1; pion.y >= 0 && b; pion.y--)
+    else
     {
-        if (VerifCaseVide(pion))
-        {
-            mouv[i] = pion;
-            i++;
-        }
-        else    b = 0;
-    }
-    pion = depart;
-    pion.x++;
-    for (b = 1; pion.x < 5 && b; pion.x++)
-    {
-        if (VerifCaseVide(pion))
-        {
-            mouv[i] = pion;
-            i++;
-        }
-        else    b = 0;
-    }
-    pion = depart;
-    pion.x--;
-    for (b = 1; pion.x >= 0 && b; pion.x--)
-    {
-        if (VerifCaseVide(pion))
-        {
-            mouv[i] = pion;
-            i++;
-        }
-        else    b = 0;
+        set_case(&c, depart.x - 1, depart.y);
+        if (VerifDansPlateau(c))
+            if (VerifCaseVide(c)) mouv[i++] = c;
     }
 
-    mouv = (Case *) realloc(mouv, sizeof(Case) * i);
+    if (plateau[depart.y][depart.x + 1] == advers)
+    {
+        set_case(&c, depart.x + 2, depart.y);
+        if (VerifDansPlateau(c))
+            if (VerifCaseVide(c)) mouv[i++] = c;
+    }
+    else
+    {
+        set_case(&c, depart.x + 1, depart.y);
+        if (VerifDansPlateau(c))
+            if (VerifCaseVide(c)) mouv[i++] = c;
+    }
+
+    // Vertical
+    if (plateau[depart.y + 1][depart.x] == advers)
+    {
+        set_case(&c, depart.x, depart.y + 2);
+        if (VerifDansPlateau(c))
+            if (VerifCaseVide(c)) mouv[i++] = c;
+    }
+    else
+    {
+        set_case(&c, depart.x, depart.y + 1);
+        if (VerifDansPlateau(c))
+            if (VerifCaseVide(c)) mouv[i++] = c;
+    }
+
+    if (plateau[depart.y - 1][depart.x] == advers)
+    {
+        set_case(&c, depart.x, depart.y - 2);
+        if (VerifDansPlateau(c))
+            if (VerifCaseVide(c))
+                mouv[i++] = c;
+    }
+    else
+    {
+        set_case(&c, depart.x, depart.y - 1);
+        if (VerifDansPlateau(c))
+            if (VerifCaseVide(c)) mouv[i++] = c;
+    }
+
+    // on re alloue le tableau avec une nouvelle taille
+    if (i != 4)
+        mouv = (Case *) realloc(mouv, sizeof(Case) * i);
+
+    // le tableau est alloué dynamiquement, on a
+    // forcément besoin de sa taille
     *taille = i;
+
     return mouv;
 }
 
+// Vérifie qu'une coordonnée est bien dans le plateau
+// >= 0 et < 5 (abscisse)
+// >= 0 et < 6 (ordonnée)
+int VerifDansPlateau(Case c)
+{
+    return c.x >= 0 && c.x < 5 && c.y >= 0 && c.y < 6;
+}
+
+// à renommer SetCase
+void set_case(Case *c, int x, int y)
+{
+    c->x = x;
+    c->y = y;
+}
+
+// Renvoie le type de l'adversaire (DEMON ou HOMME)
+TypeContents Adversaire(TypeContents joueur)
+{
+    if (joueur == DEMON) return HOMME;
+    else return DEMON;
+}
+
+// Vérifie si un mouvement est égal à un autre
+// Remplacé par VerifSurSesPas
+// EqlMove
 int eql_move(Move m1, Move m2)
 {
     return eql(m1.ancienne_position, m2.nouvelle_position) && eql(m1.nouvelle_position, m2.ancienne_position);
 }
 
+// Vérifie qu'une case est égale à une autre
+// EqlCase
 int eql(Case c1, Case c2)
 {
     return c1.x == c2.x && c1.y == c2.y;
@@ -323,6 +385,8 @@ void InitMove(Mouv *mouv, Case c1, Case c2)
     *mouv = (Move) { c1, c2 };
 }
 */
+
+// Tests
 
 void test_mouv()
 {
@@ -338,3 +402,6 @@ void test_mouv()
     if (!eql_move(mouv, mouv3))
         printf("pas Meme mouvement2\n");
 }
+
+
+
