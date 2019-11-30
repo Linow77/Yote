@@ -6,6 +6,7 @@
 - boucle de jeu
 - capture d'un pion + capture d'un 2è pion
 - ia
+- écriture et lecture des scores
 
 ##	UTILISER LE MAKEFILE
 ```
