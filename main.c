@@ -48,6 +48,8 @@ void RecupCoordonneesCLI(Case *c);
 void ChoisirPion(Player *p, Case *pion);
 void DeplacerPion(Player *p);
 int MemeType(Case c, TypeContents type);
+Case *VerifMouvementValides(Case depart, int *taille);
+void AppliqueCoup(Case pion, Case dest, TypeContents type);
 
 // Variable globale
 
@@ -75,8 +77,18 @@ int main()
     PlacerPion(&(joueurs[1]));
     AffichePlateauCLI();
 
-    DeplacerPion(&(joueurs[0]));
-    AffichePlateauCLI();
+    //DeplacerPion(&(joueurs[0]));
+    //AffichePlateauCLI();
+
+    Case c = { 3, 2 };
+    Case *mouv = NULL;
+    int taille;
+    mouv = VerifMouvementValides(c, &taille);
+    puts("A");
+    int i;
+    for (i = 0; i < taille; i++)
+        printf("%d %d\n", mouv[i].x, mouv[i].y);
+    free(mouv);
 
     return 0;
 }
@@ -193,6 +205,7 @@ void PlacerPion(Player *p) {
     plateau[c.y][c.x] = p->JoueurT;
     p->piece_reserve--;
     p->piece_plateau++;
+
 }
 
 /* Le joueur choisit un pion du plateau */
@@ -224,7 +237,67 @@ void DeplacerPion(Player *p) {
         // vide et que le déplacement est orthogonal
     } while (!(VerifCaseVide(dest) && VerifDeplacementOrthogonal(pion, dest)));
 
-    plateau[pion.y][pion.x] = VIDE;
-    plateau[dest.y][dest.x] = p->JoueurT;
+    AppliqueCoup(pion, dest, p->JoueurT);
 }
 
+void AppliqueCoup(Case pion, Case dest, TypeContents type)
+{
+    plateau[pion.y][pion.x] = VIDE;
+    plateau[dest.y][dest.x] = type;
+}
+
+Case *VerifMouvementValides(Case depart, int *taille)
+{
+    int i = 0, b;
+    Case pion = depart;
+    Case* mouv = (Case *) malloc(sizeof(Case) * 9);
+
+    pion.y++;
+
+    for (b = 1; pion.y < 6 && b; pion.y++)
+    {
+        if (VerifCaseVide(pion))
+        {
+            mouv[i] = pion;
+            i++;
+        }
+        else    b = 0;
+    }
+    pion = depart;
+    pion.y--;
+    for (b = 1; pion.y >= 0 && b; pion.y--)
+    {
+        if (VerifCaseVide(pion))
+        {
+            mouv[i] = pion;
+            i++;
+        }
+        else    b = 0;
+    }
+    pion = depart;
+    pion.x++;
+    for (b = 1; pion.x < 5 && b; pion.x++)
+    {
+        if (VerifCaseVide(pion))
+        {
+            mouv[i] = pion;
+            i++;
+        }
+        else    b = 0;
+    }
+    pion = depart;
+    pion.x--;
+    for (b = 1; pion.x >= 0 && b; pion.x--)
+    {
+        if (VerifCaseVide(pion))
+        {
+            mouv[i] = pion;
+            i++;
+        }
+        else    b = 0;
+    }
+
+    mouv = (Case *) realloc(mouv, sizeof(Case) * i);
+    *taille = i;
+    return mouv;
+}
