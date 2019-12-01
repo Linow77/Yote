@@ -45,7 +45,7 @@ int VerifCaseVide(Case c);
 int VerifPionsSurPlateau(TypeContents joueur);
 int VerifDeplacementOrthogonal(Case c1, Case c2);
 int MemeType(Case c, TypeContents type);
-int EqlMove(Move m1, Move m2);
+int VerifMouvementsContraires(Move m1, Move m2);
 int EqlCase(Case c1, Case c2);
 int VerifDansPlateau(Case c);
 TypeContents Adversaire(TypeContents joueur);
@@ -67,6 +67,8 @@ int main()
 
     InitPlateau();
     Init_joueurs(joueurs);
+
+    // TODO: boucle de jeu
 
     // Test
     AffichePlateauCLI();
@@ -144,6 +146,7 @@ int VerifCaseVide(Case c) {
 
 /* Vérifie que la joueur se déplace bien de haut en bas ou de bas
  * à gauche */
+// on peut l'enlever (voir fonction DeplacerPion)
 int VerifDeplacementOrthogonal(Case c1, Case c2) {
     return (c1.x == c2.x && c1.y != c2.y) ||
            (c1.x != c2.x && c1.y == c2.y);
@@ -368,7 +371,7 @@ TypeContents Adversaire(TypeContents joueur)
 
 // Vérifie si un mouvement est égal à un autre
 // Remplacé par VerifSurSesPas
-int EqlMove(Move m1, Move m2)
+int VerifMouvementsContraires(Move m1, Move m2)
 {
     return EqlCase(m1.ancienne_position, m2.nouvelle_position) && EqlCase(m1.nouvelle_position, m2.ancienne_position);
 }
@@ -391,9 +394,9 @@ void test_mouv()
     Move mouv2 = (Move) { c2, c1 };
     Move mouv3 = (Move) { c3, c1 };
 
-    if (EqlMove(mouv, mouv2))
+    if (VerifMouvementsContraires(mouv, mouv2))
         printf("meme mouvement\n");
-    if (!EqlMove(mouv, mouv3))
+    if (!VerifMouvementsContraires(mouv, mouv3))
         printf("pas Meme mouvement2\n");
 }
 */
