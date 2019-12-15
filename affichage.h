@@ -48,7 +48,7 @@ typedef struct
 	int mousex,mousey; //coordonnés de la souris
 	int mousexrel,mouseyrel; //le vecteur déplacement souris
 	char mousebuttons[8]; //boutons de la souris 
-       char quit;
+    char quit;
 }Input;
 
 /** IMAGE / POSITION **/
@@ -64,13 +64,14 @@ typedef struct
 	// Création des surfaces
 	SDL_Surface* pion_d;
 	SDL_Surface* pion_h;
+	SDL_Surface* case_v;
 }Ressource ;
 
 /** CASE **/
 typedef struct
 {
-	int x;
-	int y;
+	int x;//ligne
+	int y;//colone
 }Case;
 
 /** CLIC **/
@@ -80,6 +81,29 @@ typedef struct
 	int y;
 }Point;
 
+/** ContenuCase**/
+typedef enum TypeContents {
+    VIDE, HOMME, DEMON
+} TypeContents;
+
+/** JOUEUR **/
+typedef struct Player {
+    TypeContents JoueurT;
+    int piece_cap;// nombre de pièces capturées
+    int piece_reserve;// - dans la réserve
+    int piece_plateau;// - sur le plateau
+    // char nom[20];
+} Player;
+
+/** MOUVEMENT **/
+typedef struct Move {
+    Case ancienne_position;
+    Case nouvelle_position;
+} Move;
+
+// Variable globale
+
+TypeContents plateau[5][6];
 
 //PROTOTYPES
 
@@ -89,6 +113,10 @@ void chargement_objets(img* fond,img* ecran);
 void affiche_menu(img fond, img ecran);
 Case PointToCase(Point clic);
 Point CaseToPointhg(Case case1);
-
-
+void AfficherPion(img *pion, Ressource sprite, Point hg, int joueur);
+void InitPlateau();
+void Init_joueurs(Player players[]);
+void Init_joueur(Player *player);
+void change_joueur(int *joueur);
+int VerifDansPlateau(Point clic);
 #endif

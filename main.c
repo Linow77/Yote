@@ -393,12 +393,9 @@ void test_mouv()
     Move mouv  = (Move) { c1, c2 };
     Move mouv2 = (Move) { c2, c1 };
     Move mouv3 = (Move) { c3, c1 };
-
     if (VerifMouvementsContraires(mouv, mouv2))
         printf("meme mouvement\n");
     if (!VerifMouvementsContraires(mouv, mouv3))
         printf("pas Meme mouvement2\n");
 }
 */
-
-
