@@ -13,7 +13,7 @@ void init_table_score(TableScore *table)
     return;
 }
 
-
+// Allocate memory for the table of scores
 void alloc_table_score(TableScore *table)
 {
     int num;
@@ -28,7 +28,7 @@ void alloc_table_score(TableScore *table)
     return;
 }
 
-
+// Get the scores from a file (see filename in DEFINEs)
 int get_scores(TableScore *table_s)
 {
     FILE* file = NULL;
@@ -51,7 +51,8 @@ int get_scores(TableScore *table_s)
     return 0;
 }
 
-
+// Prints the scores into the terminal
+// ranked from best to worse
 void best_scores(TableScore *t)
 {
     int r;// rank of the player
@@ -72,11 +73,13 @@ void best_scores(TableScore *t)
     return;
 }
 
-
+// Save the scores in a file (see name of file in DEFINE's)
 int save_score(TableScore *table_s)
 {
     FILE* file = NULL;
     int num;
+
+	if (table_s->number == 0) return 0;
 
     file = fopen(SCORE_FILE, "w");
     if (file != NULL)
@@ -87,6 +90,7 @@ int save_score(TableScore *table_s)
             fprintf(file, "%s %d\n", table_s->players[num], table_s->scores[num]);
         }
         fclose(file);
+
         return 1;// success, we read the file
     }
 
@@ -94,9 +98,12 @@ int save_score(TableScore *table_s)
 }
 
 
+// Add a score to the table of scores : the value of the score (int) and the name
+// of the player (char *)
 void input_score(TableScore *table, unsigned int p_score, char *nom)
 {
-    int num, num2;
+    int num;
+	int num2;
 
     if (table->number != MAX_SCORE)
     {
@@ -115,32 +122,32 @@ void input_score(TableScore *table, unsigned int p_score, char *nom)
     for (num2 = table->number - 1; num2 != num; num2--)
     {
         table->scores[num2] = table->scores[num2 - 1];
+		//table->players[num2] = NULL;
+		//free(table->players[num2]);
+		//table->players[num2] = (char *) malloc(sizeof(char) * MAX_SIZE);
         strcpy(table->players[num2], table->players[num2 - 1]);
     }
 
-    table->scores[num] =  p_score;// insertion
+    table->scores[num]  = p_score;// insertion
     table->players[num] = nom;// insertion
 
     return;
 }
 
-void input_player_name(TableScore *table, unsigned int rank)
+// Free memory of the table of scores
+// Still some memory leaks though @.@ ?
+void free_table_score(TableScore *table)
 {
-    char name[MAX_BUFFER];// in case the user input is too much, we use a buffer
-    char *skip_line;
-    //int c;
+    int num;
+	//printf("NUMBER %d\n", table->number);
 
-    printf("Entrez votre pseudo : ");
-    //getchar();// to remove the newline from the scanf
-
-    do
+    for (num = 0; num != table->number; num++)
     {
-        fgets(name, sizeof(name), stdin);// we get the user input
-        skip_line = strchr(name, '\n');// we remove the newline from the input
-        *skip_line = '\0';
-    } while (strlen(name) >= MAX_SIZE || name[0] == '\0');
+        //free(table->players[num]);
+    }
 
-    strcpy(table->players[rank], name);
+	free(table->players);
+	//table->players = NULL;
 
     return;
 }

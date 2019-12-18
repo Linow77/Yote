@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "table_score.h"
 
 // Structures
 
@@ -60,28 +61,23 @@ TypeContents plateau[5][6];
 
 int main()
 {
-    // Pour pouvoir tirer au sort un joueur (donc générer un nombre aléatoire)
-    // Il faut initialiser la graine (une seule fois)
-    srand(time(NULL));
-    Player joueurs[2];
+	TableScore scores;
+	init_table_score(&scores);
+	alloc_table_score(&scores);
+	// lecture des scores depuis un fichier score.txt
+	// ! ne pas créer le fichier score.txt, il se crée tout seul !
+	get_scores(&scores);
 
-    InitPlateau();
-    Init_joueurs(joueurs);
-
-    // TODO: boucle de jeu
-
-    // Test
-    AffichePlateauCLI();
-    TireAuSortJoueur(joueurs);
-
-    PlacerPion(&(joueurs[0]));
-    AffichePlateauCLI();
-
-    PlacerPion(&(joueurs[1]));
-    AffichePlateauCLI();
-
-    //DeplacerPion(&(joueurs[0]));
-    //AffichePlateauCLI();
+	input_score(&scores, 13, "toto");
+	input_score(&scores, 33, "jesus");
+	input_score(&scores, 64, "luke");
+	input_score(&scores, 30, "link");
+	input_score(&scores, 3, "mario");
+	input_score(&scores, 4, "obiwan");
+	//best_scores(&scores);// affichage dans le terminal
+	// sauvegarde des scores dans le fichier score.txt
+	save_score(&scores);
+	free_table_score(&scores);
 
     return 0;
 }
