@@ -6,7 +6,6 @@
 #include "affichage.h"
 
 
-///FONCTIONS RICHARD
 void chargement (Ressource *sprite)
 {
 	sprite->pion_d=SDL_LoadBMP("pion_demon.bmp");
@@ -41,7 +40,7 @@ Point CaseToPointhg(Case case1)
 	return p;
 }
 
-// FONCTIONS IMANE
+
 void UpdateEvents(Input* in)
 {
 		SDL_Event event;
@@ -78,7 +77,6 @@ void UpdateEvents(Input* in)
 
 void chargement_objets(img* fond,img* ecran)
 {
-
 	//A METTRE AVANT LE SET ICONE
 	SDL_Init(SDL_INIT_VIDEO);
 
@@ -109,8 +107,6 @@ void affiche_menu(img fond, img ecran)
 }
 
 
-
-//Code ajouté
 /** Verif clic est dan le tableau **/
 int VerifDansPlateau(Point clic)
 {
@@ -139,7 +135,8 @@ void SupprimerPion(img *caseVide, Ressource sprite, Point hg, int joueur)
 }
 
 /** Initialiser les cases du plateau à VIDE **/
-void InitPlateau() {
+void InitPlateau() 
+{
 	int i, j;
 
 	for (i = 0; i != 6; i++) {
@@ -150,18 +147,21 @@ void InitPlateau() {
 }
 
 /** Initialiser Les joueurs **/
-void Init_joueurs(Player players[]) {
+void Init_joueurs(Player players[]) 
+{
 	Init_joueur(&(players[0]));
 	Init_joueur(&(players[1]));
 }
 
 /** Initialiser joueur **/
-void Init_joueur(Player *player) {
+void Init_joueur(Player *player) 
+{
 	*player = (Player) { VIDE, 0, 12, 0 };
 }
 
 /** Au début du jeu le 1er joueur qui va jouer est tiré au sort **/
-void TireAuSortJoueur(Player joueurs[]) {
+void TireAuSortJoueur(Player joueurs[]) 
+{
 	if (rand() % 2) {
 		joueurs[0].JoueurT = HOMME;
 		joueurs[1].JoueurT = DEMON;
@@ -245,7 +245,6 @@ void AppliqueCoupV3(Case casePion, Player *joueurAct, Player *joueurAdv)
 	ModifierNbPiece(joueurAct,joueurAdv);
 }
 
-
 /** Changer le contenu du case lorsque on place une pion sur le plateau **/
 void ChangerContenuCase(Case c , Player *joueur)
 {
@@ -271,8 +270,8 @@ int VerifCaseVide(Case c)
 }
 
 /** Vérifie que la joueur se déplace Orthogonalement et d'une seule case **/
-int VerifDeplacementOrthogonal(Case c1, Case c2) {
-
+int VerifDeplacementOrthogonal(Case c1, Case c2) 
+{
 	if ( c2.x == c1.x )
 	{
 		return (c2.y == c1.y + 1) || (c2.y == c1.y - 1);
@@ -348,13 +347,14 @@ Case DetermineCaseASupprimer (Case case1, Case case2)
 int main(int argc, char *argv[])
 {
 	int tour= 0, joueur=0, estPremierClic=1, estCoupValide = 0, aMangerAdversaire = 0, JoueurAd;
-	Point clic,hg1,hg2, hgDelete;
+	Point clic, hg1,hg2, hgDelete;
 	Case case1, case2;
 	Player joueurs[2];
 	img fond,ecran,pion, case_vide;
 	Input in; //VARIABLE GESTION EVENEMENT
 	Ressource sprite;
-
+	
+	
 	/** INITIALISATION DU PLATEAU **/
 	InitPlateau();
 	/** INITIALISATION DES JOUEURS **/
@@ -363,6 +363,7 @@ int main(int argc, char *argv[])
 	TireAuSortJoueur(joueurs);
 	/** CHARGEMENT DES IMAGES **/
 	chargement(&sprite);
+
 
 	//CHARGEMENT DES IMAGES & POSITIONS DES OBJETS
 	chargement_objets(&fond, &ecran);
@@ -425,13 +426,17 @@ int main(int argc, char *argv[])
 			fond.image=SDL_LoadBMP("table.bmp");
 			affiche_menu(fond,ecran);
 			in.mousebuttons[SDL_BUTTON_LEFT]=0;
+			
+			
 		}
 
 		//SI ON CLIC SUR SCORE
 		/* a venir */
+		
+		
 		// si on est dans le mode jeux simple et il esxite des pions pour les deux jouers sur le plateau
 		if(tour==3 && ( VerifPionsSurPlateau(joueurs[0]) || VerifPionsSurPlateau(joueurs[1]) || estPremierClic))
-		{
+		{			
 			estCoupValide = 0;
 			//si l'utilisateur a cliqué sur le button droit de la souris
 			if(in.mousebuttons[SDL_BUTTON_LEFT])
@@ -446,12 +451,9 @@ int main(int argc, char *argv[])
 				if(case1.x!=-1 && case1.y!=-1)
 
 				{
-
-					printf("avnt case vide\n");
 					//si la case est vide
 					if(VerifCaseVide(case1))
 					{
-						printf("case vide\n");
 						estCoupValide = 1;
 						hg1=CaseToPointhg(case1);
 						AfficherPion(&pion, sprite, hg1, joueur);
@@ -492,7 +494,6 @@ int main(int argc, char *argv[])
 										// DANS LE CAS OU LE JOUEUR VEUT MANGER LE PION DE LADVERSAIRE
 										if(VerifCoupValide(case1, case2, joueurs[joueur].JoueurT))
 										{
-											printf("a manger adversair\n");
 											aMangerAdversaire = 1;
 											Case caseASupprimer = DetermineCaseASupprimer(case1, case2);
 											hgDelete=CaseToPointhg(caseASupprimer);
@@ -531,8 +532,8 @@ int main(int argc, char *argv[])
 										SDL_Flip(ecran.image);
 
 										// prendre deuxieme pion aux choix apres avoir manger le pion de ladversaire
-										if(aMangerAdversaire) {
-											printf("a vraiment manger\n");
+										if(aMangerAdversaire) 
+										{
 											in.mousebuttons[SDL_BUTTON_LEFT]=0;
 
 											estCoupValide = 0;
@@ -551,7 +552,6 @@ int main(int argc, char *argv[])
 													// et qu'elle n'est pas vide
 													if(plateau[case1.x][case1.y] != VIDE
 														&& plateau[case1.x][case1.y] != joueurs[joueur].JoueurT) {
-														printf("clic sur case adversaire\n");
 														estCoupValide = 1;
 														hgDelete=CaseToPointhg(case1);
 
@@ -567,13 +567,10 @@ int main(int argc, char *argv[])
 														SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
 														SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 														SDL_Flip(ecran.image);
-													} else {
-														printf("a cliquer sur une case invalide\n");
-													}
+													} 
 												}
 
 											} while(!estCoupValide && (!in.key[SDLK_ESCAPE]) && (!in.quit));
-											printf("fin manger nouvelle casse");
 
 										}
 									}
@@ -594,7 +591,7 @@ int main(int argc, char *argv[])
 		//SI ON CLIC SUR QUITTER
 		if (VerifQuitter(in) &&(tour==0))
 		{
-			SDL_Quit();
+			SDL_Quit();		
 		}
 	}
 	return EXIT_SUCCESS;

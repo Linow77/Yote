@@ -106,17 +106,56 @@ typedef struct Move {
 TypeContents plateau[5][6];
 
 //PROTOTYPES
-
-void chargement(Ressource *sprite);
+void chargement (Ressource *sprite);
+Case PointToCase(Point clic);
+Point CaseToPointhg(Case case1);
 void UpdateEvents(Input* in);
 void chargement_objets(img* fond,img* ecran);
 void affiche_menu(img fond, img ecran);
-Case PointToCase(Point clic);
-Point CaseToPointhg(Case case1);
+int VerifDansPlateau(Point clic);
 void AfficherPion(img *pion, Ressource sprite, Point hg, int joueur);
+void SupprimerPion(img *caseVide, Ressource sprite, Point hg, int joueur);
 void InitPlateau();
 void Init_joueurs(Player players[]);
 void Init_joueur(Player *player);
-void change_joueur(int *joueur);
-int VerifDansPlateau(Point clic);
+void TireAuSortJoueur(Player joueurs[]);
+void Changer_joueur(int *joueur);
+int VerifQuitter(Input in);
+int VerifMenu1(Input in);
+int Verif1Vs1(Input in);
+int VerifModeSimple(Input in);
+int VerifModeVariante(Input in);
+void AppliqueCoup(Case pion, Case dest, TypeContents type);
+void ModifierNbPiece(Player *joueurAct, Player *joueurAdv );
+void AppliqueCoupV2(Case pion, Case adversaire, Case dest, Player *joueurAct, Player *joueurAdv );
+void AppliqueCoupV3(Case casePion, Player *joueurAct, Player *joueurAdv);
+void ChangerContenuCase(Case c , Player *joueur);
+int VerifPionsSurPlateau(Player joueur);
+int VerifCaseVide(Case c);
+int VerifMemeType(Case c, Player joueur);
+int VerifDeplacementOrthogonal(Case c1, Case c2);
+int VerifCoupValide(Case caseDepart, Case caseArrivee, TypeContents type);
+int NbJoueurAdv(int joueurAct);
+Case DetermineCaseASupprimer (Case case1, Case case2);
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #endif
