@@ -107,7 +107,7 @@ void affiche_menu(img fond, img ecran)
 }
 
 
-/** Verif clic est dan le tableau **/
+/** Permet de vérifier si un clic appartient au plateau du jeu ou non  **/
 int VerifDansPlateau(Point clic)
 {
  return(145<clic.x && clic.x<855 && 150<clic.y && clic.y<740); //SUR LE PLATEAU
@@ -134,7 +134,7 @@ void SupprimerPion(img *caseVide, Ressource sprite, Point hg, int joueur)
 	caseVide->position.y=hg.y;
 }
 
-/** Initialiser les cases du plateau à VIDE **/
+/** Permet d’initialiser les cases du plateau à VIDE **/
 void InitPlateau() 
 {
 	int i, j;
@@ -153,13 +153,13 @@ void Init_joueurs(Player players[])
 	Init_joueur(&(players[1]));
 }
 
-/** Initialiser joueur **/
+/** Permet d’initialiser un joueur **/
 void Init_joueur(Player *player) 
 {
 	*player = (Player) { VIDE, 0, 12, 0 };
 }
 
-/** Au début du jeu le 1er joueur qui va jouer est tiré au sort **/
+/** Permet de faire un tirage au sort du premier joueur **/
 void TireAuSortJoueur(Player joueurs[]) 
 {
 	if (rand() % 2) {
@@ -171,7 +171,7 @@ void TireAuSortJoueur(Player joueurs[])
 		joueurs[1].JoueurT = HOMME;
 	}
 }
-/** Changer tour du joueur**/
+/** Changement du joueur courant **/
 void Changer_joueur(int *joueur)
 {
 	if(*joueur == 0)
@@ -179,57 +179,58 @@ void Changer_joueur(int *joueur)
 	else
 		*joueur = 0;
 }
-/** Verifer si on clic sur Quiter **/
+
+/** Permet de vérifier si l’utilisateur a cliqué sur le bouton quitter dans le premier menu **/
 int VerifQuitter(Input in)
 {
 	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONQUITTERX1)&&(in.mousex<BOUTTONQUITTERX2)&&(in.mousey>BOUTTONQUITTERY1)&&(in.mousey<BOUTTONQUITTERY2);
 }
 
-/**  Verifer si on clic sur MENU 1 **/
+/**  Permet de vérifier si l’utilisateur a cliqué sur le bouton jouer dans le premier menu  **/
 int VerifMenu1(Input in)
 {
 	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONJOUERX1)&&(in.mousex<BOUTTONJOUERX2)&&(in.mousey>BOUTTONJOUERY1)&&(in.mousey<BOUTTONJOUERY2);
 }
 
-/**  Verifer si on clic sur 1Vs1 **/
+/**  Permet de vérifier si l’utilisateur clique sur le bouton 1 VS 1 **/
 int Verif1Vs1(Input in)
 {
 	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTON1V1X1)&&(in.mousex<BOUTTON1V1X2)&&(in.mousey>BOUTTON1V1Y1)&&(in.mousey<BOUTTON1V1Y2);
 }
 
-/**  Verifer si on clic sur 1VsIA **/
+/**  Permet de vérifier si l’utilisateur clique sur le bouton 1 VS IA **/
 int Verif1VsIA(Input in)
 {
 	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTON1VSIAX1)&&(in.mousex<BOUTTON1VSIAX2)&&(in.mousey>BOUTTON1VSIAY1)&&(in.mousey<BOUTTON1VSIAY2);
 }
 
-/**  Verifer si on choisit le mode simple **/
+/**  Permet de vérifier si l’utilisateur clique sur le bouton Mode simple **/
 int VerifModeSimple(Input in)
 {
 	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONSIMPLEX1)&&(in.mousex<BOUTTONSIMPLEX2)&&(in.mousey>BOUTTONSIMPLEY1)&&(in.mousey<BOUTTONSIMPLEY2);
 }
 
-/**  Verifer si on choisit le mode Variante **/
+/**  Permet de vérifier si l’utilisateur clique sur le bouton Mode variante **/
 int VerifModeVariante(Input in)
 {
 	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONVARIANTEX1)&&(in.mousex<BOUTTONVARIANTEX2)&&(in.mousey>BOUTTONVARIANTEY1)&&(in.mousey<BOUTTONVARIANTEY2);
 }
 
-/** Changer les valeur des cases du tableau lors du mouvements simple sans manger de pion**/
+/** Permet de changer les valeurs des cases du tableau lors d’un mouvement sans manger de pion **/
 void AppliqueCoup(Case pion, Case dest, TypeContents type)
 {
 	plateau[pion.x][pion.y] = VIDE;
 	plateau[dest.x][dest.y] = type;
 }
-/** changer les valeurs des pions capté et celles sur le plateau **/
+
+/** Permet de changer les valeurs des pions capturés et celles sur le plateau **/
 void ModifierNbPiece(Player *joueurAct, Player *joueurAdv )
 {
 	joueurAct->piece_cap ++;
 	joueurAdv->piece_plateau --;
 }
 
-/** Changer le contenu des cases du plateau et les valeurs des pions capté et celles sur le plateau
-					lorsque on mange un pion								**/
+/** Permet de changer le contenu des cases du plateau et les valeurs des pions capturés et ceux sur le plateau lorsqu'on mange un pion	**/
 void AppliqueCoupV2(Case pion, Case adversaire, Case dest, Player *joueurAct, Player *joueurAdv )
 {
 	AppliqueCoup(pion, dest, joueurAct->JoueurT);
@@ -237,15 +238,14 @@ void AppliqueCoupV2(Case pion, Case adversaire, Case dest, Player *joueurAct, Pl
 	ModifierNbPiece(joueurAct,joueurAdv);
 
 }
-/**Changer le contenu des cases du plateau et les valeurs des pions capté et celles sur le plateau
-					lorsque on choisir le 2eme pion apprendre		 **/
+/**Permet de changer le contenu des cases du plateau et les valeurs des pions capturés et ceux sur le plateau lorsqu'on choisir le 2è pion à prendre **/
 void AppliqueCoupV3(Case casePion, Player *joueurAct, Player *joueurAdv)
 {
 	plateau[casePion.x][casePion.y] = VIDE;
 	ModifierNbPiece(joueurAct,joueurAdv);
 }
 
-/** Changer le contenu du case lorsque on place une pion sur le plateau **/
+/** Permet de changer le contenu du case lorsque l’on place un pion sur le plateau **/
 void ChangerContenuCase(Case c , Player *joueur)
 {
 	plateau[c.x][c.y] = joueur->JoueurT;
@@ -253,17 +253,17 @@ void ChangerContenuCase(Case c , Player *joueur)
 	joueur-> piece_reserve --;
 }
 
-/** On vérifie que le joueur a des pions sur le plateau **/
+/** Vérifie qu’un joueur a encore des pions sur le plateau **/
 int VerifPionsSurPlateau(Player joueur)
 {
 	return joueur.piece_plateau > 0;
 }
- /** Vérifier que la case est vide	**/
+ /** Vérifie qu’une case du plateau est vide **/
 int VerifCaseVide(Case c)
 {
 	return plateau[c.x][c.y] == VIDE;
 }
-/** Verifer si le pion dans cette case appartient au joueur **/
+/** Vérifie que la case contient un pion du joueur **/
  int VerifMemeType(Case c, Player joueur)
 {
 	return plateau[c.x][c.y] == joueur.JoueurT;
@@ -282,7 +282,7 @@ int VerifDeplacementOrthogonal(Case c1, Case c2)
 	}
 	else return 0;
 }
- /** Vérifier que le joueur va manger sur un pion adversaire **/
+ /** Permet de vérifier que le joueur va manger un pion adversaire **/
  int VerifCoupValide(Case caseDepart, Case caseArrivee, TypeContents type)
 {
 	//mouvement horizontal
@@ -308,7 +308,7 @@ int VerifDeplacementOrthogonal(Case c1, Case c2)
 	return 0 ;
 }
 
-/** Derminer le numéro du joeur addversaire **/
+/** Permet de déterminer le numéro du joueur adversaire **/
 int NbJoueurAdv(int joueurAct)
 {
 	if(joueurAct == 0)
@@ -317,7 +317,7 @@ int NbJoueurAdv(int joueurAct)
 		return 0;
 }
 
-/** Determine la case a supprimer en fonction de la case de depart et de la case d'arrivee**/
+/** Permet de déterminer la case à supprimer en fonction de la case de départ et de la case d'arrivée **/
 Case DetermineCaseASupprimer (Case case1, Case case2)
 {
 	Case caseASupprimer;
