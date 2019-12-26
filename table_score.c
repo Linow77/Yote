@@ -55,34 +55,40 @@ int get_scores(TableScore *table_s)
 // We loop through the scores, if the name matches one player,
 // we get the score. Then the scores below are shifted to
 // 'erase' the score. Finally the score deleted is returned.
-int delete_by_name(TableScore *t, char *name)
+unsigned int delete_by_name(TableScore *t, char *name)
 {
-    int r;// rank of the player
-    int found = 0;
-    int score = -1;
+    int index;
+    unsigned int score = 0;
 
-    for (r = 0; r != t->number && !found; r++)
+    index = search_by_name(t, name);
+
+    if (index != -1)
     {
-        found = (strcmp(name, t->players[r]) == 0);
+        score = t->scores[index];
+        shift(t, index);
     }
-
-    if (found)
-    {
-        r--;
-        score = t->scores[r];
-        shift(t, r);
-    }
-
 
     return score;
 }
+
+unsigned int search_by_name(TableScore *t, char *name)
+{
+    int r;
+
+    for (r = 0; r != t->number; r++)
+    {
+        if (strcmp(name, t->players[r]) == 0) return r;
+    }
+
+    return -1;
+}
+
 
 // Prints the scores into the terminal
 // ranked from best to worse
 void print_tablescore(TableScore *t)
 {
     int r;// rank of the player
-
 
     puts("\n\tSCORES\n");
     puts("RANG\tJOUEUR\tPOINTS\n");
@@ -100,7 +106,7 @@ int save_score(TableScore *table_s)
     FILE* file = NULL;
     int num;
 
-	if (table_s->number == 0) return 0;
+    if (table_s->number == 0) return 0;
 
     file = fopen(SCORE_FILE, "w");
     if (file != NULL)
@@ -122,7 +128,14 @@ int save_score(TableScore *table_s)
 void insert(TableScore *t, unsigned int p_score, char *name)
 {
     int r;
+    int old_score;
     int can_be_inserted = 0;
+
+    if (!ALLOW_NAME_DUPLICATIONS)
+    {
+        old_score = delete_by_name(t, name);
+        if (old_score > p_score) return;
+    }
 
     // while the score is lower, we loop the scores
     for (r = 0; r != t->number && !can_be_inserted; r++)
@@ -161,7 +174,6 @@ int min(int a, int b)
 
 void push(TableScore *t, unsigned int index, unsigned int s, char *n)
 {
-    puts("PUSH");
     int i = min(t->number, MAX_SCORE - 1);
 
     for (; i != index; i--)
@@ -187,10 +199,7 @@ void shift(TableScore *t, unsigned int index)
 
 void set(TableScore *t, unsigned int index, unsigned int s, char *n)
 {
-    puts("SET");
-    DEBUG
     t->scores[index] = s;
-    DEBUG
     strcpy(t->players[index], n);
 }
 
@@ -202,15 +211,12 @@ void set(TableScore *t, unsigned int index, unsigned int s, char *n)
 void free_table_score(TableScore *table)
 {
     int num;
-	//printf("NUMBER %d\n", table->number);
 
     for (num = 0; num != table->number; num++)
     {
         //free(table->players[num]);
     }
 
-	free(table->players);
-
-    return;
+    free(table->players);
 }
 

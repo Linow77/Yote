@@ -19,9 +19,8 @@ int main()
 	insert(&scores, 64, "luke");
 	insert(&scores, 30, "link");
 	insert(&scores, 3, "mario");
-	insert(&scores, 4, "obiwan");
 	print_tablescore(&scores);// affichage dans le terminal
-	delete_by_name(&scores, "jesus");
+	insert(&scores, 44, "toto");
 	print_tablescore(&scores);// affichage dans le terminal
 	// sauvegarde des scores dans le fichier score.txt
 	//save_score(&scores);
