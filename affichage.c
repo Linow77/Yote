@@ -111,10 +111,13 @@ void affiche_menu(img fond, img ecran)
 	SDL_Flip(ecran.image);
 }
 
-void affiche_scores(TTF_Font *police, TableScore *t)
+void affiche_scores(TTF_Font *police, img fond, TableScore *t)
 {
-    SDL_Color couleurNoire = {0, 0, 0};
-    TTF_RenderText_Blended(police, "Salut les Zér0s !", couleurNoire);
+	SDL_Color couleurNoire = {0, 0, 0};
+    //SDL_Surface *ecran = NULL;
+	//SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format, 255, 255, 255));
+	fond.image=SDL_LoadBMP("scores_bg.jpg");
+	TTF_RenderText_Blended(police, "Salut les Zér0s !", couleurNoire);
 }
 
 
@@ -429,8 +432,12 @@ int main(int argc, char *argv[])
 		{
 			//puts("SCORES");
 			affiche_menu(fond,ecran);
+			//SDL_Flip(ecran.image);
+			affiche_scores(police, fond, &scores);
+			fond.image=SDL_LoadBMP("scores_bg.jpg");
+			affiche_menu(fond,ecran);
 			in.mousebuttons[SDL_BUTTON_LEFT]=0;
-			affiche_scores(police, &scores);
+			puts("Scores");
 		}
 
 		//1 VS 1
