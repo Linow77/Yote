@@ -3,7 +3,7 @@
 
 //MACROCONSTANTES
 
-/*Coordonnées des boutons*/ 
+/*Coordonnées des boutons*/
 #define BOUTTONJOUERX1 94
 #define BOUTTONJOUERX2 344
 #define BOUTTONJOUERY1 502
@@ -29,6 +29,12 @@
 #define BOUTTONQUITTERY1 502
 #define BOUTTONQUITTERY2 615
 
+#define BOUTON_SCORES_X1 380
+#define BOUTON_SCORES_Y1 509
+#define BOUTON_SCORES_X2 600
+#define BOUTON_SCORES_Y2 602
+
+
 #define BOUTTONSIMPLEX1 127
 #define BOUTTONSIMPLEX2 450
 #define BOUTTONSIMPLEY1 430
@@ -39,7 +45,7 @@
 #define BOUTTONVARIANTEY1 430
 #define BOUTTONVARIANTEY2 560
 
-//STRUCTURES 
+//STRUCTURES
 
 /** EVENEMENT **/
 typedef struct
@@ -47,7 +53,7 @@ typedef struct
 	char key[SDLK_LAST]; //clavier
 	int mousex,mousey; //coordonnés de la souris
 	int mousexrel,mouseyrel; //le vecteur déplacement souris
-	char mousebuttons[8]; //boutons de la souris 
+	char mousebuttons[8]; //boutons de la souris
     char quit;
 }Input;
 
@@ -59,7 +65,7 @@ typedef struct
 }img;
 
 /** LOAD IMAGES **/
-typedef struct 
+typedef struct
 {
 	// Création des surfaces
 	SDL_Surface* pion_d;
@@ -139,7 +145,7 @@ int NbJoueurAdv(int joueurAct);
 Case DetermineCaseASupprimer (Case case1, Case case2);
 
 
- 
+
 
 
 

@@ -3,7 +3,9 @@
 #include <SDL/SDL.h>
 #include <time.h>
 #include <SDL/SDL_ttf.h>
+#include <SDL/SDL_image.h>
 #include "affichage.h"
+#include "table_score.h"
 
 
 void chargement (Ressource *sprite)
@@ -79,6 +81,8 @@ void chargement_objets(img* fond,img* ecran)
 {
 	//A METTRE AVANT LE SET ICONE
 	SDL_Init(SDL_INIT_VIDEO);
+	// Police
+    TTF_Init();
 
 	/*Chargement Icône*/
 	SDL_WM_SetIcon(SDL_LoadBMP("logo.bmp"), NULL);
@@ -88,6 +92,7 @@ void chargement_objets(img* fond,img* ecran)
 
 	// Chargement Ecran
 	ecran->image = SDL_SetVideoMode(1000, 760, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+
 
 	// Nom du jeu
 	SDL_WM_SetCaption("YOTE", NULL);
@@ -104,6 +109,12 @@ void affiche_menu(img fond, img ecran)
 {
 	SDL_BlitSurface(fond.image, NULL, ecran.image, &fond.position);
 	SDL_Flip(ecran.image);
+}
+
+void affiche_scores(TTF_Font *police, TableScore *t)
+{
+    SDL_Color couleurNoire = {0, 0, 0};
+    TTF_RenderText_Blended(police, "Salut les Zér0s !", couleurNoire);
 }
 
 
@@ -135,7 +146,7 @@ void SupprimerPion(img *caseVide, Ressource sprite, Point hg, int joueur)
 }
 
 /** Permet d’initialiser les cases du plateau à VIDE **/
-void InitPlateau() 
+void InitPlateau()
 {
 	int i, j;
 
@@ -147,20 +158,20 @@ void InitPlateau()
 }
 
 /** Initialiser Les joueurs **/
-void Init_joueurs(Player players[]) 
+void Init_joueurs(Player players[])
 {
 	Init_joueur(&(players[0]));
 	Init_joueur(&(players[1]));
 }
 
 /** Permet d’initialiser un joueur **/
-void Init_joueur(Player *player) 
+void Init_joueur(Player *player)
 {
 	*player = (Player) { VIDE, 0, 12, 0 };
 }
 
 /** Permet de faire un tirage au sort du premier joueur **/
-void TireAuSortJoueur(Player joueurs[]) 
+void TireAuSortJoueur(Player joueurs[])
 {
 	if (rand() % 2) {
 		joueurs[0].JoueurT = HOMME;
@@ -178,6 +189,12 @@ void Changer_joueur(int *joueur)
 		*joueur = 1;
 	else
 		*joueur = 0;
+}
+
+void affiche_coordonnees_clic(Input in)
+{
+	if (in.mousebuttons[SDL_BUTTON_LEFT])
+		printf("x : %d; y : %d\n", in.mousex, in.mousey);
 }
 
 /** Permet de vérifier si l’utilisateur a cliqué sur le bouton quitter dans le premier menu **/
@@ -214,6 +231,13 @@ int VerifModeSimple(Input in)
 int VerifModeVariante(Input in)
 {
 	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONVARIANTEX1)&&(in.mousex<BOUTTONVARIANTEX2)&&(in.mousey>BOUTTONVARIANTEY1)&&(in.mousey<BOUTTONVARIANTEY2);
+}
+
+int VerifMenuScores(Input in)
+{
+	return in.mousebuttons[SDL_BUTTON_LEFT] && in.mousex > BOUTON_SCORES_X1 &&
+		   in.mousex < BOUTON_SCORES_X2 && in.mousey > BOUTON_SCORES_Y1 &&
+		   in.mousey < BOUTON_SCORES_Y2;
 }
 
 /** Permet de changer les valeurs des cases du tableau lors d’un mouvement sans manger de pion **/
@@ -270,7 +294,7 @@ int VerifCaseVide(Case c)
 }
 
 /** Vérifie que la joueur se déplace Orthogonalement et d'une seule case **/
-int VerifDeplacementOrthogonal(Case c1, Case c2) 
+int VerifDeplacementOrthogonal(Case c1, Case c2)
 {
 	if ( c2.x == c1.x )
 	{
@@ -350,11 +374,19 @@ int main(int argc, char *argv[])
 	Point clic, hg1,hg2, hgDelete;
 	Case case1, case2;
 	Player joueurs[2];
+	TTF_Font *police = NULL;
 	img fond,ecran,pion, case_vide;
 	Input in; //VARIABLE GESTION EVENEMENT
 	Ressource sprite;
-	
-	
+
+	// Tableau des scores
+	TableScore scores;
+	init_table_score(&scores);
+	alloc_table_score(&scores);
+	get_scores(&scores);
+	test_insert(&scores);
+
+
 	/** INITIALISATION DU PLATEAU **/
 	InitPlateau();
 	/** INITIALISATION DES JOUEURS **/
@@ -367,6 +399,7 @@ int main(int argc, char *argv[])
 
 	//CHARGEMENT DES IMAGES & POSITIONS DES OBJETS
 	chargement_objets(&fond, &ecran);
+    police = TTF_OpenFont("RuneicityDecorative001.ttf", 65);
 
 	//GESTION DES EVENEMENTS :
 	memset(&in,0,sizeof(in));
@@ -380,6 +413,7 @@ int main(int argc, char *argv[])
 		UpdateEvents(&in);
 
 		//SI ON CLIC SUR UN BOUTON DU MENU
+		//affiche_coordonnees_clic(in);
 
 		//SI ON CLIC SUR JOUER MENU 1
 		if (VerifMenu1(in)&&(tour==0))
@@ -390,6 +424,13 @@ int main(int argc, char *argv[])
 
 			//On remet le compteur de clic à 0 pour pouvoir récuperer d'autres clic
 			in.mousebuttons[SDL_BUTTON_LEFT]=0;
+		}
+		if (VerifMenuScores(in) && tour == 0)
+		{
+			//puts("SCORES");
+			affiche_menu(fond,ecran);
+			in.mousebuttons[SDL_BUTTON_LEFT]=0;
+			affiche_scores(police, &scores);
 		}
 
 		//1 VS 1
@@ -426,17 +467,17 @@ int main(int argc, char *argv[])
 			fond.image=SDL_LoadBMP("table.bmp");
 			affiche_menu(fond,ecran);
 			in.mousebuttons[SDL_BUTTON_LEFT]=0;
-			
-			
+
+
 		}
 
 		//SI ON CLIC SUR SCORE
 		/* a venir */
-		
-		
+
+
 		// si on est dans le mode jeux simple et il esxite des pions pour les deux jouers sur le plateau
 		if(tour==3 && ( VerifPionsSurPlateau(joueurs[0]) || VerifPionsSurPlateau(joueurs[1]) || estPremierClic))
-		{			
+		{
 			estCoupValide = 0;
 			//si l'utilisateur a cliqué sur le button droit de la souris
 			if(in.mousebuttons[SDL_BUTTON_LEFT])
@@ -532,7 +573,7 @@ int main(int argc, char *argv[])
 										SDL_Flip(ecran.image);
 
 										// prendre deuxieme pion aux choix apres avoir manger le pion de ladversaire
-										if(aMangerAdversaire) 
+										if(aMangerAdversaire)
 										{
 											in.mousebuttons[SDL_BUTTON_LEFT]=0;
 
@@ -567,7 +608,7 @@ int main(int argc, char *argv[])
 														SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
 														SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 														SDL_Flip(ecran.image);
-													} 
+													}
 												}
 
 											} while(!estCoupValide && (!in.key[SDLK_ESCAPE]) && (!in.quit));
@@ -591,8 +632,15 @@ int main(int argc, char *argv[])
 		//SI ON CLIC SUR QUITTER
 		if (VerifQuitter(in) &&(tour==0))
 		{
-			SDL_Quit();		
+			TTF_CloseFont(police);
+			TTF_Quit();
+			SDL_Quit();
 		}
 	}
+
+	save_score(&scores);
+	free_table_score(&scores);
+
 	return EXIT_SUCCESS;
 }
+

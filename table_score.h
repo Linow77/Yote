@@ -57,5 +57,7 @@ void decrease_size(TableScore *t);
 
 int min(int a, int b);
 
+void test_insert(TableScore *t);
+
 #endif
 

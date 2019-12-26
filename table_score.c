@@ -220,3 +220,12 @@ void free_table_score(TableScore *table)
     free(table->players);
 }
 
+void test_insert(TableScore *t)
+{
+	insert(t, 23, "toto");
+	insert(t, 53, "jesus");
+	insert(t, 64, "luke");
+	insert(t, 80, "link");
+	insert(t, 9, "mario");
+}
+
