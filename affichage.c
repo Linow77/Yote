@@ -10,7 +10,7 @@ void chargement (Ressource *sprite)
 {
 	sprite->pion_d=SDL_LoadBMP("pion_demonv3.bmp");
 	sprite->pion_h=SDL_LoadBMP("pion_hommev3.bmp");
-	sprite->case_v=SDL_LoadBMP("cache.bmp");
+	sprite->case_v=SDL_LoadBMP("cachev3.bmp");
 }
 
 
@@ -20,8 +20,8 @@ Case PointToCase(Point clic)
 
 	if(VerifDansPlateau(clic)) //SUR LE PLATEAU
 	{
-		case1.y=(clic.x-146)/116;
-		case1.x=(clic.y-151)/116;
+		case1.x=(clic.x-146)/116;
+		case1.y=(clic.y-151)/116;
 
 	}else{
 		case1.x=-1; //EN DEHORS DU PLATEAU
@@ -34,8 +34,8 @@ Case PointToCase(Point clic)
 Point CaseToPointhg(Case case1)
 {
 	Point p;
-	p.y=case1.x*120 +146;
-	p.x=case1.y*120 +151;
+	p.x=case1.x*120 +145;
+	p.y=case1.y*120 +149;
 
 	return p;
 }
