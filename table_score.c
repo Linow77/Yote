@@ -51,14 +51,38 @@ int get_scores(TableScore *table_s)
     return 0;
 }
 
+// Deletes the score of a player according to his name
+// We loop through the scores, if the name matches one player,
+// we get the score. Then the scores below are shifted to
+// 'erase' the score. Finally the score deleted is returned.
+int delete_by_name(TableScore *t, char *name)
+{
+    int r;// rank of the player
+    int found = 0;
+    int score = -1;
+
+    for (r = 0; r != t->number && !found; r++)
+    {
+        found = (strcmp(name, t->players[r]) == 0);
+    }
+
+    if (found)
+    {
+        r--;
+        score = t->scores[r];
+        shift(t, r);
+    }
+
+
+    return score;
+}
+
 // Prints the scores into the terminal
 // ranked from best to worse
-void best_scores(TableScore *t)
+void print_tablescore(TableScore *t)
 {
     int r;// rank of the player
 
-    getchar();// remove newline from scanf
-    CLEAR
 
     puts("\n\tSCORES\n");
     puts("RANG\tJOUEUR\tPOINTS\n");
@@ -66,9 +90,6 @@ void best_scores(TableScore *t)
     {
         printf("%d\t%s\t%d\n", r + 1, t->players[r], t->scores[r]);
     }
-
-    printf("\nAppuyez sur entrer pour revenir au menu");
-    getchar();
 
     return;
 }
@@ -98,41 +119,83 @@ int save_score(TableScore *table_s)
 }
 
 
-// Add a score to the table of scores : the value of the score (int) and the name
-// of the player (char *)
-void input_score(TableScore *table, unsigned int p_score, char *nom)
+void insert(TableScore *t, unsigned int p_score, char *name)
 {
-    int num;
-	int num2;
+    int r;
+    int can_be_inserted = 0;
 
-    if (table->number != MAX_SCORE)
+    // while the score is lower, we loop the scores
+    for (r = 0; r != t->number && !can_be_inserted; r++)
     {
-        table->number++;
-        table->scores[table->number - 1] = 0;// the value isn't initialized yet
+        if (t->scores[r] < p_score) can_be_inserted = 1;
     }
 
-    // we iterate through the score table till we find a place for the player's
-    // score; the table is crescently sorted
-    for (num = 0; num != table->number && table->scores[num] > p_score; num++);
-
-    // if we reached the end of the table, no insertion
-    if (num == table->number) return;
-
-    // we push the array, so that we can insert the player's score and name
-    for (num2 = table->number - 1; num2 != num; num2--)
+    if (can_be_inserted)
     {
-        table->scores[num2] = table->scores[num2 - 1];
-		//table->players[num2] = NULL;
-		//free(table->players[num2]);
-		//table->players[num2] = (char *) malloc(sizeof(char) * MAX_SIZE);
-        strcpy(table->players[num2], table->players[num2 - 1]);
+        r--;
+        push(t, r, p_score, name);
+    }
+    else if (r < MAX_SCORE)
+    {
+        set(t, r, p_score, name);
+        increase_size(t);
     }
 
-    table->scores[num]  = p_score;// insertion
-    table->players[num] = nom;// insertion
-
-    return;
 }
+
+void increase_size(TableScore *t)
+{
+    if (t->number < MAX_SCORE) t->number++;
+}
+
+void decrease_size(TableScore *t)
+{
+    if (t->number > 0) t->number--;
+}
+
+int min(int a, int b)
+{
+    if (a < b) return a;
+    return b;
+}
+
+void push(TableScore *t, unsigned int index, unsigned int s, char *n)
+{
+    puts("PUSH");
+    int i = min(t->number, MAX_SCORE - 1);
+
+    for (; i != index; i--)
+    {
+        set(t, i, t->scores[i - 1], t->players[i - 1]);
+    }
+
+    set(t, i, s, n);
+    increase_size(t);
+}
+
+void shift(TableScore *t, unsigned int index)
+{
+    int i;
+
+    for (i = index; i != t->number - 1; i++)
+    {
+        set(t, i, t->scores[i + 1], t->players[i + 1]);
+    }
+
+    decrease_size(t);
+}
+
+void set(TableScore *t, unsigned int index, unsigned int s, char *n)
+{
+    puts("SET");
+    DEBUG
+    t->scores[index] = s;
+    DEBUG
+    strcpy(t->players[index], n);
+}
+
+
+
 
 // Free memory of the table of scores
 // Still some memory leaks though @.@ ?
@@ -147,7 +210,6 @@ void free_table_score(TableScore *table)
     }
 
 	free(table->players);
-	//table->players = NULL;
 
     return;
 }
