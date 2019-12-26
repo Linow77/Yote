@@ -65,6 +65,7 @@ typedef struct
 	SDL_Surface* pion_d;
 	SDL_Surface* pion_h;
 	SDL_Surface* case_v;
+	SDL_Surface* cache_info;
 }Ressource ;
 
 /** CASE **/
@@ -137,7 +138,7 @@ int VerifDeplacementOrthogonal(Case c1, Case c2);
 int VerifCoupValide(Case caseDepart, Case caseArrivee, TypeContents type);
 int NbJoueurAdv(int joueurAct);
 Case DetermineCaseASupprimer (Case case1, Case case2);
-
+void infoPartie(img ecran, Player joueurs[],Ressource sprite);
 
  
 
