@@ -8,8 +8,8 @@
 
 void chargement (Ressource *sprite)
 {
-	sprite->pion_d=SDL_LoadBMP("pion_demon.bmp");
-	sprite->pion_h=SDL_LoadBMP("pion_homme.bmp");
+	sprite->pion_d=SDL_LoadBMP("pion_demonv3.bmp");
+	sprite->pion_h=SDL_LoadBMP("pion_hommev3.bmp");
 	sprite->case_v=SDL_LoadBMP("cache.bmp");
 }
 
