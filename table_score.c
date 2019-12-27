@@ -71,6 +71,16 @@ unsigned int delete_by_name(TableScore *t, char *name)
     return score;
 }
 
+// Returns the score of a player, by name
+// If the player doesn't exist, returns 0
+unsigned int get_score_by_name(TableScore *t, char *name)
+{
+    int r = search_by_name(t, name);
+
+    if (r == -1) return 0;
+    else return t->scores[r];
+}
+
 unsigned int search_by_name(TableScore *t, char *name)
 {
     int r;

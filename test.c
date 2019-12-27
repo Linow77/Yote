@@ -22,6 +22,7 @@ int main()
 	print_tablescore(&scores);// affichage dans le terminal
 	insert(&scores, 44, "toto");
 	print_tablescore(&scores);// affichage dans le terminal
+    printf("Score of %s : %d\n", "jesus", get_score_by_name(&scores, "jesus"));
 	// sauvegarde des scores dans le fichier score.txt
 	save_score(&scores);
 	free_table_score(&scores);

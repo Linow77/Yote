@@ -48,6 +48,7 @@ void print_tablescore(TableScore *t);
 
 unsigned int delete_by_name(TableScore *t, char *name);
 unsigned int search_by_name(TableScore *t, char *name);
+unsigned int get_score_by_name(TableScore *t, char *name);
 void push(TableScore *t, unsigned int index, unsigned int s, char *n);
 void shift(TableScore *t, unsigned int index);
 void insert(TableScore *table, unsigned int p_score, char *name);
