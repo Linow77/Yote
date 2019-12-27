@@ -100,7 +100,7 @@ void chargement_objets(img* fond,img* ecran)
 
 void affiche_menu(img fond, img ecran)
 {
-	affiche_image(fond.image, ecran.image, &fond.position);
+	SDL_BlitSurface(fond.image, NULL, ecran.image, &fond.position);
 	rafraichir(ecran.image);
 }
 
@@ -132,7 +132,7 @@ void AfficherPion(img ecran,img *pion, Ressource sprite, Point hg, int joueur)
 	SDL_SetColorKey(pion->image,SDL_SRCCOLORKEY,SDL_MapRGB(pion->image->format,255, 0, 255));
 	pion->position.x=hg.x;
 	pion->position.y=hg.y;
-	affiche_image(pion->image, ecran.image, &pion->position);
+	SDL_BlitSurface(pion->image, NULL, ecran.image, &pion->position);
 }
 
 /** Supprimer Pion **/
@@ -387,19 +387,19 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite)
 	position.x = 195;	position1.x = 780;	position2.x = 315;	position3.x = 640;
 	position.y = 20;	position1.y = 20;	position2.y = 65;	position3.y = 65;
 
-	affiche_image(sprite.cache_info, ecran.image, &position); // efface le texte potentielment précedement
-	affiche_image(sprite.cache_info, ecran.image, &position1);
-	affiche_image(sprite.cache_info, ecran.image, &position2);
-	affiche_image(sprite.cache_info, ecran.image, &position3);
+	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position); // efface le texte potentielment précedement
+	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position1);
+	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position2);
+	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position3);
 
-	affiche_image(texte, ecran.image, &position2); //on écrit le nouveau texte
-	affiche_image(texte1, ecran.image, &position3);
-	affiche_image(texte2, ecran.image, &position);
-	affiche_image(texte3, ecran.image, &position1);
+	SDL_BlitSurface(texte, NULL, ecran.image, &position2); //on écrit le nouveau texte
+	SDL_BlitSurface(texte1, NULL, ecran.image, &position3);
+	SDL_BlitSurface(texte2, NULL, ecran.image, &position);
+	SDL_BlitSurface(texte3, NULL, ecran.image, &position1);
 
 	position.x=position.x+35;
 
-	affiche_image(sprite.cache_info, ecran.image, &position);
+	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position);
 
 	rafraichir(ecran.image);
 	TTF_CloseFont(police);
@@ -424,7 +424,7 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	position.x = 100;
 	position.y = 200;
 
-	affiche_image(sprite.ecran_de_fin, ecran.image, &position);
+	SDL_BlitSurface(sprite.ecran_de_fin, NULL, ecran.image, &position);
 
 
 	/** 	AFFICHAGE DES PIONS 	**/
@@ -496,13 +496,13 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	position1.y = 250;	position2.y = 250;	position3.y = 520;	position4.y = 520; position5.y = 520;	position6.y = 520;
 
 
-	affiche_image(textevictoire, ecran.image, &position1); //on écrit le nouveau texte
-	affiche_image(textedefaite, ecran.image, &position2);
-	affiche_image(pseudovainqueur, ecran.image, &position3);
-	affiche_image(pseudoperdant, ecran.image, &position4);
-	affiche_image(scorevainqueur, ecran.image, &position5);
-	affiche_image(scoreperdant, ecran.image, &position6);
-	affiche_image(scoreperdant, ecran.image, &position6);
+	SDL_BlitSurface(textevictoire, NULL, ecran.image, &position1); //on écrit le nouveau texte
+	SDL_BlitSurface(textedefaite, NULL, ecran.image, &position2);
+	SDL_BlitSurface(pseudovainqueur, NULL, ecran.image, &position3);
+	SDL_BlitSurface(pseudoperdant, NULL, ecran.image, &position4);
+	SDL_BlitSurface(scorevainqueur, NULL, ecran.image, &position5);
+	SDL_BlitSurface(scoreperdant, NULL, ecran.image, &position6);
+	SDL_BlitSurface(scoreperdant, NULL, ecran.image, &position6);
 
 	rafraichir(ecran.image);
 	TTF_CloseFont(police);
@@ -544,10 +544,6 @@ void rafraichir(SDL_Surface *s)
 	SDL_Flip(s);
 }
 
-void affiche_image(SDL_Surface *fond, SDL_Surface *image, SDL_Rect *position)
-{
-	SDL_BlitSurface(fond, NULL, image, position);
-}
 
 
 

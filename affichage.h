@@ -165,8 +165,6 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant);
 void rafraichir(SDL_Surface *s);
 int VerifClicDansSurface(Input i, int x_hg, int y_hg, int x_bd, int y_db);
 void titre_fenetre(char *titre);
-void affiche_image(SDL_Surface *fond, SDL_Surface *image, SDL_Rect *position);
-
 
 
 
