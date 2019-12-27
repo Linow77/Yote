@@ -1,13 +1,5 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <SDL/SDL.h>
-#include <time.h>
-#include <SDL/SDL_ttf.h>
-#include <SDL/SDL_image.h>
+
 #include "affichage.h"
-#include "table_score.h"
-
-
 void chargement (Ressource *sprite)
 {
 	sprite->pion_d=SDL_LoadBMP("pion_demonv3.bmp");

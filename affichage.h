@@ -1,5 +1,13 @@
 #ifndef affichage
 #define affichage
+#include <stdlib.h>
+#include <stdio.h>
+#include <SDL/SDL.h>
+#include <time.h>
+#include <SDL/SDL_ttf.h>
+#include <SDL/SDL_image.h>
+#include "table_score.h"
+
 
 //MACROCONSTANTES
 
