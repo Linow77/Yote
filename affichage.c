@@ -9,11 +9,11 @@ void chargement (Ressource *sprite)
 	sprite->ecran_de_fin=SDL_LoadBMP("ecrandefin.bmp");
 }
 
-/*
+
 void rafraichir(SDL_Surface *s)
 {
 	SDL_Flip(s);
-}*/
+}
 
 
 Case PointToCase(Point clic)
@@ -95,7 +95,7 @@ void chargement_objets(img* fond,img* ecran)
 
 
 	// Nom du jeu
-	SDL_WM_SetCaption("YOTE", NULL);
+	titre_fenetre("YOTE");
 
 	// Chargement Fond
 	fond->position.x = 0;
@@ -108,7 +108,7 @@ void chargement_objets(img* fond,img* ecran)
 void affiche_menu(img fond, img ecran)
 {
 	SDL_BlitSurface(fond.image, NULL, ecran.image, &fond.position);
-	SDL_Flip(ecran.image);
+	rafraichir(ecran.image);
 }
 
 /*
@@ -196,11 +196,6 @@ void Changer_joueur(int *joueur)
 		*joueur = 0;
 }
 
-void affiche_coordonnees_clic(Input in)
-{
-	if (in.mousebuttons[SDL_BUTTON_LEFT])
-		printf("x : %d; y : %d\n", in.mousex, in.mousey);
-}
 
 /** Permet de vérifier si l’utilisateur a cliqué sur le bouton quitter dans le premier menu **/
 int VerifQuitter(Input in)
@@ -413,7 +408,7 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite)
 
 	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position);
 
-	SDL_Flip(ecran.image);
+	rafraichir(ecran.image);
 	TTF_CloseFont(police);
     TTF_Quit();
 
@@ -515,7 +510,7 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	SDL_BlitSurface(scorevainqueur, NULL, ecran.image, &position5);
 	SDL_BlitSurface(scoreperdant, NULL, ecran.image, &position6);
 
-	SDL_Flip(ecran.image);
+	rafraichir(ecran.image);
 	TTF_CloseFont(police);
     TTF_Quit();
 
@@ -536,4 +531,14 @@ int VerifClicDansSurface(Input i, int x_hg, int y_hg, int x_bd, int y_db)
 		   i.mousex < x_bd && i.mousey > y_hg && i.mousey < y_db;
 }
 
+void affiche_coordonnees_clic(Input in)
+{
+	if (in.mousebuttons[SDL_BUTTON_LEFT])
+		printf("x : %d; y : %d\n", in.mousex, in.mousey);
+}
+
+void titre_fenetre(char *titre)
+{
+	SDL_WM_SetCaption(titre, NULL);
+}
 
