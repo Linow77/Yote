@@ -205,37 +205,37 @@ void affiche_coordonnees_clic(Input in)
 /** Permet de vérifier si l’utilisateur a cliqué sur le bouton quitter dans le premier menu **/
 int VerifQuitter(Input in)
 {
-	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONQUITTERX1)&&(in.mousex<BOUTTONQUITTERX2)&&(in.mousey>BOUTTONQUITTERY1)&&(in.mousey<BOUTTONQUITTERY2);
+	return VerifClicDansSurface(in, BOUTTONQUITTERX1, BOUTTONQUITTERY1, BOUTTONQUITTERX2, BOUTTONQUITTERY2);
 }
 
 /**  Permet de vérifier si l’utilisateur a cliqué sur le bouton jouer dans le premier menu  **/
 int VerifMenu1(Input in)
 {
-	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONJOUERX1)&&(in.mousex<BOUTTONJOUERX2)&&(in.mousey>BOUTTONJOUERY1)&&(in.mousey<BOUTTONJOUERY2);
+	return VerifClicDansSurface(in, BOUTTONJOUERX1, BOUTTONJOUERY1, BOUTTONJOUERX2, BOUTTONJOUERY2);
 }
 
 /**  Permet de vérifier si l’utilisateur clique sur le bouton 1 VS 1 **/
 int Verif1Vs1(Input in)
 {
-	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTON1V1X1)&&(in.mousex<BOUTTON1V1X2)&&(in.mousey>BOUTTON1V1Y1)&&(in.mousey<BOUTTON1V1Y2);
+	return VerifClicDansSurface(in, BOUTTON1V1X1, BOUTTON1V1Y1, BOUTTON1V1X2, BOUTTON1V1Y2);
 }
 
 /**  Permet de vérifier si l’utilisateur clique sur le bouton 1 VS IA **/
 int Verif1VsIA(Input in)
 {
-	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTON1VSIAX1)&&(in.mousex<BOUTTON1VSIAX2)&&(in.mousey>BOUTTON1VSIAY1)&&(in.mousey<BOUTTON1VSIAY2);
+	return VerifClicDansSurface(in, BOUTTON1VSIAX1, BOUTTON1VSIAY1, BOUTTON1VSIAX2, BOUTTON1VSIAY2);
 }
 
 /**  Permet de vérifier si l’utilisateur clique sur le bouton Mode simple **/
 int VerifModeSimple(Input in)
 {
-	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONSIMPLEX1)&&(in.mousex<BOUTTONSIMPLEX2)&&(in.mousey>BOUTTONSIMPLEY1)&&(in.mousey<BOUTTONSIMPLEY2);
+	return VerifClicDansSurface(in, BOUTTONSIMPLEX1, BOUTTONSIMPLEY1, BOUTTONSIMPLEX2, BOUTTONSIMPLEY2);
 }
 
 /**  Permet de vérifier si l’utilisateur clique sur le bouton Mode variante **/
 int VerifModeVariante(Input in)
 {
-	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONVARIANTEX1)&&(in.mousex<BOUTTONVARIANTEX2)&&(in.mousey>BOUTTONVARIANTEY1)&&(in.mousey<BOUTTONVARIANTEY2);
+	return VerifClicDansSurface(in, BOUTTONVARIANTEX1, BOUTTONVARIANTEY1, BOUTTONVARIANTEX2, BOUTTONVARIANTEY2);
 }
 
 int VerifMenuScores(Input in)
@@ -528,4 +528,12 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 }
 
 
- //MAIN
+/* Vérifie qu'un clic est contenu dans une zone entre 2 coordonnées :
+ * (x_hg, y_hg) et (x_bd, y_db) => (haut gauche) et (bas droite) */
+int VerifClicDansSurface(Input i, int x_hg, int y_hg, int x_bd, int y_db)
+{
+	return i.mousebuttons[SDL_BUTTON_LEFT] && i.mousex > x_hg &&
+		   i.mousex < x_bd && i.mousey > y_hg && i.mousey < y_db;
+}
+
+

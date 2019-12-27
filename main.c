@@ -287,8 +287,8 @@ int main(int argc, char *argv[])
 		//SI ON CLIC SUR QUITTER
 		if (VerifQuitter(in) &&(tour==0))
 		{
-			TTF_CloseFont(police);
-			TTF_Quit();
+			//TTF_CloseFont(police);// Erreur de segmentation
+			//TTF_Quit();
 			SDL_Quit();
 		}
 	}
