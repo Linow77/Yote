@@ -1,5 +1,5 @@
-
 #include "affichage.h"
+
 void chargement (Ressource *sprite)
 {
 	sprite->pion_d=SDL_LoadBMP("pion_demonv3.bmp");
@@ -8,13 +8,6 @@ void chargement (Ressource *sprite)
 	sprite->cache_info=SDL_LoadBMP("cache_info.bmp");
 	sprite->ecran_de_fin=SDL_LoadBMP("ecrandefin.bmp");
 }
-
-
-void rafraichir(SDL_Surface *s)
-{
-	SDL_Flip(s);
-}
-
 
 Case PointToCase(Point clic)
 {
@@ -509,6 +502,7 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	SDL_BlitSurface(pseudoperdant, NULL, ecran.image, &position4);
 	SDL_BlitSurface(scorevainqueur, NULL, ecran.image, &position5);
 	SDL_BlitSurface(scoreperdant, NULL, ecran.image, &position6);
+	affiche_image(scoreperdant, ecran.image, &position6);
 
 	rafraichir(ecran.image);
 	TTF_CloseFont(police);
@@ -531,14 +525,29 @@ int VerifClicDansSurface(Input i, int x_hg, int y_hg, int x_bd, int y_db)
 		   i.mousex < x_bd && i.mousey > y_hg && i.mousey < y_db;
 }
 
+/* Affiche les coordonnées d'un clic dans le terminal */
 void affiche_coordonnees_clic(Input in)
 {
 	if (in.mousebuttons[SDL_BUTTON_LEFT])
 		printf("x : %d; y : %d\n", in.mousex, in.mousey);
 }
 
+/* Modifie le titre de la fenêtre de jeu */
 void titre_fenetre(char *titre)
 {
 	SDL_WM_SetCaption(titre, NULL);
 }
+
+/* Rafraîchit l'écran de jeu */
+void rafraichir(SDL_Surface *s)
+{
+	SDL_Flip(s);
+}
+
+void affiche_image(SDL_Surface *fond, SDL_Surface *image, SDL_Rect *position)
+{
+	SDL_BlitSurface(fond, NULL, image, position);
+}
+
+
 

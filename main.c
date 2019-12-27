@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 
 	//CHARGEMENT DES IMAGES & POSITIONS DES OBJETS
 	chargement_objets(&fond, &ecran);
-    police = TTF_OpenFont("RuneicityDecorative001.ttf", 65);
+    police = TTF_OpenFont(POLICE, 65);
 
 	//GESTION DES EVENEMENTS :
 	memset(&in,0,sizeof(in));
