@@ -71,6 +71,8 @@ typedef struct
 	SDL_Surface* pion_d;
 	SDL_Surface* pion_h;
 	SDL_Surface* case_v;
+	SDL_Surface* cache_info;
+	SDL_Surface* ecran_de_fin;
 }Ressource ;
 
 /** CASE **/
@@ -119,7 +121,7 @@ void UpdateEvents(Input* in);
 void chargement_objets(img* fond,img* ecran);
 void affiche_menu(img fond, img ecran);
 int VerifDansPlateau(Point clic);
-void AfficherPion(img *pion, Ressource sprite, Point hg, int joueur);
+void AfficherPion(img ecran, img *pion, Ressource sprite, Point hg, int joueur);
 void SupprimerPion(img *caseVide, Ressource sprite, Point hg, int joueur);
 void InitPlateau();
 void Init_joueurs(Player players[]);
@@ -146,6 +148,8 @@ Case DetermineCaseASupprimer (Case case1, Case case2);
 
 
 
+void infoPartie(img ecran, Player joueurs[],Ressource sprite);
+void afficheFinJeu(img ecran, Ressource sprite, Player gagnant);
 
 
 
