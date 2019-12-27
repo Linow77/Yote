@@ -141,6 +141,7 @@ int VerifMenu1(Input in);
 int Verif1Vs1(Input in);
 int VerifModeSimple(Input in);
 int VerifModeVariante(Input in);
+int VerifMenuScores(Input in);
 void AppliqueCoup(Case pion, Case dest, TypeContents type);
 void ModifierNbPiece(Player *joueurAct, Player *joueurAdv );
 void AppliqueCoupV2(Case pion, Case adversaire, Case dest, Player *joueurAct, Player *joueurAdv );
@@ -158,6 +159,7 @@ Case DetermineCaseASupprimer (Case case1, Case case2);
 
 void infoPartie(img ecran, Player joueurs[],Ressource sprite);
 void afficheFinJeu(img ecran, Ressource sprite, Player gagnant);
+void rafraichir(SDL_Surface *s);
 
 
 

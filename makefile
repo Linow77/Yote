@@ -3,10 +3,10 @@ game: table_score.o affichage.o main.c
 
 table_score.o: table_score.c
 	echo table_score.c
-	gcc -o table_score.o -c table_score.c -W -Wall -pedantic
+	gcc -o table_score.o -c table_score.c -W -Wall
 
 
 affichage.o: affichage.c
 	echo affichage.c
-	gcc -o affichage.o -c affichage.c -W -Wall -pedantic -D_REENTRANT -I/usr/include/SDL  -L/usr/lib/x86_64-linux-gnu -lSDL -lSDL_ttf -lSDL_image
+	gcc -o affichage.o -c affichage.c -W -Wall -D_REENTRANT -I/usr/include/SDL  -L/usr/lib/x86_64-linux-gnu -lSDL -lSDL_ttf -lSDL_image
 

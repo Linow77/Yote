@@ -9,6 +9,12 @@ void chargement (Ressource *sprite)
 	sprite->ecran_de_fin=SDL_LoadBMP("ecrandefin.bmp");
 }
 
+/*
+void rafraichir(SDL_Surface *s)
+{
+	SDL_Flip(s);
+}*/
+
 
 Case PointToCase(Point clic)
 {
@@ -105,6 +111,7 @@ void affiche_menu(img fond, img ecran)
 	SDL_Flip(ecran.image);
 }
 
+/*
 void affiche_scores(TTF_Font *police, img fond, TableScore *t)
 {
 	SDL_Color couleurNoire = {0, 0, 0};
@@ -113,7 +120,7 @@ void affiche_scores(TTF_Font *police, img fond, TableScore *t)
 	fond.image=SDL_LoadBMP("scores_bg.jpg");
 	TTF_RenderText_Blended(police, "Salut les Zér0s !", couleurNoire);
 }
-
+*/
 
 /** Permet de vérifier si un clic appartient au plateau du jeu ou non  **/
 int VerifDansPlateau(Point clic)

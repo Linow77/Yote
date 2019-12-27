@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 			//puts("SCORES");
 			affiche_menu(fond,ecran);
 			//SDL_Flip(ecran.image);
-			affiche_scores(police, fond, &scores);
+			//affiche_scores(police, fond, &scores);
 			fond.image=SDL_LoadBMP("scores_bg.jpg");
 			affiche_menu(fond,ecran);
 			in.mousebuttons[SDL_BUTTON_LEFT]=0;
