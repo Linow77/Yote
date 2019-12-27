@@ -1,397 +1,300 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include "affichage.h"
 #include "table_score.h"
 
-// Structures
 
-typedef struct Case {
-    int x;
-    int y;
-} Case;
 
-typedef enum TypeContents {
-    VIDE, HOMME, DEMON
-} TypeContents;
-
-// TODO: Mouvement précédent à rajouter ?
-typedef struct Player {
-    TypeContents JoueurT;
-    int piece_cap;// nombre de pièces capturées
-    int piece_reserve;// - dans la réserve
-    int piece_plateau;// - sur le plateau
-    // char nom[20];
-} Player;
-
-typedef struct Move {
-    Case ancienne_position;
-    Case nouvelle_position;
-} Move;
-
-// Prototypes
-
-void TireAuSortJoueur(Player joueurs[]);
-void InitPlateau();
-void AffichePlateauCLI();
-void Init_joueur(Player *player);
-void Init_joueurs(Player players[]);
-void PlacerPion(Player *p);
-void RecupCoordonneesCLI(Case *c);
-void ChoisirPion(Player *p, Case *pion);
-void DeplacerPion(Player *p);
-Case *VerifMouvementsValides(Case depart, int *taille);
-void AppliqueCoup(Case pion, Case dest, TypeContents type);
-void SetCase(Case *c, int x, int y);
-int VerifCaseVide(Case c);
-int VerifPionsSurPlateau(TypeContents joueur);
-int VerifDeplacementOrthogonal(Case c1, Case c2);
-int MemeType(Case c, TypeContents type);
-int VerifMouvementsContraires(Move m1, Move m2);
-int EqlCase(Case c1, Case c2);
-int VerifDansPlateau(Case c);
-TypeContents Adversaire(TypeContents joueur);
-
-//void test_mouv();
-
-// Variable globale
-
-TypeContents plateau[5][6];
-
-// Main
-
-int main()
+int main(int argc, char *argv[])
 {
+	int tour= 0, joueur=0, estPremierClic=1, estCoupValide = 0, aMangerAdversaire = 0, JoueurAd;
+	int victoire=0;
+	Point clic, hg1,hg2, hgDelete;
+	Case case1, case2;
+	Player joueurs[2];
+	TTF_Font *police = NULL;
+	img fond,ecran,pion, case_vide;
+	Input in; //VARIABLE GESTION EVENEMENT
+	Ressource sprite;
+
+	// Tableau des scores
 	TableScore scores;
 	init_table_score(&scores);
 	alloc_table_score(&scores);
-	// lecture des scores depuis un fichier score.txt
-	// ! ne pas créer le fichier score.txt, il se crée tout seul !
 	get_scores(&scores);
+	test_insert(&scores);
 
-	input_score(&scores, 13, "toto");
-	input_score(&scores, 33, "jesus");
-	input_score(&scores, 64, "luke");
-	input_score(&scores, 30, "link");
-	input_score(&scores, 3, "mario");
-	input_score(&scores, 4, "obiwan");
-	//best_scores(&scores);// affichage dans le terminal
-	// sauvegarde des scores dans le fichier score.txt
+
+	/** INITIALISATION DU PLATEAU **/
+	InitPlateau();
+	/** INITIALISATION DES JOUEURS **/
+	Init_joueurs(joueurs);
+	/** tiré au sort du joueur **/
+	TireAuSortJoueur(joueurs);
+	/** CHARGEMENT DES IMAGES **/
+	chargement(&sprite);
+
+
+	//CHARGEMENT DES IMAGES & POSITIONS DES OBJETS
+	chargement_objets(&fond, &ecran);
+    police = TTF_OpenFont("RuneicityDecorative001.ttf", 65);
+
+	//GESTION DES EVENEMENTS :
+	memset(&in,0,sizeof(in));
+
+	//On affiche le menu si la partie n'a pas commencée MENU 0
+	affiche_menu(fond,ecran);
+
+	//AFFICHAGE FIN DE PARTIE
+	/*	if(victoire==0)
+		{
+			afficheFinJeu(ecran,sprite,joueurs[0]);
+
+		}
+	*/
+
+
+	while((!in.key[SDLK_ESCAPE]) && (!in.quit)) //TANT QUE L'UTILISATEUR N'A PAS QUITTÉ ou qu'il n'a pas gagné
+	{
+		UpdateEvents(&in);
+
+		//SI ON CLIC SUR UN BOUTON DU MENU
+		//affiche_coordonnees_clic(in);
+
+		//SI ON CLIC SUR JOUER MENU 1
+		if (VerifMenu1(in)&&(tour==0))
+		{
+			tour=1;
+			fond.image=SDL_LoadBMP("ChoixAdv.bmp");
+			affiche_menu(fond,ecran);
+
+			//On remet le compteur de clic à 0 pour pouvoir récuperer d'autres clic
+			in.mousebuttons[SDL_BUTTON_LEFT]=0;
+		}
+		if (VerifMenuScores(in) && tour == 0)
+		{
+			//puts("SCORES");
+			affiche_menu(fond,ecran);
+			//SDL_Flip(ecran.image);
+			affiche_scores(police, fond, &scores);
+			fond.image=SDL_LoadBMP("scores_bg.jpg");
+			affiche_menu(fond,ecran);
+			in.mousebuttons[SDL_BUTTON_LEFT]=0;
+			puts("Scores");
+		}
+
+		//SI ON CLIC SUR UN BOUTON DU MENU
+
+		//SI ON CLIC SUR JOUER MENU 1
+		//1 VS 1
+		if (Verif1Vs1(in)&&(tour==1))
+		{
+			tour=2;
+			fond.image=SDL_LoadBMP("menuChoix.bmp");
+			affiche_menu(fond,ecran);
+
+			in.mousebuttons[SDL_BUTTON_LEFT]=0;
+		}
+		//1 VS IA
+		if (Verif1VsIA(in)&&(tour==1))
+		{
+			tour=2;
+			fond.image=SDL_LoadBMP("menuChoix.bmp");
+			affiche_menu(fond,ecran);
+			in.mousebuttons[SDL_BUTTON_LEFT]=0;
+		}
+
+		//si on choisit le mode simple
+		if (VerifModeSimple(in)&&(tour==2))
+		{
+			tour=3;
+			fond.image=SDL_LoadBMP("table.bmp");
+			affiche_menu(fond,ecran);
+			infoPartie(ecran, joueurs,sprite);
+			in.mousebuttons[SDL_BUTTON_LEFT]=0;
+		}
+
+		//si on choisit le mode variante
+		if (VerifModeVariante(in)&&(tour==2))
+		{
+			tour=3;
+			fond.image=SDL_LoadBMP("table.bmp");
+			affiche_menu(fond,ecran);
+			infoPartie(ecran, joueurs,sprite);
+			in.mousebuttons[SDL_BUTTON_LEFT]=0;
+		}
+
+		//SI ON CLIC SUR SCORE
+		/* a venir */
+
+		// si on est dans le mode jeux simple et il existe des pions pour les deux joueurs sur le plateau
+		if(tour==3 && ( VerifPionsSurPlateau(joueurs[0]) || VerifPionsSurPlateau(joueurs[1]) || estPremierClic))
+		{
+
+			estCoupValide = 0;
+			//si l'utilisateur a cliqué sur le button gauche de la souris
+			if(in.mousebuttons[SDL_BUTTON_LEFT])
+			{
+				in.mousebuttons[SDL_BUTTON_LEFT]=0;
+				estPremierClic=0;
+				clic.x=in.mousex;
+				clic.y=in.mousey;
+
+				case1=PointToCase(clic);
+				// si cette case est dans le plateau
+				if(case1.x!=-1 && case1.y!=-1)
+
+				{
+					//si la case est vide
+					if(VerifCaseVide(case1))
+					{
+						estCoupValide = 1;
+						hg1=CaseToPointhg(case1);
+						AfficherPion(ecran,&pion, sprite, hg1, joueur);
+
+						ChangerContenuCase(case1, &joueurs[joueur]);
+
+						infoPartie(ecran, joueurs,sprite);
+
+						SDL_Flip(ecran.image);
+					}
+					//si la case de départ dipose un pion qui appartient au joueur
+					else if(VerifMemeType(case1, joueurs[joueur]))
+					{
+						in.mousebuttons[SDL_BUTTON_LEFT]=0;
+
+						//si l'utilisateur a cliqué sur le button gauche de la souris
+						UpdateEvents(&in);
+						do {
+							estCoupValide = 0;
+							UpdateEvents(&in);
+
+							if (in.mousebuttons[SDL_BUTTON_LEFT])
+							{
+
+								clic.x=in.mousex;
+								clic.y=in.mousey;
+
+								case2=PointToCase(clic);
+
+								//si la case destination est dans le plateau
+								if(case2.x!=-1 && case2.y!=-1)
+								{
+									in.mousebuttons[SDL_BUTTON_LEFT]=0;
+
+									if(VerifCaseVide(case2) && (VerifDeplacementOrthogonal(case1,case2)
+										|| VerifCoupValide(case1, case2, joueurs[joueur].JoueurT)))
+									{
+
+										// DANS LE CAS OU LE JOUEUR VEUT MANGER LE PION DE L'ADVERSAIRE
+										if(VerifCoupValide(case1, case2, joueurs[joueur].JoueurT))
+										{
+											aMangerAdversaire = 1;
+											Case caseASupprimer = DetermineCaseASupprimer(case1, case2);
+											hgDelete=CaseToPointhg(caseASupprimer);
+
+											JoueurAd=NbJoueurAdv(joueur);
+											AppliqueCoupV2(case1, caseASupprimer, case2, &joueurs[joueur], &joueurs[JoueurAd] );
+
+											// ON CHANGE LE JOUEUR POUR SUPPRIMER LE PION DE LADVERSAIRE
+											Changer_joueur(&joueur);
+											SupprimerPion(&case_vide,sprite, hgDelete, joueur);
+											// ON REVIENT SUR LE JOUEUR INITIAL
+											Changer_joueur(&joueur);
+
+											infoPartie(ecran, joueurs,sprite);
+											SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
+											SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
+											SDL_Flip(ecran.image);
+										}
+										else
+										{
+											AppliqueCoup(case1, case2, joueurs[joueur].JoueurT);
+										}
+
+										//Afin d'eviter la redondance du coup ce code va etre appliquer dans le cas ou on
+										//manger adversaire ou dans le cas ou on va faire juste un mouvement orthogonal
+										// c'est pour ca il est mis ici donc il sera appliquer qq soit le type de mouvement
+
+										estCoupValide = 1;
+
+										hg1=CaseToPointhg(case1);
+										hg2=CaseToPointhg(case2);
+
+										infoPartie(ecran, joueurs,sprite);
+										AfficherPion(ecran,&pion, sprite, hg2, joueur);
+										SupprimerPion(&case_vide,sprite, hg1, joueur);
+
+										SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
+										SDL_Flip(ecran.image);
+
+										// prendre deuxieme pion aux choix apres avoir manger le pion de ladversaire
+										if(aMangerAdversaire)
+										{
+											in.mousebuttons[SDL_BUTTON_LEFT]=0;
+
+											estCoupValide = 0;
+											do {
+												UpdateEvents(&in);
+
+												if (in.mousebuttons[SDL_BUTTON_LEFT])
+												{
+													clic.x=in.mousex;
+													clic.y=in.mousey;
+													// nouvelle case a manger de l'adversaire que l'on stocke dans case 2
+													case1=PointToCase(clic);
+													in.mousebuttons[SDL_BUTTON_LEFT]=0;
+
+													// on vérifie qu'il s'agit d'une case de l'adversaire
+													// et qu'elle n'est pas vide
+													if(plateau[case1.x][case1.y] != VIDE
+														&& plateau[case1.x][case1.y] != joueurs[joueur].JoueurT) {
+														estCoupValide = 1;
+														hgDelete=CaseToPointhg(case1);
+
+														JoueurAd=NbJoueurAdv(joueur);
+														AppliqueCoupV3(case1, &joueurs[joueur], &joueurs[JoueurAd]);
+
+														// ON CHANGE LE JOUEUR POUR SUPPRIMER LE NOUVEAU PION DE L'ADVERSAIRE
+														Changer_joueur(&joueur);
+														SupprimerPion(&case_vide,sprite, hgDelete, joueur);
+														// ON REVIENT SUR LE JOUEUR INITIAL
+														Changer_joueur(&joueur);
+
+														infoPartie(ecran, joueurs,sprite);
+														SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
+														SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
+														SDL_Flip(ecran.image);
+													}
+												}
+
+											} while(!estCoupValide && (!in.key[SDLK_ESCAPE]) && (!in.quit));
+
+										}
+									}
+								}
+							}
+						}while(!estCoupValide && (!in.key[SDLK_ESCAPE]) && (!in.quit));
+					}
+				}
+
+				if(estCoupValide)
+				{
+					Changer_joueur(&joueur);
+				}
+
+			}
+		}
+
+		//SI ON CLIC SUR QUITTER
+		if (VerifQuitter(in) &&(tour==0))
+		{
+			TTF_CloseFont(police);
+			TTF_Quit();
+			SDL_Quit();
+		}
+	}
+
 	save_score(&scores);
 	free_table_score(&scores);
 
-    return 0;
+	return EXIT_SUCCESS;
 }
-
-// Définition des fonctions
-
-// Temporaire
-void AffichePlateauCLI() {
-    int i, j, z;
-
-    for (z = 0; z != 5; z++) {
-        printf("--");
-    }
-    printf("-\n");
-    for (i = 0; i != 6; i++) {
-        for (j = 0; j != 5; j++) {
-            switch (plateau[i][j]) {
-                case VIDE:
-                    printf("| ");
-                    break;
-                case HOMME:
-                    printf("|H");
-                    break;
-                case DEMON:
-                    printf("|D");
-                    break;
-                default:
-                    printf("|x");
-            }
-        }
-        printf("|\n");
-        for (z = 0; z != 5; z++) {
-            printf("--");
-        }
-        printf("-\n");
-    }
-}
-
-// Temporaire
-void RecupCoordonneesCLI(Case *c) {
-    printf("Entrez les coordonnées de la case\n");
-    printf("x: ");
-    scanf(" %d", &c->x);
-    printf("y: ");
-    scanf(" %d", &c->y);
-}
-
-/* Initialise les cases du plateau à VIDE */
-void InitPlateau() {
-    int i, j;
-
-    for (i = 0; i != 6; i++) {
-        for (j = 0; j != 5; j++) {
-            plateau[i][j] = VIDE;
-        }
-    }
-}
-
-int VerifCaseVide(Case c) {
-    return plateau[c.y][c.x] == VIDE;
-}
-
-/* Vérifie que la joueur se déplace bien de haut en bas ou de bas
- * à gauche */
-// on peut l'enlever (voir fonction DeplacerPion)
-int VerifDeplacementOrthogonal(Case c1, Case c2) {
-    return (c1.x == c2.x && c1.y != c2.y) ||
-           (c1.x != c2.x && c1.y == c2.y);
-}
-
-/* On vérifie que le joueur a des pions sur le plateau */
-int VerifPionsSurPlateau(TypeContents joueur) {
-    int i, j;
-
-    for (i = 0; i != 6; i++) {
-        for (j = 0; j != 5; j++) {
-            if (plateau[i][j] == joueur)
-                return 0;// 0 == vrai
-        }
-    }
-
-    return 1;
-}
-
-/* Au début du jeu le 1er joueur est tiré au sort */
-void TireAuSortJoueur(Player joueurs[]) {
-    if (rand() % 2) {
-        joueurs[0].JoueurT = HOMME;
-        joueurs[1].JoueurT = DEMON;
-    }
-    else {
-        joueurs[0].JoueurT = DEMON;
-        joueurs[1].JoueurT = HOMME;
-    }
-}
-
-void Init_joueur(Player *player) {
-    *player = (Player) { HOMME, 0, 12, 0 };
-}
-
-void Init_joueurs(Player players[]) {
-    Init_joueur(&(players[0]));
-    Init_joueur(&(players[1]));
-}
-
-/* Placement d'un pion de la réserve
- * On suppose que la réserve n'est pas vide */
-void PlacerPion(Player *p) {
-    Case c;
-
-    do {
-        RecupCoordonneesCLI(&c);// TODO: à remplacer
-    } while (!VerifCaseVide(c));
-
-    plateau[c.y][c.x] = p->JoueurT;
-    p->piece_reserve--;
-    p->piece_plateau++;
-
-    /*
-     * test
-    Case *mouv = NULL;
-    int taille;
-    mouv = VerifMouvementsValides(c, &taille);
-    int i;
-    for (i = 0; i < taille; i++)
-        printf("%d %d\n", mouv[i].x, mouv[i].y);
-    free(mouv);
-    */
-}
-
-/* Le joueur choisit un pion du plateau */
-void ChoisirPion(Player *p, Case *pion) {
-    Case c;
-
-    do {
-        printf("Choisir pion\n");
-        RecupCoordonneesCLI(&c);// TODO: à remplacer
-        // on vérifie que le pion sélectionné est bien à soi
-    } while (!MemeType(c, p->JoueurT));
-
-    *pion = c;
-}
-
-int MemeType(Case c, TypeContents type) {
-    return plateau[c.y][c.x] == type;
-}
-
-// A renommer ?
-// Dans AppliqueCoup on déplace aussi le pion...
-void DeplacerPion(Player *p) {
-    Case pion, dest;
-
-    ChoisirPion(p, &pion);
-
-    // TODO: ChoisirDestination() ?
-    // {
-    do {
-        printf("Destination\n");
-        RecupCoordonneesCLI(&dest);// TODO: à remplacer
-        // TODO: Conditions à remplacer par autre chose:
-        // on vérifie que la destination est dans le
-        // tableau des mouvements possibles
-    } while (!(VerifCaseVide(dest) && VerifDeplacementOrthogonal(pion, dest)));
-    // }
-
-    AppliqueCoup(pion, dest, p->JoueurT);
-}
-
-void AppliqueCoup(Case pion, Case dest, TypeContents type)
-{
-    plateau[pion.y][pion.x] = VIDE;
-    plateau[dest.y][dest.x] = type;
-}
-
-// Renvoie les mouvements possible que peut faire un pion
-// Ne pas oublier le free !
-// A améliorer ?
-Case *VerifMouvementsValides(Case depart, int *taille)
-{
-    int i = 0;
-    TypeContents joueur;
-    TypeContents advers;
-    Case *mouv;
-    Case c;
-
-    joueur = plateau[depart.y][depart.x];
-    advers = Adversaire(joueur);
-    // le nombre de déplacements possible est au plus 4
-    mouv = (Case *) malloc(sizeof(Case) * 4);
-
-    // Horizontal
-    // s'il y a un adversaire à côté du joueur,
-    // le joueur peut sauter par-dessus le pion
-    // sinon il se déplace à côté
-    if (plateau[depart.y][depart.x - 1] == advers)
-    {
-        SetCase(&c, depart.x - 2, depart.y);
-        if (VerifDansPlateau(c))
-            if (VerifCaseVide(c))
-                mouv[i++] = c;
-    }
-    else
-    {
-        SetCase(&c, depart.x - 1, depart.y);
-        if (VerifDansPlateau(c))
-            if (VerifCaseVide(c))
-                mouv[i++] = c;
-    }
-
-    if (plateau[depart.y][depart.x + 1] == advers)
-    {
-        SetCase(&c, depart.x + 2, depart.y);
-        if (VerifDansPlateau(c))
-            if (VerifCaseVide(c))
-                mouv[i++] = c;
-    }
-    else
-    {
-        SetCase(&c, depart.x + 1, depart.y);
-        if (VerifDansPlateau(c))
-            if (VerifCaseVide(c))
-                mouv[i++] = c;
-    }
-
-    // Vertical
-    if (plateau[depart.y + 1][depart.x] == advers)
-    {
-        SetCase(&c, depart.x, depart.y + 2);
-        if (VerifDansPlateau(c))
-            if (VerifCaseVide(c))
-                mouv[i++] = c;
-    }
-    else
-    {
-        SetCase(&c, depart.x, depart.y + 1);
-        if (VerifDansPlateau(c))
-            if (VerifCaseVide(c))
-                mouv[i++] = c;
-    }
-
-    if (plateau[depart.y - 1][depart.x] == advers)
-    {
-        SetCase(&c, depart.x, depart.y - 2);
-        if (VerifDansPlateau(c))
-            if (VerifCaseVide(c))
-                mouv[i++] = c;
-    }
-    else
-    {
-        SetCase(&c, depart.x, depart.y - 1);
-        if (VerifDansPlateau(c))
-            if (VerifCaseVide(c))
-                mouv[i++] = c;
-    }
-
-    // on re alloue le tableau avec une nouvelle taille
-    if (i != 4)
-        mouv = (Case *) realloc(mouv, sizeof(Case) * i);
-
-    // le tableau est alloué dynamiquement, on a
-    // forcément besoin de sa taille
-    *taille = i;
-
-    return mouv;
-}
-
-// Vérifie qu'une coordonnée est bien dans le plateau
-// >= 0 et < 5 (abscisse)
-// >= 0 et < 6 (ordonnée)
-int VerifDansPlateau(Case c)
-{
-    return c.x >= 0 && c.x < 5 && c.y >= 0 && c.y < 6;
-}
-
-void SetCase(Case *c, int x, int y)
-{
-    c->x = x;
-    c->y = y;
-}
-
-// Renvoie le type de l'adversaire (DEMON ou HOMME)
-TypeContents Adversaire(TypeContents joueur)
-{
-    if (joueur == DEMON) return HOMME;
-    else return DEMON;
-}
-
-// Vérifie si un mouvement est égal à un autre
-// Remplacé par VerifSurSesPas
-int VerifMouvementsContraires(Move m1, Move m2)
-{
-    return EqlCase(m1.ancienne_position, m2.nouvelle_position) && EqlCase(m1.nouvelle_position, m2.ancienne_position);
-}
-
-// Vérifie qu'une case est égale à une autre
-int EqlCase(Case c1, Case c2)
-{
-    return c1.x == c2.x && c1.y == c2.y;
-}
-
-// Tests
-
-/*
-void test_mouv()
-{
-    Case c1 = { 3, 2 };
-    Case c2 = { 4, 2 };
-    Case c3 = { 5, 2 };
-    Move mouv  = (Move) { c1, c2 };
-    Move mouv2 = (Move) { c2, c1 };
-    Move mouv3 = (Move) { c3, c1 };
-    if (VerifMouvementsContraires(mouv, mouv2))
-        printf("meme mouvement\n");
-    if (!VerifMouvementsContraires(mouv, mouv3))
-        printf("pas Meme mouvement2\n");
-}
-*/
