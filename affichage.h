@@ -109,7 +109,8 @@ typedef struct Player {
     int piece_cap;// nombre de pièces capturées
     int piece_reserve;// - dans la réserve
     int piece_plateau;// - sur le plateau
-    // char nom[20];
+    char nom[10];
+    int score;
 } Player;
 
 /** MOUVEMENT **/
@@ -160,26 +161,8 @@ Case DetermineCaseASupprimer (Case case1, Case case2);
 
 
 void infoPartie(img ecran, Player joueurs[],Ressource sprite);
-void afficheFinJeu(img ecran, Ressource sprite, Player gagnant);
+void afficheFinJeu(img ecran, Ressource sprite, Player gagnant, Player perdant);
 
-void rafraichir(SDL_Surface *s);
 int VerifClicDansSurface(Input i, int x_hg, int y_hg, int x_bd, int y_db);
-void titre_fenetre(char *titre);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #endif

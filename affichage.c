@@ -159,13 +159,15 @@ void InitPlateau()
 void Init_joueurs(Player players[])
 {
 	Init_joueur(&(players[0]));
+	strcpy(players[0].nom, "Anastasia");
 	Init_joueur(&(players[1]));
+	strcpy(players[1].nom, "Carlotta");
 }
 
 /** Permet d’initialiser un joueur **/
 void Init_joueur(Player *player)
 {
-	*player = (Player) { VIDE, 0, 12, 0 };
+	*player = (Player) { VIDE, 0, 12, 0, "Joueur", 0};
 }
 
 /** Permet de faire un tirage au sort du premier joueur **/
@@ -411,12 +413,13 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite)
 	SDL_FreeSurface(texte3);
 }
 
-void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCUPÉRER LES SCORES DES JOUEURS
+void afficheFinJeu(img ecran, Ressource sprite, Player gagnant, Player perdant) // IL FAUT RÉCUPÉRER LES SCORES DES JOUEURS
 {
 	// a enlever
-	int score_joueur1=5, score_joueur2=0;
-	char pseudo_joueur1[10] = "Anastasii"; //LE PSEUDO EST DE 9 CARACTERE MAXIMUM
-	char pseudo_joueur2[10] = "Carla";
+	int score_joueur1, score_joueur2;
+	score_joueur1 = gagnant.score;
+	score_joueur1 = perdant.score;
+
 	// a enlever
 
 	/** AFFICHAGE DU FOND **/
@@ -456,8 +459,10 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	/** 	AFFICHAGES DU TABLEAU DE FIN 	**/
 	char victoire[9] = "victoire";
 	char defaite[8] = "defaite";
-	char pseudo_vainqueur[10] = "";
-	char pseudo_perdant[10] = "";
+	// Pas besoin de créer des tableaux de char, le nom est déjà dans la
+	// structure Player
+	//char pseudo_vainqueur[10] = "";
+	//char pseudo_perdant[10] = "";
 	char score_vainqueur[2] = "";
 	char score_perdant[2] = "";
 
@@ -468,17 +473,18 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 
 	TTF_Init(); // Appel de la fct qui perlet d'écrire
 
-	police = TTF_OpenFont("RuneicityDecorative001.ttf", 62); //on charge la police
+	police = TTF_OpenFont(POLICE, 62); //on charge la police
 
 	SDL_Color couleurBordeau = {139, 3, 3};
 	SDL_Color couleurNoire = {0, 0, 0};
 	SDL_Surface *textevictoire = NULL , *textedefaite = NULL, *pseudovainqueur = NULL, *pseudoperdant = NULL, *scorevainqueur = NULL, *scoreperdant = NULL; //initialisation des surface de texte et d'effacement
 	SDL_Rect position1,position2,position3, position4, position5, position6; //initialisation des positions des surfaces
 
+	// Convertit int -> string
 	sprintf(score_vainqueur, "%d", score_joueur1);
 	sprintf(score_perdant, "%d", score_joueur2);
-	sprintf(pseudo_vainqueur, "%s", pseudo_joueur1);
-	sprintf(pseudo_perdant, "%s", pseudo_joueur2);
+	//sprintf(pseudo_vainqueur, "%s", pseudo_joueur1);
+	//sprintf(pseudo_perdant, "%s", pseudo_joueur2);
 
 
 	TTF_SetFontStyle(police, TTF_STYLE_BOLD | TTF_STYLE_UNDERLINE);
@@ -487,8 +493,8 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 
 	police = TTF_OpenFont("RuneicityDecorative001.ttf", 40); //on charge la police
 	TTF_SetFontStyle(police, TTF_STYLE_NORMAL);
-	pseudovainqueur = TTF_RenderText_Blended(police,pseudo_vainqueur, couleurBordeau);
-	pseudoperdant = TTF_RenderText_Blended(police,pseudo_perdant, couleurNoire);
+	pseudovainqueur = TTF_RenderText_Blended(police, gagnant.nom, couleurBordeau);
+	pseudoperdant = TTF_RenderText_Blended(police, perdant.nom, couleurNoire);
 	scorevainqueur = TTF_RenderText_Blended(police,score_vainqueur, couleurBordeau);
 	scoreperdant = TTF_RenderText_Blended(police,score_perdant, couleurNoire);
 

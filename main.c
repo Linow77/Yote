@@ -10,7 +10,6 @@ int main(int argc, char *argv[])
 	Point clic, hg1,hg2, hgDelete;
 	Case case1, case2;
 	Player joueurs[2];
-	TTF_Font *police = NULL;
 	img fond,ecran,pion, case_vide;
 	Input in; //VARIABLE GESTION EVENEMENT
 	Ressource sprite;
@@ -27,6 +26,8 @@ int main(int argc, char *argv[])
 	InitPlateau();
 	/** INITIALISATION DES JOUEURS **/
 	Init_joueurs(joueurs);
+	joueurs[0].score = get_score_by_name(&scores, joueurs[0].nom);
+	joueurs[1].score = get_score_by_name(&scores, joueurs[1].nom);
 	/** tiré au sort du joueur **/
 	TireAuSortJoueur(joueurs);
 	/** CHARGEMENT DES IMAGES **/
@@ -35,7 +36,6 @@ int main(int argc, char *argv[])
 
 	//CHARGEMENT DES IMAGES & POSITIONS DES OBJETS
 	chargement_objets(&fond, &ecran);
-    police = TTF_OpenFont(POLICE, 65);
 
 	//GESTION DES EVENEMENTS :
 	memset(&in,0,sizeof(in));
@@ -44,12 +44,12 @@ int main(int argc, char *argv[])
 	affiche_menu(fond,ecran);
 
 	//AFFICHAGE FIN DE PARTIE
-	/*	if(victoire==0)
+		if(victoire==0)
 		{
-			afficheFinJeu(ecran,sprite,joueurs[0]);
+			afficheFinJeu(ecran, sprite, joueurs[0], joueurs[1]);
 
 		}
-	*/
+
 
 
 	while((!in.key[SDLK_ESCAPE]) && (!in.quit)) //TANT QUE L'UTILISATEUR N'A PAS QUITTÉ ou qu'il n'a pas gagné
