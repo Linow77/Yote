@@ -88,7 +88,7 @@ void chargement_objets(img* fond,img* ecran)
 
 
 	// Nom du jeu
-	titre_fenetre("YOTE");
+	SDL_WM_SetCaption("YOTE", NULL);
 
 	// Chargement Fond
 	fond->position.x = 0;
@@ -101,7 +101,7 @@ void chargement_objets(img* fond,img* ecran)
 void affiche_menu(img fond, img ecran)
 {
 	SDL_BlitSurface(fond.image, NULL, ecran.image, &fond.position);
-	rafraichir(ecran.image);
+	SDL_Flip(ecran.image);
 }
 
 /*
@@ -401,7 +401,7 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite)
 
 	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position);
 
-	rafraichir(ecran.image);
+	SDL_Flip(ecran.image);
 	TTF_CloseFont(police);
     TTF_Quit();
 
@@ -504,7 +504,7 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	SDL_BlitSurface(scoreperdant, NULL, ecran.image, &position6);
 	SDL_BlitSurface(scoreperdant, NULL, ecran.image, &position6);
 
-	rafraichir(ecran.image);
+	SDL_Flip(ecran.image);
 	TTF_CloseFont(police);
     TTF_Quit();
 
@@ -532,17 +532,6 @@ void affiche_coordonnees_clic(Input in)
 		printf("x : %d; y : %d\n", in.mousex, in.mousey);
 }
 
-/* Modifie le titre de la fenêtre de jeu */
-void titre_fenetre(char *titre)
-{
-	SDL_WM_SetCaption(titre, NULL);
-}
-
-/* Rafraîchit l'écran de jeu */
-void rafraichir(SDL_Surface *s)
-{
-	SDL_Flip(s);
-}
 
 
 
