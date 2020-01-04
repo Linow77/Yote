@@ -639,6 +639,29 @@ int dans_le_plateau(Case c)
 	return c.x != -1 && c.y != -1;
 }
 
+void mange_adversaire(int *aMangerAdversaire, Case caseSelection,
+					  Case caseDeplacement, int *joueur, Player joueurs[],
+					  img *case_vide, img *pion, Ressource sprite, img ecran)
+{
+	*aMangerAdversaire = 1;
+	Case caseASupprimer = DetermineCaseASupprimer(caseSelection, caseDeplacement);
+	Point hgDelete = CaseToPointhg(caseASupprimer);
+
+	int JoueurAd = NbJoueurAdv(*joueur);
+	AppliqueCoupV2(caseSelection, caseASupprimer, caseDeplacement, &joueurs[*joueur], &joueurs[JoueurAd] );
+
+	// ON CHANGE LE JOUEUR POUR SUPPRIMER LE PION DE LADVERSAIRE
+	Changer_joueur(joueur);
+	SupprimerPion(case_vide,sprite, hgDelete, *joueur);
+	// ON REVIENT SUR LE JOUEUR INITIAL
+	Changer_joueur(joueur);
+
+	infoPartie(ecran, joueurs, sprite);
+	SDL_BlitSurface(pion->image, NULL, ecran.image, &(pion->position));
+	SDL_BlitSurface(case_vide->image, NULL, ecran.image, &(case_vide->position));
+	SDL_Flip(ecran.image);
+}
+
  //MAIN
 
 int main(int argc, char *argv[])
@@ -810,6 +833,7 @@ int main(int argc, char *argv[])
 						in.mousebuttons[SDL_BUTTON_LEFT]=0;
 
 						//si l'utilisateur a cliqué sur le button gauche de la souris
+						// L'utilisateur clique sur la case d'arrivée
 						UpdateEvents(&in);
 						do {
 							estCoupValide = 0;// faux
@@ -841,6 +865,12 @@ int main(int argc, char *argv[])
 										// DANS LE CAS OU LE JOUEUR VEUT MANGER LE PION DE L'ADVERSAIRE
 										if(VerifCoupValide(caseSelection, caseDeplacement, joueurs[joueur].JoueurT))
 										{
+
+											/* Erreur de segmentation
+											 * mange_adversaire(&aMangerAdversaire, caseSelection,
+															 caseDeplacement, &joueur, joueurs,
+															 &case_vide, &pion, sprite, ecran);
+															 */
 											aMangerAdversaire = 1;
 											Case caseASupprimer = DetermineCaseASupprimer(caseSelection, caseDeplacement);
 											hgDelete=CaseToPointhg(caseASupprimer);
