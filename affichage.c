@@ -138,7 +138,7 @@ void SupprimerPion(img *caseVide, Ressource sprite, Point hg, int joueur)
 }
 
 /** Permet d’initialiser les cases du plateau à VIDE **/
-void InitPlateau() 
+void InitPlateau()
 {
 	int i, j;
 
@@ -150,20 +150,20 @@ void InitPlateau()
 }
 
 /** Initialiser Les joueurs **/
-void Init_joueurs(Player players[]) 
+void Init_joueurs(Player players[])
 {
 	Init_joueur(&(players[0]));
 	Init_joueur(&(players[1]));
 }
 
 /** Permet d’initialiser un joueur **/
-void Init_joueur(Player *player) 
+void Init_joueur(Player *player)
 {
 	*player = (Player) { VIDE, 0, 12, 0 };
 }
 
 /** Permet de faire un tirage au sort du premier joueur **/
-void TireAuSortJoueur(Player joueurs[]) 
+void TireAuSortJoueur(Player joueurs[])
 {
 	if (rand() % 2) {
 		joueurs[0].JoueurT = HOMME;
@@ -273,7 +273,7 @@ int VerifCaseVide(Case c)
 }
 
 /** Vérifie que la joueur se déplace Orthogonalement et d'une seule case **/
-int VerifDeplacementOrthogonal(Case c1, Case c2) 
+int VerifDeplacementOrthogonal(Case c1, Case c2)
 {
 	if ( c2.x == c1.x )
 	{
@@ -310,7 +310,7 @@ int VerifDeplacementOrthogonal(Case c1, Case c2)
 				return 1;
 			}
 		}
-		
+
 		if(caseDepart.x > caseArrivee.x) {
 			if(plateau[caseArrivee.x +1][caseArrivee.y] != VIDE && plateau[caseArrivee.x +1][caseArrivee.y] != type) {
 				return 1;
@@ -360,12 +360,12 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite)
 	char pionM2[2] = "";  /*Tableau de char suffisamment grand pour contenir le nombre de pions mangés du J2*/
 	char pionR1[2] = "";  /*Tableau de char suffisamment grand pour contenir le nombre de pions restants du J1*/
 	char pionR2[2] = "";  /*Tableau de char suffisamment grand pour contenir le nombre de pions restants du J2*/
-	
+
 	TTF_Font *police = NULL; //initialisation de la police
-	
+
 	TTF_Init(); // Appel de la fct qui permet d'écrire
 	police = TTF_OpenFont("RuneicityDecorative001.ttf", 30); //on charge la police
-	SDL_Color couleurNoire = {0, 0, 0}; 
+	SDL_Color couleurNoire = {0, 0, 0};
 	SDL_Surface *texte = NULL , *texte1 = NULL, *texte2 = NULL, *texte3 = NULL; //initialisation des surface de texte et d'effacement
 	SDL_Rect position,position1,position2,position3; //initialisation des positions des surfaces
 
@@ -373,33 +373,33 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite)
 	sprintf(pionM1, "%d", joueurs[1].piece_cap);
 	sprintf(pionM2, "%d", joueurs[0].piece_cap);
 	sprintf(pionR2, "%d", joueurs[0].piece_reserve);
-	
+
 	texte = TTF_RenderText_Blended(police,pionM1, couleurNoire); //on charge le texte avec la couleur et la police
 	texte1 = TTF_RenderText_Blended(police,pionM2, couleurNoire);
 	texte2 = TTF_RenderText_Blended(police,pionR1, couleurNoire);
 	texte3 = TTF_RenderText_Blended(police,pionR2, couleurNoire);
-	
-	position.x = 195;	position1.x = 780;	position2.x = 315;	position3.x = 640; 
+
+	position.x = 195;	position1.x = 780;	position2.x = 315;	position3.x = 640;
 	position.y = 20;	position1.y = 20;	position2.y = 65;	position3.y = 65;
-	
-	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position); // efface le texte potentielment précedement 
+
+	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position); // efface le texte potentielment précedement
 	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position1);
 	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position2);
 	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position3);
-	
-	SDL_BlitSurface(texte, NULL, ecran.image, &position2); //on écrit le nouveau texte 
+
+	SDL_BlitSurface(texte, NULL, ecran.image, &position2); //on écrit le nouveau texte
 	SDL_BlitSurface(texte1, NULL, ecran.image, &position3);
 	SDL_BlitSurface(texte2, NULL, ecran.image, &position);
-	SDL_BlitSurface(texte3, NULL, ecran.image, &position1); 
-	
+	SDL_BlitSurface(texte3, NULL, ecran.image, &position1);
+
 	position.x=position.x+35;
-	
+
 	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position);
-	
+
 	SDL_Flip(ecran.image);
 	TTF_CloseFont(police);
     TTF_Quit();
-    
+
 	SDL_FreeSurface(texte);
 	SDL_FreeSurface(texte1);
 	SDL_FreeSurface(texte2);
@@ -421,33 +421,33 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 
 	SDL_BlitSurface(sprite.ecran_de_fin, NULL, ecran.image, &position);
 
-	
+
 	/** 	AFFICHAGE DES PIONS 	**/
 	img pion;
 	Point position_pion;
 	position_pion.x = 220;
 	position_pion.y = 350;
-	
+
 	if (gagnant.JoueurT == HOMME)
 	{
 		//affichage pion homme
 		AfficherPion(ecran,&pion, sprite, position_pion, 1);
-		
+
 		position_pion.x = position_pion.x + 450;
 		//affichage pion démon
 		AfficherPion(ecran,&pion, sprite, position_pion, 0);
-		
-		
+
+
 	}else{
 		//affichage pion démon
 		AfficherPion(ecran,&pion, sprite, position_pion, 0);
-		
+
 		position_pion.x = position_pion.x + 450;
 		//affichage pion homme
 		AfficherPion(ecran,&pion, sprite, position_pion, 1);
-		
+
 	}
-	
+
 	/** 	AFFICHAGES DU TABLEAU DE FIN 	**/
 	char victoire[9] = "victoire";
 	char defaite[8] = "defaite";
@@ -455,18 +455,18 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	char pseudo_perdant[10] = "";
 	char score_vainqueur[2] = "";
 	char score_perdant[2] = "";
-	
 
-	
+
+
 
 	TTF_Font *police = NULL; //initialisation de la police
-	
+
 	TTF_Init(); // Appel de la fct qui perlet d'écrire
 
 	police = TTF_OpenFont("RuneicityDecorative001.ttf", 62); //on charge la police
 
 	SDL_Color couleurBordeau = {139, 3, 3};
-	SDL_Color couleurNoire = {0, 0, 0}; 
+	SDL_Color couleurNoire = {0, 0, 0};
 	SDL_Surface *textevictoire = NULL , *textedefaite = NULL, *pseudovainqueur = NULL, *pseudoperdant = NULL, *scorevainqueur = NULL, *scoreperdant = NULL; //initialisation des surface de texte et d'effacement
 	SDL_Rect position1,position2,position3, position4, position5, position6; //initialisation des positions des surfaces
 
@@ -475,7 +475,7 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	sprintf(pseudo_vainqueur, "%s", pseudo_joueur1);
 	sprintf(pseudo_perdant, "%s", pseudo_joueur2);
 
-	
+
 	TTF_SetFontStyle(police, TTF_STYLE_BOLD | TTF_STYLE_UNDERLINE);
 	textevictoire = TTF_RenderText_Blended(police,victoire, couleurBordeau); //on charge le texte avec la couleur et la police
 	textedefaite = TTF_RenderText_Blended(police,defaite, couleurNoire);
@@ -487,16 +487,16 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	scorevainqueur = TTF_RenderText_Blended(police,score_vainqueur, couleurBordeau);
 	scoreperdant = TTF_RenderText_Blended(police,score_perdant, couleurNoire);
 
-	position1.x = 150;	position2.x = 600;	position3.x = 150;	position4.x = 600; position5.x = 400;	position6.x = 850; 
+	position1.x = 150;	position2.x = 600;	position3.x = 150;	position4.x = 600; position5.x = 400;	position6.x = 850;
 	position1.y = 250;	position2.y = 250;	position3.y = 520;	position4.y = 520; position5.y = 520;	position6.y = 520;
 
 
-	SDL_BlitSurface(textevictoire, NULL, ecran.image, &position1); //on écrit le nouveau texte 
+	SDL_BlitSurface(textevictoire, NULL, ecran.image, &position1); //on écrit le nouveau texte
 	SDL_BlitSurface(textedefaite, NULL, ecran.image, &position2);
 	SDL_BlitSurface(pseudovainqueur, NULL, ecran.image, &position3);
-	SDL_BlitSurface(pseudoperdant, NULL, ecran.image, &position4); 
-	SDL_BlitSurface(scorevainqueur, NULL, ecran.image, &position5); 
-	SDL_BlitSurface(scoreperdant, NULL, ecran.image, &position6); 
+	SDL_BlitSurface(pseudoperdant, NULL, ecran.image, &position4);
+	SDL_BlitSurface(scorevainqueur, NULL, ecran.image, &position5);
+	SDL_BlitSurface(scoreperdant, NULL, ecran.image, &position6);
 
 	SDL_Flip(ecran.image);
 	TTF_CloseFont(police);
@@ -514,17 +514,17 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
  */
  int rand_a_b(int a, int b) {
 	 static int first = 0;
-	 
+
 	 if(first == 0) {
 		 // pour générer des nombres alétoires différents à chaque nouvelle execution du programme
-		 // le srand est executé une seule fois 
+		 // le srand est executé une seule fois
 		 srand(time (NULL));
 		 first = 1;
 	 }
-	 
+
 	 return rand()%b + a;
  }
- 
+
  /** Méthode qui permet de récuperer les coordonnées x y d'une case ou l'IA Peut se déplacer **/
 Case RecupCaseArriveeIA (Case caseDepart)
 {
@@ -533,13 +533,13 @@ Case RecupCaseArriveeIA (Case caseDepart)
 	caseArriveeIA.y = -1;
 	int x = caseDepart.x;
 	int y = caseDepart.y;
-	
+
 	// si la case sur notre gauche contient un demon et que la case à gauche du demon est vide alors
-	// on peut déplacer le pion controlé par l'IA 
+	// on peut déplacer le pion controlé par l'IA
 	 if (x-2 >= 0 && plateau[x - 1][y] == DEMON && plateau[x - 2][y] == VIDE) {
 		caseArriveeIA.x = x - 2;
 		caseArriveeIA.y = y;
-		
+
 	// si la case en haut contient un demon et que la case en haut du demon est vide alors
 	// on peut déplacer le pion controlé par l'IA vers le haut
 	} else if (y-2 >= 0 && plateau[x][y-1] == DEMON && plateau[x][y - 2] == VIDE) {
@@ -547,7 +547,7 @@ Case RecupCaseArriveeIA (Case caseDepart)
 		caseArriveeIA.y = y - 2;
 
 	// si la case sur notre droite contient un demon et que la case à droite du demon est vide alors
-	// on peut déplacer le pion controlé par l'IA 
+	// on peut déplacer le pion controlé par l'IA
 	} else if (x+2 < 6 && plateau[x+1][y] == DEMON && plateau[x + 2][y] == VIDE) {
 		caseArriveeIA.x = x + 2;
 		caseArriveeIA.y = y;
@@ -557,12 +557,12 @@ Case RecupCaseArriveeIA (Case caseDepart)
 	} else if (y+2 < 4 && plateau[x][y+1] == DEMON && plateau[x][y + 2] == VIDE) {
 		caseArriveeIA.x = x;
 		caseArriveeIA.y = y + 2;
-		
+
 	// si la case à gauche est vide alors on peut déplacer le pion vers la gauche
 	} else if(x-1 >= 0 && plateau[x-1][y] == VIDE ) {
 		caseArriveeIA.x = x -1;
 		caseArriveeIA.y = y;
-		
+
 	// si la case en haut est vide alors on peut déplacer le pion vers le haut
 	} else if (y-1 >= 0 && plateau[x][y-1] == VIDE) {
 		caseArriveeIA.x = x;
@@ -577,7 +577,7 @@ Case RecupCaseArriveeIA (Case caseDepart)
 	} else if (y+1 < 4 && plateau[x][y+1] == VIDE) {
 		caseArriveeIA.x = x;
 		caseArriveeIA.y = y + 1;
-		
+
 	}
 
 	return caseArriveeIA;
@@ -587,7 +587,7 @@ Case RecupCaseArriveeIA (Case caseDepart)
 Case RecupCaseDeSelectionIA () {
 	Case caseSelectionIA;
 	int nombrePionHommePlateau = 0;
-	
+
 	// on compte le nombre de pion sur le plateau de l'IA
 	// pour utilisation ultérieur
 	for(int i = 0; i < 6; i ++) {
@@ -597,7 +597,7 @@ Case RecupCaseDeSelectionIA () {
 			}
 		}
 	}
-	
+
 	// Si le nombre de pion sur le plateau est supérieur ou égale à 4
 	// alors l'IA sélectionne un pion qui lui appartient pour le déplacer
 	if(nombrePionHommePlateau >= 4) {
@@ -609,9 +609,9 @@ Case RecupCaseDeSelectionIA () {
 				}
 			}
 		}
-		
-	} 
-	else  
+
+	}
+	else
 	{
 		// sinon on prend une case aléatoire pour faire le placement du pion sur le tableau
 		caseSelectionIA.x = rand_a_b(0, 6);
@@ -621,20 +621,32 @@ Case RecupCaseDeSelectionIA () {
 	return caseSelectionIA;
 }
 
+/* Place un pion sur l'interface graphique et dans le plateau de jeu */
+void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
+				 Ressource sprite, int joueur, Player joueurs[])
+{
+	*estCoupValide = 1;
+	Point hg1=CaseToPointhg(caseSelection);
+	AfficherPion(ecran, pion, sprite, hg1, joueur);
+	ChangerContenuCase(caseSelection, &joueurs[joueur]);
+	infoPartie(ecran, joueurs,sprite);
+	SDL_Flip(ecran.image);
+}
+
  //MAIN
 
 int main(int argc, char *argv[])
 {
 	int tour= 0, joueur=0, estPremierClic=1, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, JoueurAd;
 	Point clic, hg1, hg2, hgDelete;
-	
+
 	Case caseSelection, caseDeplacement;
 	Case caseArriveeIA;
 	Player joueurs[2];
 	img fond,ecran,pion, case_vide;
 	Input in; //VARIABLE GESTION EVENEMENT
 	Ressource sprite;
-	
+
 	/** INITIALISATION DU PLATEAU **/
 	InitPlateau();
 	/** INITIALISATION DES JOUEURS **/
@@ -643,7 +655,7 @@ int main(int argc, char *argv[])
 	TireAuSortJoueur(joueurs);
 	/** CHARGEMENT DES IMAGES **/
 	chargement(&sprite);
-	
+
 
 	//CHARGEMENT DES IMAGES & POSITIONS DES OBJETS
 	chargement_objets(&fond, &ecran);
@@ -676,7 +688,7 @@ int main(int argc, char *argv[])
 			//On remet le compteur de clic à 0 pour pouvoir récuperer d'autres clic
 			in.mousebuttons[SDL_BUTTON_LEFT]=0;
 		}
-		
+
 		//SI ON CLIC SUR UN BOUTON DU MENU
 
 		//SI ON CLIC SUR JOUER MENU 1
@@ -723,57 +735,57 @@ int main(int argc, char *argv[])
 
 		//SI ON CLIC SUR SCORE
 		/* a venir */
-		
-		// si on est dans le mode jeux simple ou mode variante et il existe des pions pour les deux joueurs sur le plateau et le jeu n'est pas fini 
+
+		// si on est dans le mode jeux simple ou mode variante et il existe des pions pour les deux joueurs sur le plateau et le jeu n'est pas fini
 		if(tour==3 && ( VerifPionsSurPlateau(joueurs[0]) || VerifPionsSurPlateau(joueurs[1]) || estPremierClic) && !estGameOver)
-		{	
-			
+		{
+
 			estCoupValide = 0;
 			//si l'utilisateur a cliqué sur le button gauche de la souris ou s'il s'agit du joueur HOMME contrôlé par l'IA
 			if(in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && joueurs[joueur].JoueurT==HOMME) )
 			{
 				in.mousebuttons[SDL_BUTTON_LEFT]=0;
 				estPremierClic=0;
-				
+
 				//on va supposer que le joueur HOMME est l'IA
-				if(estVSIA && joueurs[joueur].JoueurT==HOMME ) 
-				{ 
+				if(estVSIA && joueurs[joueur].JoueurT==HOMME )
+				{
 					int choixCaseIAAutorise = 0;
 
 					do {
-						
+
 						caseSelection = RecupCaseDeSelectionIA();
-												
-						// on vérifie que l'IA sélectionne un pion qui lui appartient 
+
+						// on vérifie que l'IA sélectionne un pion qui lui appartient
 						//(car on peut sélectionner un pion VIDE avec le random)
 						if(plateau[caseSelection.x][caseSelection.y] == HOMME) {
 							// on récupére une case d'arrivee autorisé pour le déplacement
 							caseArriveeIA = RecupCaseArriveeIA(caseSelection);
-							
+
 							if(caseArriveeIA.x != -1) {
 								choixCaseIAAutorise = 1;
-							} 
-						} 
+							}
+						}
 						// si l'IA sélectionne une case vide alors le choix de la case pa l'IA est autorisé
-						else if(plateau[caseSelection.x][caseSelection.y] == VIDE) 
+						else if(plateau[caseSelection.x][caseSelection.y] == VIDE)
 						{
 							choixCaseIAAutorise = 1;
 						}
-						
-						
+
+
 					// on répéte l'opération tant que  l'on a pas sélectioné une case valide pour l'IA
 					} while (!choixCaseIAAutorise);
-					
 
-				} 
+
+				}
 				// Quand le joueur n'est pas contrôle par l'IA On sélectionne le clic de l'adversaire manuellement
-				else 
+				else
 				{
 					clic.x=in.mousex;
 					clic.y=in.mousey;
 					caseSelection=PointToCase(clic);
 				}
-				
+
 
 				// si cette case est dans le plateau
 				if(caseSelection.x!=-1 && caseSelection.y!=-1)
@@ -783,13 +795,9 @@ int main(int argc, char *argv[])
 					{
 						// on vérifie qu'il dispose d'une reserve de pièce suffisante
 						if(joueurs[joueur].piece_reserve>0)
-						{	
-							estCoupValide = 1;
-							hg1=CaseToPointhg(caseSelection);
-							AfficherPion(ecran,&pion, sprite, hg1, joueur);
-							ChangerContenuCase(caseSelection, &joueurs[joueur]);
-							infoPartie(ecran, joueurs,sprite);
-							SDL_Flip(ecran.image);
+						{
+							placer_pion(&estCoupValide, caseSelection, ecran,
+										&pion, sprite, joueur, joueurs);
 						}
 					}
 					//si la case de sélection contient un pion qui appartient au joueur
@@ -806,11 +814,11 @@ int main(int argc, char *argv[])
 							if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && joueurs[joueur].JoueurT==HOMME))
 							{
 
-								if(estVSIA && joueurs[joueur].JoueurT==HOMME ) 
+								if(estVSIA && joueurs[joueur].JoueurT==HOMME )
 								{
 									caseDeplacement = caseArriveeIA;
 
-								} else 
+								} else
 								{
 									clic.x=in.mousex;
 									clic.y=in.mousey;
@@ -864,15 +872,15 @@ int main(int argc, char *argv[])
 										infoPartie(ecran, joueurs,sprite);
 										AfficherPion(ecran,&pion, sprite, hg2, joueur);
 										SupprimerPion(&case_vide,sprite, hg1, joueur);
-										
+
 										SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 										SDL_Flip(ecran.image);
 
 										// si on est dans le mode simple
-										// prendre deuxieme pion aux choix apres avoir manger le pion de ladversaire 
+										// prendre deuxieme pion aux choix apres avoir manger le pion de ladversaire
 										// c'est pour cela que l'on vérifie que le nombre de piece sur le plateau du joueur adverse est > 0
-										if((!estModeVariante && aMangerAdversaire && joueurs[JoueurAd].piece_plateau > 0) || 
-										(estModeVariante && aMangerAdversaire && joueurs[JoueurAd].piece_reserve > 0)) 
+										if((!estModeVariante && aMangerAdversaire && joueurs[JoueurAd].piece_plateau > 0) ||
+										(estModeVariante && aMangerAdversaire && joueurs[JoueurAd].piece_reserve > 0))
 										{
 											in.mousebuttons[SDL_BUTTON_LEFT]=0;
 
@@ -923,7 +931,7 @@ int main(int argc, char *argv[])
 														SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
 														SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 														SDL_Flip(ecran.image);
-													} 
+													}
 												}
 
 											} while(!estCoupValide && (!in.key[SDLK_ESCAPE]) && (!in.quit));
@@ -943,9 +951,9 @@ int main(int argc, char *argv[])
 					// plateau sont égales à 0
 					// Pour le mode simple le message game over s'affiche si le nombre de piece dans de le plateau est égale
 					// à 0
-					if( (estModeVariante && joueurs[joueur].piece_plateau == 0 && joueurs[joueur].piece_reserve == 0) || 
+					if( (estModeVariante && joueurs[joueur].piece_plateau == 0 && joueurs[joueur].piece_reserve == 0) ||
 						(!estModeVariante && joueurs[joueur].piece_plateau == 0 && aMangerAdversaire)) {
-						
+
 						// ici afficher le message de game over à l'écran
 						printf("Game over\n");
 						estGameOver = 1;
@@ -955,13 +963,13 @@ int main(int argc, char *argv[])
 				}
 			}
 		}
-		
+
 		//SI ON CLIC SUR QUITTER
 		if (VerifQuitter(in) &&(tour==0))
-		{		
+		{
 			//SDL_FreeSurface(text);
 			SDL_Quit();
-			
+
 		}
 	}
 	return EXIT_SUCCESS;
