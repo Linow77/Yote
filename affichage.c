@@ -418,7 +418,7 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant, Player perdant) 
 	// a enlever
 	int score_joueur1, score_joueur2;
 	score_joueur1 = gagnant.score;
-	score_joueur1 = perdant.score;
+	score_joueur2 = perdant.score;
 
 	// a enlever
 
@@ -529,6 +529,11 @@ int VerifClicDansSurface(Input i, int x_hg, int y_hg, int x_bd, int y_db)
 {
 	return i.mousebuttons[SDL_BUTTON_LEFT] && i.mousex > x_hg &&
 		   i.mousex < x_bd && i.mousey > y_hg && i.mousey < y_db;
+}
+
+int VerifPointDansSurface(Point p, int x_hg, int y_hg, int x_bd, int y_db)
+{
+	return p.x > x_hg && p.x < x_bd && p.y > y_hg && p.y < y_db;
 }
 
 /* Affiche les coordonnées d'un clic dans le terminal */

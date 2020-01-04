@@ -44,11 +44,11 @@ int main(int argc, char *argv[])
 	affiche_menu(fond,ecran);
 
 	//AFFICHAGE FIN DE PARTIE
-		if(victoire==0)
+		/*if(victoire==0)
 		{
 			afficheFinJeu(ecran, sprite, joueurs[0], joueurs[1]);
 
-		}
+		}*/
 
 
 
