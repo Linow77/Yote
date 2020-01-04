@@ -633,6 +633,12 @@ void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
 	SDL_Flip(ecran.image);
 }
 
+/* Vérifie qu'une case est dans le plateau */
+int dans_le_plateau(Case c)
+{
+	return c.x != -1 && c.y != -1;
+}
+
  //MAIN
 
 int main(int argc, char *argv[])
@@ -788,17 +794,15 @@ int main(int argc, char *argv[])
 
 
 				// si cette case est dans le plateau
-				if(caseSelection.x!=-1 && caseSelection.y!=-1)
+				if(dans_le_plateau(caseSelection))
 				{
 					//si la case de selection est vide
-					if(VerifCaseVide(caseSelection))
+					// on vérifie qu'il dispose d'une reserve de pièce suffisante
+					if(VerifCaseVide(caseSelection) &&
+					   joueurs[joueur].piece_reserve > 0)
 					{
-						// on vérifie qu'il dispose d'une reserve de pièce suffisante
-						if(joueurs[joueur].piece_reserve>0)
-						{
-							placer_pion(&estCoupValide, caseSelection, ecran,
-										&pion, sprite, joueur, joueurs);
-						}
+						placer_pion(&estCoupValide, caseSelection, ecran,
+									&pion, sprite, joueur, joueurs);
 					}
 					//si la case de sélection contient un pion qui appartient au joueur
 					else if(VerifMemeType(caseSelection, joueurs[joueur]))
@@ -808,7 +812,7 @@ int main(int argc, char *argv[])
 						//si l'utilisateur a cliqué sur le button gauche de la souris
 						UpdateEvents(&in);
 						do {
-							estCoupValide = 0;
+							estCoupValide = 0;// faux
 							UpdateEvents(&in);
 
 							if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && joueurs[joueur].JoueurT==HOMME))
@@ -826,7 +830,7 @@ int main(int argc, char *argv[])
 								}
 
 								//si la case destination est dans le plateau
-								if(caseDeplacement.x!=-1 && caseDeplacement.y!=-1)
+								if(dans_le_plateau(caseDeplacement))
 								{
 									in.mousebuttons[SDL_BUTTON_LEFT]=0;
 
