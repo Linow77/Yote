@@ -662,6 +662,19 @@ void mange_adversaire(int *aMangerAdversaire, Case caseSelection,
 	SDL_Flip(ecran.image);
 }
 
+void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
+				   img ecran, Player joueurs[], Ressource sprite, img *case_vide,
+				   img *pion, int *joueur)
+{
+	*estCoupValide = 1;
+
+	Point hg1 = CaseToPointhg(caseSelection);
+	Point hg2 = CaseToPointhg(caseDeplacement);
+
+	infoPartie(ecran, joueurs, sprite);
+	AfficherPion(ecran, pion, sprite, hg2, *joueur);
+	SupprimerPion(case_vide, sprite, hg1, *joueur);
+}
  //MAIN
 
 int main(int argc, char *argv[])
@@ -898,14 +911,9 @@ int main(int argc, char *argv[])
 										//manger adversaire ou dans le cas ou on va faire juste un mouvement orthogonal
 										// c'est pour ca il est mis ici donc il sera appliquer qq soit le type de mouvement
 
-										estCoupValide = 1;
-
-										hg1=CaseToPointhg(caseSelection);
-										hg2=CaseToPointhg(caseDeplacement);
-
-										infoPartie(ecran, joueurs,sprite);
-										AfficherPion(ecran,&pion, sprite, hg2, joueur);
-										SupprimerPion(&case_vide,sprite, hg1, joueur);
+										deplacer_pion(&estCoupValide, caseSelection, caseDeplacement,
+													  ecran, joueurs, sprite, &case_vide,
+													  &pion, &joueur);
 
 										SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 										SDL_Flip(ecran.image);
