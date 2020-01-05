@@ -1024,10 +1024,10 @@ int main(int argc, char *argv[])
 		//SI ON CLIC SUR QUITTER
 		if (VerifQuitter(in) &&(tour==0))
 		{
-			//SDL_FreeSurface(text);
 			SDL_Quit();
-
 		}
 	}
+
 	return EXIT_SUCCESS;
 }
+
