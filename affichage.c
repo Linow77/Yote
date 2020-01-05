@@ -655,11 +655,6 @@ void mange_adversaire(int *aMangerAdversaire, Case caseSelection,
 	SupprimerPion(case_vide,sprite, hgDelete, *joueur);
 	// ON REVIENT SUR LE JOUEUR INITIAL
 	Changer_joueur(joueur);
-
-	infoPartie(ecran, joueurs, sprite);
-	SDL_BlitSurface(pion->image, NULL, ecran.image, &(pion->position));
-	SDL_BlitSurface(case_vide->image, NULL, ecran.image, &(case_vide->position));
-	SDL_Flip(ecran.image);
 }
 
 void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
@@ -675,6 +670,32 @@ void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 	AfficherPion(ecran, pion, sprite, hg2, *joueur);
 	SupprimerPion(case_vide, sprite, hg1, *joueur);
 }
+
+void set_case(Case *c, int x, int y)
+{
+	c->x = x;
+	c->y = y;
+}
+
+void ia_pioche_pion(Case *caseSelection)
+{
+	int i;
+	int j;
+	int found = 0;
+
+	for (i = 0; i < 6 && !found; i++)
+	{
+		for (j = 0; j < 5 && !found; j++)
+		{
+			if (plateau[i][j] == DEMON)
+			{
+				set_case(caseSelection, i, j);
+				found = 1;
+			}
+		}
+	}
+}
+
  //MAIN
 
 int main(int argc, char *argv[])
@@ -879,11 +900,11 @@ int main(int argc, char *argv[])
 										if(VerifCoupValide(caseSelection, caseDeplacement, joueurs[joueur].JoueurT))
 										{
 
-											/* Erreur de segmentation
-											 * mange_adversaire(&aMangerAdversaire, caseSelection,
+											/* Erreur de segmentation */
+											/*mange_adversaire(&aMangerAdversaire, caseSelection,
 															 caseDeplacement, &joueur, joueurs,
 															 &case_vide, &pion, sprite, ecran);
-															 */
+                                                             */
 											aMangerAdversaire = 1;
 											Case caseASupprimer = DetermineCaseASupprimer(caseSelection, caseDeplacement);
 											hgDelete=CaseToPointhg(caseASupprimer);
@@ -935,16 +956,7 @@ int main(int argc, char *argv[])
 													//si on a mangé un pion, le deuxieme pion à manger est le premier pion DEMON
 													// que l'on trouve dans le plateau
 													if(estVSIA && joueurs[joueur].JoueurT==HOMME ) {
-														int found = 0;
-														for(int i = 0; i < 6 && !found; i ++) {
-															for(int j = 0; j < 4 && !found; j ++) {
-																if(plateau[i][j] == DEMON) {
-																	caseSelection.x = i;
-																	caseSelection.y = j;
-																	found = 1;
-																}
-															}
-														}
+														ia_pioche_pion(&caseSelection);
 													} else {
 														clic.x=in.mousex;
 														clic.y=in.mousey;
