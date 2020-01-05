@@ -671,12 +671,15 @@ void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 	SupprimerPion(case_vide, sprite, hg1, *joueur);
 }
 
+/* Modifie une case en fonction des arguments x et y */
 void set_case(Case *c, int x, int y)
 {
 	c->x = x;
 	c->y = y;
 }
 
+/* l'IA sélectionne pioche un pion de son adversaire (le premier pion qu'il
+ * trouve) */
 void ia_pioche_pion(Case *caseSelection)
 {
 	int i;
@@ -696,12 +699,18 @@ void ia_pioche_pion(Case *caseSelection)
 	}
 }
 
+/* Retourne un Point là où le joueur a cliqué */
+Point clic_souris(Input in)
+{
+	return (Point) { in.mousex, in.mousey };
+}
+
  //MAIN
 
 int main(int argc, char *argv[])
 {
 	int tour= 0, joueur=0, estPremierClic=1, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, JoueurAd;
-	Point clic, hg1, hg2, hgDelete;
+	Point hgDelete;
 
 	Case caseSelection, caseDeplacement;
 	Case caseArriveeIA;
@@ -844,9 +853,7 @@ int main(int argc, char *argv[])
 				// Quand le joueur n'est pas contrôle par l'IA On sélectionne le clic de l'adversaire manuellement
 				else
 				{
-					clic.x=in.mousex;
-					clic.y=in.mousey;
-					caseSelection=PointToCase(clic);
+					caseSelection=PointToCase(clic_souris(in));
 				}
 
 
@@ -882,9 +889,7 @@ int main(int argc, char *argv[])
 
 								} else
 								{
-									clic.x=in.mousex;
-									clic.y=in.mousey;
-									caseDeplacement=PointToCase(clic);
+									caseDeplacement=PointToCase(clic_souris(in));
 								}
 
 								//si la case destination est dans le plateau
@@ -958,10 +963,8 @@ int main(int argc, char *argv[])
 													if(estVSIA && joueurs[joueur].JoueurT==HOMME ) {
 														ia_pioche_pion(&caseSelection);
 													} else {
-														clic.x=in.mousex;
-														clic.y=in.mousey;
 														// nouvelle case a manger de l'adversaire que l'on stocke dans case 1
-														caseSelection=PointToCase(clic);
+														caseSelection=PointToCase(clic_souris(in));
 													}
 													in.mousebuttons[SDL_BUTTON_LEFT]=0;
 
