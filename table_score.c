@@ -5,6 +5,8 @@
 /*        DEFINITIONS DES FONCTIONS        */
 /*******************************************/
 
+/* Initialize the structure
+ * TODO : Merge with alloc_table_score() ? */
 void init_table_score(TableScore *table)
 {
     table->players = NULL;
@@ -81,6 +83,8 @@ unsigned int get_score_by_name(TableScore *t, char *name)
     else return t->scores[r];
 }
 
+/* Returns a score with a given name
+ * If the score isn't found, -1 is returned */
 unsigned int search_by_name(TableScore *t, char *name)
 {
     int r;
@@ -113,9 +117,10 @@ void print_tablescore(TableScore *t)
 // Save the scores in a file (see name of file in DEFINE's)
 int save_score(TableScore *table_s)
 {
-    FILE* file = NULL;
     int num;
+    FILE* file = NULL;
 
+    /* If there are no scores */
     if (table_s->number == 0) return 0;
 
     file = fopen(SCORE_FILE, "w");
@@ -134,7 +139,13 @@ int save_score(TableScore *table_s)
     return 0;
 }
 
-
+/*
+ * Insert a score with a name
+ * If the player has already a score, but is lower than p_score,
+ * the player's score is replaced with p_score.
+ * The score can be either 'inserted' or appended to the end
+ * of the structure
+ * */
 void insert(TableScore *t, unsigned int p_score, char *name)
 {
     int r;
@@ -150,15 +161,15 @@ void insert(TableScore *t, unsigned int p_score, char *name)
     // while the score is lower, we loop the scores
     for (r = 0; r != t->number && !can_be_inserted; r++)
     {
-        if (t->scores[r] < p_score) can_be_inserted = 1;
+        can_be_inserted = (t->scores[r] < p_score);
     }
 
-    if (can_be_inserted)
+    if (can_be_inserted)// insert
     {
         r--;
         push(t, r, p_score, name);
     }
-    else if (r < MAX_SCORE)
+    else if (r < MAX_SCORE)// append
     {
         set(t, r, p_score, name);
         increase_size(t);
@@ -166,22 +177,30 @@ void insert(TableScore *t, unsigned int p_score, char *name)
 
 }
 
+/* Increase size of structure */
 void increase_size(TableScore *t)
 {
     if (t->number < MAX_SCORE) t->number++;
 }
 
+/* Decrease size of structure */
 void decrease_size(TableScore *t)
 {
     if (t->number > 0) t->number--;
 }
 
+/* Returns the minimum between a and b */
 int min(int a, int b)
 {
     if (a < b) return a;
     return b;
 }
 
+/* Push an array from a given index
+ * [a, b, c, d, e]
+ * push(2, x)
+ * [a, b, x, c, d, e]
+ * */
 void push(TableScore *t, unsigned int index, unsigned int s, char *n)
 {
     int i = min(t->number, MAX_SCORE - 1);
@@ -195,6 +214,11 @@ void push(TableScore *t, unsigned int index, unsigned int s, char *n)
     increase_size(t);
 }
 
+/* Shift an array from a given index
+ * [a, b, c, d, e]
+ * shift(2)
+ * [a, b, d, e]
+ * */
 void shift(TableScore *t, unsigned int index)
 {
     int i;
@@ -212,9 +236,6 @@ void set(TableScore *t, unsigned int index, unsigned int s, char *n)
     t->scores[index] = s;
     strcpy(t->players[index], n);
 }
-
-
-
 
 // Free memory of the table of scores
 // Still some memory leaks though @.@ ?
