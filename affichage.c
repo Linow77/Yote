@@ -183,6 +183,12 @@ void Changer_joueur(int *joueur)
 		*joueur = 0;
 }
 
+int joueur_adv(int joueur)
+{
+	if (joueur == 0) return 1;
+	else return 0;
+}
+
 /** Permet de vérifier si l’utilisateur a cliqué sur le bouton quitter dans le premier menu **/
 int VerifQuitter(Input in)
 {
@@ -809,7 +815,8 @@ int main(int argc, char *argv[])
 		/* a venir */
 
 		// si on est dans le mode jeux simple ou mode variante et il existe des pions pour les deux joueurs sur le plateau et le jeu n'est pas fini
-		if(tour==3 && ( VerifPionsSurPlateau(joueurs[0]) || VerifPionsSurPlateau(joueurs[1]) || estPremierClic) && !estGameOver)
+		if (tour==3 && ( VerifPionsSurPlateau(joueurs[0]) ||
+			VerifPionsSurPlateau(joueurs[1]) || estPremierClic) && !estGameOver)
 		{
 
 			estCoupValide = 0;
@@ -820,7 +827,7 @@ int main(int argc, char *argv[])
 				estPremierClic=0;
 
 				//on va supposer que le joueur HOMME est l'IA
-				if(estVSIA && joueurs[joueur].JoueurT==HOMME )
+				if(estVSIA)
 				{
 					int choixCaseIAAutorise = 0;
 
@@ -849,6 +856,12 @@ int main(int argc, char *argv[])
 					} while (!choixCaseIAAutorise);
 
 
+					/*
+					do {
+						caseSelection = RecupCaseDeSelectionIA();
+					} while (!((caseSelection.x != -1 && plateau[caseSelection.x][caseSelection.y] == HOMME) ||
+							plateau[caseSelection.x][caseSelection.y] == VIDE));
+					*/
 				}
 				// Quand le joueur n'est pas contrôle par l'IA On sélectionne le clic de l'adversaire manuellement
 				else
@@ -880,17 +893,11 @@ int main(int argc, char *argv[])
 							estCoupValide = 0;// faux
 							UpdateEvents(&in);
 
-							if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && joueurs[joueur].JoueurT==HOMME))
+							if (in.mousebuttons[SDL_BUTTON_LEFT] || estVSIA)
 							{
 
-								if(estVSIA && joueurs[joueur].JoueurT==HOMME )
-								{
-									caseDeplacement = caseArriveeIA;
-
-								} else
-								{
-									caseDeplacement=PointToCase(clic_souris(in));
-								}
+								if (estVSIA) caseDeplacement = caseArriveeIA;
+								else caseDeplacement = PointToCase(clic_souris(in));
 
 								//si la case destination est dans le plateau
 								if(dans_le_plateau(caseDeplacement))
