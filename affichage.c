@@ -709,21 +709,6 @@ int dans_le_plateau(Case c)
 	return c.x != -1 && c.y != -1;
 }
 
-void mange_adversaire(int *aMangerAdversaire, Case caseSelection,
-					  Case caseDeplacement, int *joueur, Player joueurs[],
-					  img *case_vide, img *pion, Ressource sprite, img ecran)
-{
-	*aMangerAdversaire = 1;
-	Case caseASupprimer = DetermineCaseASupprimer(caseSelection, caseDeplacement);
-	Point hgDelete = CaseToPointhg(caseASupprimer);
-
-	int JoueurAd = NbJoueurAdv(*joueur);
-	AppliqueCoupV2(caseSelection, caseASupprimer, caseDeplacement, &joueurs[*joueur], &joueurs[JoueurAd] );
-
-	// ON CHANGE LE JOUEUR POUR SUPPRIMER LE PION DE LADVERSAIRE
-	SupprimerPion(case_vide,sprite, hgDelete, joueur_adv(*joueur));
-	// ON REVIENT SUR LE JOUEUR INITIAL
-}
 
 void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 				   img ecran, Player joueurs[], Ressource sprite, img *case_vide,
@@ -772,6 +757,12 @@ Point clic_souris(Input in)
 {
 	return (Point) { in.mousex, in.mousey };
 }
+
+int tour_de_homme(Player joueurs[], int joueur)
+{
+	return joueurs[joueur].JoueurT == HOMME;
+}
+
 
  //MAIN
 
@@ -881,11 +872,11 @@ int main(int argc, char *argv[])
 		{
 
 			estCoupValide = 0;
-			if(in.mousebuttons[SDL_BUTTON_LEFT] || estVSIA)
+			if(in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
 			{
 				in.mousebuttons[SDL_BUTTON_LEFT]=0;
 
-				if(estVSIA)
+				if(estVSIA && tour_de_homme(joueurs, joueur))
 				{
 					int choixCaseIAAutorise = 0;
 
@@ -945,10 +936,10 @@ int main(int argc, char *argv[])
 							estCoupValide = 0;// faux
 							UpdateEvents(&in);
 
-							if (in.mousebuttons[SDL_BUTTON_LEFT] || estVSIA)
+							if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
 							{
 
-								if (estVSIA) caseDeplacement = caseArriveeIA;
+								if (estVSIA && tour_de_homme(joueurs, joueur)) caseDeplacement = caseArriveeIA;
 								else caseDeplacement = PointToCase(clic_souris(in));
 
 								//si la case destination est dans le plateau
@@ -1013,11 +1004,11 @@ int main(int argc, char *argv[])
 											do {
 												UpdateEvents(&in);
 
-												if (in.mousebuttons[SDL_BUTTON_LEFT] || estVSIA)
+												if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
 												{
 													//si on a mangé un pion, le deuxieme pion à manger est le premier pion DEMON
 													// que l'on trouve dans le plateau
-													if(estVSIA) {
+													if(estVSIA && tour_de_homme(joueurs, joueur)) {
 														ia_pioche_pion(&caseSelection);
 													} else {
 														// nouvelle case a manger de l'adversaire que l'on stocke dans case 1
