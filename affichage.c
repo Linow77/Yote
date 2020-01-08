@@ -5,6 +5,13 @@
 #include <SDL/SDL_ttf.h>
 #include "affichage.h"
 
+/* Modifie une case en fonction des arguments x et y */
+void set_case(Case *c, int x, int y)
+{
+	c->x = x;
+	c->y = y;
+}
+
 
 void chargement (Ressource *sprite)
 {
@@ -562,7 +569,7 @@ int pion_peut_se_deplacer(Case c)
 	return 0;
 }
 
-
+/* Retourne l'adversaire du joueur */
 TypeContents adv(TypeContents joueur)
 {
 	if (joueur == HOMME) return DEMON;
@@ -653,7 +660,11 @@ Case RecupCaseArriveeIA (Case caseDepart)
 	return caseArriveeIA;
 }
 
-/** Methode qui permet de selectionner une case sur le plateau pour l'IA */
+/* Methode qui permet de selectionner une case sur le plateau pour l'IA
+ * Soit l'ia prend :
+ *  - un pion, qui peut soit se déplacer soit manger (donc se déplacer)
+ *  - une case au pif; si c'est un pion, on reprend les mêmes conditions plus
+ *  haut, sinon c'est une case vide où il peut placer un pion */
 Case RecupCaseDeSelectionIA (Player joueur) {
 	Case caseSelectionIA;
 	int i;
@@ -667,12 +678,11 @@ Case RecupCaseDeSelectionIA (Player joueur) {
 		for (i = 0; i < 6 && !stop; i++) {
 			for (j = 0; j < 5 && !stop; j++) {
 				if (plateau[i][j] == joueur.JoueurT) {
-					caseSelectionIA.x = i;
-					caseSelectionIA.y = j;
+					set_case(&caseSelectionIA, i, j);
 
-					/*if (pion_peut_se_deplacer(caseSelectionIA) ||
+					if (pion_peut_se_deplacer(caseSelectionIA) ||
 						pion_peut_manger(caseSelectionIA, joueur.JoueurT))
-						stop = !stop;*/
+						stop = !stop;
 				}
 			}
 		}
@@ -680,13 +690,13 @@ Case RecupCaseDeSelectionIA (Player joueur) {
 	}
 	else
 	{
-/*		do
-		{*/
+		do
+		{
 			caseSelectionIA.x = rand_a_b(0, 5);
 			caseSelectionIA.y = rand_a_b(0, 4);
-		/*} while (!(pion_peut_se_deplacer(caseSelectionIA) ||
+		} while (!(pion_peut_se_deplacer(caseSelectionIA) ||
 				 pion_peut_manger(caseSelectionIA, joueur.JoueurT) ||
-				 VerifCaseVide(caseSelectionIA)));*/
+				 (VerifCaseVide(caseSelectionIA) && joueur.piece_reserve > 0)));
 	}
 
 	return caseSelectionIA;
@@ -722,13 +732,6 @@ void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 	infoPartie(ecran, joueurs, sprite);
 	AfficherPion(ecran, pion, sprite, hg2, *joueur);
 	SupprimerPion(case_vide, sprite, hg1, *joueur);
-}
-
-/* Modifie une case en fonction des arguments x et y */
-void set_case(Case *c, int x, int y)
-{
-	c->x = x;
-	c->y = y;
 }
 
 /* l'IA sélectionne pioche un pion de son adversaire (le premier pion qu'il
@@ -772,7 +775,6 @@ int main(int argc, char *argv[])
 	Point hgDelete;
 
 	Case caseSelection, caseDeplacement;
-	Case caseArriveeIA;
 	Player joueurs[2];
 	img fond,ecran,pion, case_vide;
 	Input in; //VARIABLE GESTION EVENEMENT
@@ -878,33 +880,7 @@ int main(int argc, char *argv[])
 
 				if(estVSIA && tour_de_homme(joueurs, joueur))
 				{
-					int choixCaseIAAutorise = 0;
-
-					do {
-
-						caseSelection = RecupCaseDeSelectionIA(joueurs[joueur]);
-
-						// on vérifie que l'IA sélectionne un pion qui lui appartient
-						//(car on peut sélectionner un pion VIDE avec le random)
-						if(plateau[caseSelection.x][caseSelection.y] == HOMME) {
-							// on récupére une case d'arrivee autorisé pour le déplacement
-							caseArriveeIA = RecupCaseArriveeIA(caseSelection);
-
-							if(caseArriveeIA.x != -1) {
-								choixCaseIAAutorise = 1;
-							}
-						}
-						// si l'IA sélectionne une case vide alors le choix de la case pa l'IA est autorisé
-						else if(plateau[caseSelection.x][caseSelection.y] == VIDE)
-						{
-							choixCaseIAAutorise = 1;
-						}
-
-
-					// on répéte l'opération tant que  l'on a pas sélectioné une case valide pour l'IA
-					} while (!choixCaseIAAutorise);
-
-
+					caseSelection = RecupCaseDeSelectionIA(joueurs[joueur]);
 				}
 				// Quand le joueur n'est pas contrôle par l'IA On sélectionne le clic de l'adversaire manuellement
 				else
@@ -939,8 +915,8 @@ int main(int argc, char *argv[])
 							if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
 							{
 
-								if (estVSIA && tour_de_homme(joueurs, joueur)) caseDeplacement = caseArriveeIA;
-								else caseDeplacement = PointToCase(clic_souris(in));
+								if (estVSIA && tour_de_homme(joueurs, joueur)) caseDeplacement = RecupCaseArriveeIA(caseSelection)
+;								else caseDeplacement = PointToCase(clic_souris(in));
 
 								//si la case destination est dans le plateau
 								if(dans_le_plateau(caseDeplacement))
