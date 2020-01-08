@@ -869,7 +869,7 @@ int main(int argc, char *argv[])
 		//SI ON CLIC SUR SCORE
 		/* a venir */
 
-		// si on est dans le mode jeux simple ou mode variante et il existe des pions pour les deux joueurs sur le plateau et le jeu n'est pas fini
+		// tant que le jeu n'est pas fini
 		if (tour == 3 && !estGameOver)
 		{
 
@@ -882,145 +882,145 @@ int main(int argc, char *argv[])
 				{
 					caseSelection = RecupCaseDeSelectionIA(joueurs[joueur]);
 				}
-				// Quand le joueur n'est pas contrôle par l'IA On sélectionne le clic de l'adversaire manuellement
 				else
 				{
-					caseSelection=PointToCase(clic_souris(in));
+					do
+					{
+						caseSelection = PointToCase(clic_souris(in));
+					} while (!dans_le_plateau(caseSelection));
 				}
 
 
-				// si cette case est dans le plateau
-				if(dans_le_plateau(caseSelection))
+				//si la case de selection est vide
+				// on vérifie qu'il dispose d'une reserve de pièce suffisante
+				if(VerifCaseVide(caseSelection) &&
+				   joueurs[joueur].piece_reserve > 0)
 				{
-					//si la case de selection est vide
-					// on vérifie qu'il dispose d'une reserve de pièce suffisante
-					if(VerifCaseVide(caseSelection) &&
-					   joueurs[joueur].piece_reserve > 0)
-					{
-						placer_pion(&estCoupValide, caseSelection, ecran,
-									&pion, sprite, joueur, joueurs);
-					}
-					//si la case de sélection contient un pion qui appartient au joueur
-					else if(VerifMemeType(caseSelection, joueurs[joueur]))
-					{
-						in.mousebuttons[SDL_BUTTON_LEFT]=0;
+					placer_pion(&estCoupValide, caseSelection, ecran,
+								&pion, sprite, joueur, joueurs);
+				}
+				//si la case de sélection contient un pion qui appartient au joueur
+				else if(VerifMemeType(caseSelection, joueurs[joueur]))
+				{
+					in.mousebuttons[SDL_BUTTON_LEFT]=0;
 
-						//si l'utilisateur a cliqué sur le button gauche de la souris
-						// L'utilisateur clique sur la case d'arrivée
+					//si l'utilisateur a cliqué sur le button gauche de la souris
+					// L'utilisateur clique sur la case d'arrivée
+					UpdateEvents(&in);
+					do {
+						estCoupValide = 0;// faux
 						UpdateEvents(&in);
-						do {
-							estCoupValide = 0;// faux
-							UpdateEvents(&in);
 
-							if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
+						if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
+						{
+
+							if (estVSIA && tour_de_homme(joueurs, joueur))
+								caseDeplacement = RecupCaseArriveeIA(caseSelection)
+;								else
+								caseDeplacement = PointToCase(clic_souris(in));
+
+							//si la case destination est dans le plateau
+							if(dans_le_plateau(caseDeplacement))
 							{
+								in.mousebuttons[SDL_BUTTON_LEFT]=0;
 
-								if (estVSIA && tour_de_homme(joueurs, joueur)) caseDeplacement = RecupCaseArriveeIA(caseSelection)
-;								else caseDeplacement = PointToCase(clic_souris(in));
-
-								//si la case destination est dans le plateau
-								if(dans_le_plateau(caseDeplacement))
+								if(VerifCaseVide(caseDeplacement) && (VerifDeplacementOrthogonal(caseSelection,caseDeplacement)
+									|| VerifCoupValide(caseSelection, caseDeplacement, joueurs[joueur].JoueurT)))
 								{
-									in.mousebuttons[SDL_BUTTON_LEFT]=0;
 
-									if(VerifCaseVide(caseDeplacement) && (VerifDeplacementOrthogonal(caseSelection,caseDeplacement)
-										|| VerifCoupValide(caseSelection, caseDeplacement, joueurs[joueur].JoueurT)))
+									// DANS LE CAS OU LE JOUEUR VEUT MANGER LE PION DE L'ADVERSAIRE
+									if(VerifCoupValide(caseSelection, caseDeplacement, joueurs[joueur].JoueurT))
 									{
 
-										// DANS LE CAS OU LE JOUEUR VEUT MANGER LE PION DE L'ADVERSAIRE
-										if(VerifCoupValide(caseSelection, caseDeplacement, joueurs[joueur].JoueurT))
-										{
+										/* Erreur de segmentation */
+										/*mange_adversaire(&aMangerAdversaire, caseSelection,
+														 caseDeplacement, &joueur, joueurs,
+														 &case_vide, &pion, sprite, ecran);
+														 */
+										aMangerAdversaire = 1;
+										Case caseASupprimer = DetermineCaseASupprimer(caseSelection, caseDeplacement);
+										hgDelete=CaseToPointhg(caseASupprimer);
 
-											/* Erreur de segmentation */
-											/*mange_adversaire(&aMangerAdversaire, caseSelection,
-															 caseDeplacement, &joueur, joueurs,
-															 &case_vide, &pion, sprite, ecran);
-                                                             */
-											aMangerAdversaire = 1;
-											Case caseASupprimer = DetermineCaseASupprimer(caseSelection, caseDeplacement);
-											hgDelete=CaseToPointhg(caseASupprimer);
+										JoueurAd=NbJoueurAdv(joueur);
+										AppliqueCoupV2(caseSelection, caseASupprimer, caseDeplacement, &joueurs[joueur], &joueurs[JoueurAd] );
 
-											JoueurAd=NbJoueurAdv(joueur);
-											AppliqueCoupV2(caseSelection, caseASupprimer, caseDeplacement, &joueurs[joueur], &joueurs[JoueurAd] );
+										// ON CHANGE LE JOUEUR POUR SUPPRIMER LE PION DE LADVERSAIRE
+										SupprimerPion(&case_vide,sprite, hgDelete, joueur_adv(joueur));
+										// ON REVIENT SUR LE JOUEUR INITIAL
 
-											// ON CHANGE LE JOUEUR POUR SUPPRIMER LE PION DE LADVERSAIRE
-											SupprimerPion(&case_vide,sprite, hgDelete, joueur_adv(joueur));
-											// ON REVIENT SUR LE JOUEUR INITIAL
-
-											infoPartie(ecran, joueurs,sprite);
-											SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
-											SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
-											SDL_Flip(ecran.image);
-										}
-										else
-										{
-											AppliqueCoup(caseSelection, caseDeplacement, joueurs[joueur].JoueurT);
-										}
-
-										//Afin d'eviter la redondance du coup ce code va etre appliquer dans le cas ou on
-										//manger adversaire ou dans le cas ou on va faire juste un mouvement orthogonal
-										// c'est pour ca il est mis ici donc il sera appliquer qq soit le type de mouvement
-
-										deplacer_pion(&estCoupValide, caseSelection, caseDeplacement,
-													  ecran, joueurs, sprite, &case_vide,
-													  &pion, &joueur);
-
+										infoPartie(ecran, joueurs,sprite);
+										SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
 										SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 										SDL_Flip(ecran.image);
+									}
+									else
+									{
+										AppliqueCoup(caseSelection, caseDeplacement, joueurs[joueur].JoueurT);
+									}
 
-										// si on est dans le mode simple
-										// prendre deuxieme pion aux choix apres avoir manger le pion de ladversaire
-										// c'est pour cela que l'on vérifie que le nombre de piece sur le plateau du joueur adverse est > 0
-										if((!estModeVariante && aMangerAdversaire && joueurs[JoueurAd].piece_plateau > 0) ||
-										(estModeVariante && aMangerAdversaire && joueurs[JoueurAd].piece_reserve > 0))
-										{
-											in.mousebuttons[SDL_BUTTON_LEFT]=0;
+									//Afin d'eviter la redondance du coup ce code va etre appliquer dans le cas ou on
+									//manger adversaire ou dans le cas ou on va faire juste un mouvement orthogonal
+									// c'est pour ca il est mis ici donc il sera appliquer qq soit le type de mouvement
 
-											estCoupValide = 0;
-											do {
-												UpdateEvents(&in);
+									deplacer_pion(&estCoupValide, caseSelection, caseDeplacement,
+												  ecran, joueurs, sprite, &case_vide,
+												  &pion, &joueur);
 
-												if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
-												{
-													//si on a mangé un pion, le deuxieme pion à manger est le premier pion DEMON
-													// que l'on trouve dans le plateau
-													if(estVSIA && tour_de_homme(joueurs, joueur)) {
-														ia_pioche_pion(&caseSelection);
-													} else {
-														// nouvelle case a manger de l'adversaire que l'on stocke dans case 1
-														caseSelection=PointToCase(clic_souris(in));
-														in.mousebuttons[SDL_BUTTON_LEFT]=0;
-													}
+									SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
+									SDL_Flip(ecran.image);
 
-													// on vérifie qu'il s'agit d'une case de l'adversaire
-													// et qu'elle n'est pas vide
-													if(plateau[caseSelection.x][caseSelection.y] != VIDE
-														&& plateau[caseSelection.x][caseSelection.y] != joueurs[joueur].JoueurT) {
-														estCoupValide = 1;
-														hgDelete=CaseToPointhg(caseSelection);
+									// si on est dans le mode simple
+									// prendre deuxieme pion aux choix apres avoir manger le pion de ladversaire
+									// c'est pour cela que l'on vérifie que le nombre de piece sur le plateau du joueur adverse est > 0
+									if((!estModeVariante && aMangerAdversaire && joueurs[JoueurAd].piece_plateau > 0) ||
+									(estModeVariante && aMangerAdversaire && joueurs[JoueurAd].piece_reserve > 0))
+									{
+										in.mousebuttons[SDL_BUTTON_LEFT]=0;
 
-														JoueurAd=NbJoueurAdv(joueur);
-														AppliqueCoupV3(caseSelection, &joueurs[joueur], &joueurs[JoueurAd]);
+										estCoupValide = 0;
+										do {
+											UpdateEvents(&in);
 
-														// ON CHANGE LE JOUEUR POUR SUPPRIMER LE NOUVEAU PION DE L'ADVERSAIRE
-														SupprimerPion(&case_vide,sprite, hgDelete, joueur_adv(joueur));
-														// ON REVIENT SUR LE JOUEUR INITIAL
-
-														infoPartie(ecran, joueurs,sprite);
-														SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
-														SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
-														SDL_Flip(ecran.image);
-													}
+											if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
+											{
+												//si on a mangé un pion, le deuxieme pion à manger est le premier pion DEMON
+												// que l'on trouve dans le plateau
+												if(estVSIA && tour_de_homme(joueurs, joueur)) {
+													ia_pioche_pion(&caseSelection);
+												} else {
+													// nouvelle case a manger de l'adversaire que l'on stocke dans case 1
+													caseSelection=PointToCase(clic_souris(in));
+													in.mousebuttons[SDL_BUTTON_LEFT]=0;
 												}
 
-											} while(!estCoupValide && (!in.key[SDLK_ESCAPE]) && (!in.quit));
+												// on vérifie qu'il s'agit d'une case de l'adversaire
+												// et qu'elle n'est pas vide
+												if(plateau[caseSelection.x][caseSelection.y] != VIDE
+													&& plateau[caseSelection.x][caseSelection.y] != joueurs[joueur].JoueurT) {
+													estCoupValide = 1;
+													hgDelete=CaseToPointhg(caseSelection);
 
-										}
+													JoueurAd=NbJoueurAdv(joueur);
+													AppliqueCoupV3(caseSelection, &joueurs[joueur], &joueurs[JoueurAd]);
+
+													// ON CHANGE LE JOUEUR POUR SUPPRIMER LE NOUVEAU PION DE L'ADVERSAIRE
+													SupprimerPion(&case_vide,sprite, hgDelete, joueur_adv(joueur));
+													// ON REVIENT SUR LE JOUEUR INITIAL
+
+													infoPartie(ecran, joueurs,sprite);
+													SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
+													SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
+													SDL_Flip(ecran.image);
+												}
+											}
+
+										} while(!estCoupValide && (!in.key[SDLK_ESCAPE]) && (!in.quit));
+
 									}
 								}
 							}
-						}while(!estCoupValide && (!in.key[SDLK_ESCAPE]) && (!in.quit));
-					}
+						}
+					}while(!estCoupValide && (!in.key[SDLK_ESCAPE]) && (!in.quit));
 				}
 
 				if(estCoupValide)
