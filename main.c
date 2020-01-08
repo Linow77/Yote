@@ -102,13 +102,13 @@ int main()
 		}
 
 		//SI ON CLIC SUR SCORE
-		/* a venir */
 
 		// tant que le jeu n'est pas fini
 		if (tour == 3 && !estGameOver)
 		{
 
 			estCoupValide = 0;
+			// TODO simplifier ce if
 			if(in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
 			{
 				in.mousebuttons[SDL_BUTTON_LEFT]=0;
@@ -170,12 +170,6 @@ int main()
 									// DANS LE CAS OU LE JOUEUR VEUT MANGER LE PION DE L'ADVERSAIRE
 									if(VerifCoupValide(caseSelection, caseDeplacement, joueurs[joueur].JoueurT))
 									{
-
-										/* Erreur de segmentation */
-										/*mange_adversaire(&aMangerAdversaire, caseSelection,
-														 caseDeplacement, &joueur, joueurs,
-														 &case_vide, &pion, sprite, ecran);
-														 */
 										aMangerAdversaire = 1;
 										Case caseASupprimer = DetermineCaseASupprimer(caseSelection, caseDeplacement);
 										hgDelete=CaseToPointhg(caseASupprimer);
