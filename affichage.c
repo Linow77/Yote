@@ -647,6 +647,39 @@ int pion_peut_se_deplacer(Case c)
 	return 0;
 }
 
+
+TypeContents adv(TypeContents joueur)
+{
+	if (joueur == HOMME) return DEMON;
+	else return HOMME;
+}
+
+/* Vérifie qu'un pion peut en manger un autre
+ * On suppose que la case n'est pas vide */
+int pion_peut_manger(Case c, TypeContents joueur)
+{
+	TypeContents a = adv(joueur);
+
+	if (c.x > 1)
+		if (VerifCaseVide((Case) { c.x - 2, c.y }) &&
+			plateau[c.x - 1][c.y] == a)
+			return 1;
+	if (c.x < 5)
+		if (VerifCaseVide((Case) { c.x + 2, c.y }) &&
+			plateau[c.x + 1][c.y] == a)
+			return 1;
+	if (c.y > 1)
+		if (VerifCaseVide((Case) { c.x, c.y - 2 }) &&
+			plateau[c.x][c.y - 1] == a)
+			return 1;
+	if (c.y < 4)
+		if (VerifCaseVide((Case) { c.x, c.y + 2 }) &&
+			plateau[c.x][c.y + 1] == a)
+			return 1;
+	return 0;
+}
+
+
 /* Place un pion sur l'interface graphique et dans le plateau de jeu */
 void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
 				 Ressource sprite, int joueur, Player joueurs[])
