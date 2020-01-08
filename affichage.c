@@ -262,6 +262,16 @@ void ChangerContenuCase(Case c , Player *joueur)
 	joueur-> piece_reserve --;
 }
 
+int a_encore_pieces_en_reserve(Player joueur)
+{
+	return joueur.piece_reserve > 0;
+}
+
+int a_encore_pieces_sur_plateau(Player joueur)
+{
+	return joueur.piece_plateau > 0;
+}
+
 /** Vérifie qu’un joueur a encore des pions sur le plateau **/
 int VerifPionsSurPlateau(Player joueur)
 {
@@ -590,19 +600,9 @@ Case RecupCaseArriveeIA (Case caseDepart)
 }
 
 /** Methode qui permet de selectionner une case sur le plateau pour l'IA */
-Case RecupCaseDeSelectionIA () {
+Case RecupCaseDeSelectionIA (Player joueur) {
 	Case caseSelectionIA;
-	int nombrePionHommePlateau = 0;
-
-	// on compte le nombre de pion sur le plateau de l'IA
-	// pour utilisation ultérieur
-	for(int i = 0; i < 6; i ++) {
-		for(int j = 0; j < 4; j ++) {
-			if(plateau[i][j] == HOMME) {
-				nombrePionHommePlateau++;
-			}
-		}
-	}
+	int nombrePionHommePlateau = joueur.piece_plateau;
 
 	// Si le nombre de pion sur le plateau est supérieur ou égale à 4
 	// alors l'IA sélectionne un pion qui lui appartient pour le déplacer
@@ -625,6 +625,26 @@ Case RecupCaseDeSelectionIA () {
 	}
 
 	return caseSelectionIA;
+}
+
+/* Vérifie si un pion peut se déplacer
+ * Il faut donc vérifier qu'au moins une case autour du pion
+ * soit vide */
+int pion_peut_se_deplacer(Case c)
+{
+	if (c.x > 0)
+		if (VerifCaseVide((Case) { c.x - 1, c.y }))
+			return 1;
+	if (c.x < 6)
+		if (VerifCaseVide((Case) { c.x + 1, c.y }))
+			return 1;
+	if (c.y > 0)
+		if (VerifCaseVide((Case) { c.x, c.y - 1 }))
+			return 1;
+	if (c.y < 5)
+		if (VerifCaseVide((Case) { c.x, c.y + 1 }))
+			return 1;
+	return 0;
 }
 
 /* Place un pion sur l'interface graphique et dans le plateau de jeu */
@@ -657,10 +677,8 @@ void mange_adversaire(int *aMangerAdversaire, Case caseSelection,
 	AppliqueCoupV2(caseSelection, caseASupprimer, caseDeplacement, &joueurs[*joueur], &joueurs[JoueurAd] );
 
 	// ON CHANGE LE JOUEUR POUR SUPPRIMER LE PION DE LADVERSAIRE
-	Changer_joueur(joueur);
-	SupprimerPion(case_vide,sprite, hgDelete, *joueur);
+	SupprimerPion(case_vide,sprite, hgDelete, joueur_adv(*joueur));
 	// ON REVIENT SUR LE JOUEUR INITIAL
-	Changer_joueur(joueur);
 }
 
 void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
@@ -820,20 +838,18 @@ int main(int argc, char *argv[])
 		{
 
 			estCoupValide = 0;
-			//si l'utilisateur a cliqué sur le button gauche de la souris ou s'il s'agit du joueur HOMME contrôlé par l'IA
-			if(in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && joueurs[joueur].JoueurT==HOMME) )
+			if(in.mousebuttons[SDL_BUTTON_LEFT] || estVSIA)
 			{
 				in.mousebuttons[SDL_BUTTON_LEFT]=0;
 				estPremierClic=0;
 
-				//on va supposer que le joueur HOMME est l'IA
 				if(estVSIA)
 				{
 					int choixCaseIAAutorise = 0;
 
 					do {
 
-						caseSelection = RecupCaseDeSelectionIA();
+						caseSelection = RecupCaseDeSelectionIA(joueurs[joueur]);
 
 						// on vérifie que l'IA sélectionne un pion qui lui appartient
 						//(car on peut sélectionner un pion VIDE avec le random)
@@ -856,12 +872,6 @@ int main(int argc, char *argv[])
 					} while (!choixCaseIAAutorise);
 
 
-					/*
-					do {
-						caseSelection = RecupCaseDeSelectionIA();
-					} while (!((caseSelection.x != -1 && plateau[caseSelection.x][caseSelection.y] == HOMME) ||
-							plateau[caseSelection.x][caseSelection.y] == VIDE));
-					*/
 				}
 				// Quand le joueur n'est pas contrôle par l'IA On sélectionne le clic de l'adversaire manuellement
 				else
@@ -925,10 +935,8 @@ int main(int argc, char *argv[])
 											AppliqueCoupV2(caseSelection, caseASupprimer, caseDeplacement, &joueurs[joueur], &joueurs[JoueurAd] );
 
 											// ON CHANGE LE JOUEUR POUR SUPPRIMER LE PION DE LADVERSAIRE
-											Changer_joueur(&joueur);
-											SupprimerPion(&case_vide,sprite, hgDelete, joueur);
+											SupprimerPion(&case_vide,sprite, hgDelete, joueur_adv(joueur));
 											// ON REVIENT SUR LE JOUEUR INITIAL
-											Changer_joueur(&joueur);
 
 											infoPartie(ecran, joueurs,sprite);
 											SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
@@ -963,17 +971,17 @@ int main(int argc, char *argv[])
 											do {
 												UpdateEvents(&in);
 
-												if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && joueurs[joueur].JoueurT==HOMME))
+												if (in.mousebuttons[SDL_BUTTON_LEFT] || estVSIA)
 												{
 													//si on a mangé un pion, le deuxieme pion à manger est le premier pion DEMON
 													// que l'on trouve dans le plateau
-													if(estVSIA && joueurs[joueur].JoueurT==HOMME ) {
+													if(estVSIA) {
 														ia_pioche_pion(&caseSelection);
 													} else {
 														// nouvelle case a manger de l'adversaire que l'on stocke dans case 1
 														caseSelection=PointToCase(clic_souris(in));
+														in.mousebuttons[SDL_BUTTON_LEFT]=0;
 													}
-													in.mousebuttons[SDL_BUTTON_LEFT]=0;
 
 													// on vérifie qu'il s'agit d'une case de l'adversaire
 													// et qu'elle n'est pas vide
@@ -986,10 +994,8 @@ int main(int argc, char *argv[])
 														AppliqueCoupV3(caseSelection, &joueurs[joueur], &joueurs[JoueurAd]);
 
 														// ON CHANGE LE JOUEUR POUR SUPPRIMER LE NOUVEAU PION DE L'ADVERSAIRE
-														Changer_joueur(&joueur);
-														SupprimerPion(&case_vide,sprite, hgDelete, joueur);
+														SupprimerPion(&case_vide,sprite, hgDelete, joueur_adv(joueur));
 														// ON REVIENT SUR LE JOUEUR INITIAL
-														Changer_joueur(&joueur);
 
 														infoPartie(ecran, joueurs,sprite);
 														SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
