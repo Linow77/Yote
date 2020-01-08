@@ -541,6 +541,60 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	 return rand()%b + a;
  }
 
+
+/* Vérifie si un pion peut se déplacer
+ * Il faut donc vérifier qu'au moins une case autour du pion
+ * soit vide */
+int pion_peut_se_deplacer(Case c)
+{
+	if (c.x > 0)
+		if (VerifCaseVide((Case) { c.x - 1, c.y }))
+			return 1;
+	if (c.x < 6)
+		if (VerifCaseVide((Case) { c.x + 1, c.y }))
+			return 1;
+	if (c.y > 0)
+		if (VerifCaseVide((Case) { c.x, c.y - 1 }))
+			return 1;
+	if (c.y < 5)
+		if (VerifCaseVide((Case) { c.x, c.y + 1 }))
+			return 1;
+	return 0;
+}
+
+
+TypeContents adv(TypeContents joueur)
+{
+	if (joueur == HOMME) return DEMON;
+	else return HOMME;
+}
+
+/* Vérifie qu'un pion peut en manger un autre
+ * On suppose que la case n'est pas vide */
+int pion_peut_manger(Case c, TypeContents joueur)
+{
+	TypeContents a = adv(joueur);
+
+	if (c.x > 1)
+		if (VerifCaseVide((Case) { c.x - 2, c.y }) &&
+			plateau[c.x - 1][c.y] == a)
+			return 1;
+	if (c.x < 5)
+		if (VerifCaseVide((Case) { c.x + 2, c.y }) &&
+			plateau[c.x + 1][c.y] == a)
+			return 1;
+	if (c.y > 1)
+		if (VerifCaseVide((Case) { c.x, c.y - 2 }) &&
+			plateau[c.x][c.y - 1] == a)
+			return 1;
+	if (c.y < 4)
+		if (VerifCaseVide((Case) { c.x, c.y + 2 }) &&
+			plateau[c.x][c.y + 1] == a)
+			return 1;
+	return 0;
+}
+
+
  /** Méthode qui permet de récuperer les coordonnées x y d'une case ou l'IA Peut se déplacer **/
 Case RecupCaseArriveeIA (Case caseDepart)
 {
@@ -602,16 +656,23 @@ Case RecupCaseArriveeIA (Case caseDepart)
 /** Methode qui permet de selectionner une case sur le plateau pour l'IA */
 Case RecupCaseDeSelectionIA (Player joueur) {
 	Case caseSelectionIA;
+	int i;
+	int j;
+	int stop = 0;
 	int nombrePionHommePlateau = joueur.piece_plateau;
 
 	// Si le nombre de pion sur le plateau est supérieur ou égale à 4
 	// alors l'IA sélectionne un pion qui lui appartient pour le déplacer
-	if(nombrePionHommePlateau >= 4) {
-		for(int i = 0; i < 6; i ++) {
-			for(int j = 0; j < 4; j ++) {
-				if(plateau[i][j] == HOMME) {
+	if (nombrePionHommePlateau >= 4) {
+		for (i = 0; i < 6 && !stop; i++) {
+			for (j = 0; j < 5 && !stop; j++) {
+				if (plateau[i][j] == joueur.JoueurT) {
 					caseSelectionIA.x = i;
 					caseSelectionIA.y = j;
+
+					/*if (pion_peut_se_deplacer(caseSelectionIA) ||
+						pion_peut_manger(caseSelectionIA, joueur.JoueurT))
+						stop = !stop;*/
 				}
 			}
 		}
@@ -619,67 +680,17 @@ Case RecupCaseDeSelectionIA (Player joueur) {
 	}
 	else
 	{
-		// sinon on prend une case aléatoire pour faire le placement du pion sur le tableau
-		caseSelectionIA.x = rand_a_b(0, 6);
-		caseSelectionIA.y = rand_a_b(0, 4);
+/*		do
+		{*/
+			caseSelectionIA.x = rand_a_b(0, 5);
+			caseSelectionIA.y = rand_a_b(0, 4);
+		/*} while (!(pion_peut_se_deplacer(caseSelectionIA) ||
+				 pion_peut_manger(caseSelectionIA, joueur.JoueurT) ||
+				 VerifCaseVide(caseSelectionIA)));*/
 	}
 
 	return caseSelectionIA;
 }
-
-/* Vérifie si un pion peut se déplacer
- * Il faut donc vérifier qu'au moins une case autour du pion
- * soit vide */
-int pion_peut_se_deplacer(Case c)
-{
-	if (c.x > 0)
-		if (VerifCaseVide((Case) { c.x - 1, c.y }))
-			return 1;
-	if (c.x < 6)
-		if (VerifCaseVide((Case) { c.x + 1, c.y }))
-			return 1;
-	if (c.y > 0)
-		if (VerifCaseVide((Case) { c.x, c.y - 1 }))
-			return 1;
-	if (c.y < 5)
-		if (VerifCaseVide((Case) { c.x, c.y + 1 }))
-			return 1;
-	return 0;
-}
-
-
-TypeContents adv(TypeContents joueur)
-{
-	if (joueur == HOMME) return DEMON;
-	else return HOMME;
-}
-
-/* Vérifie qu'un pion peut en manger un autre
- * On suppose que la case n'est pas vide */
-int pion_peut_manger(Case c, TypeContents joueur)
-{
-	TypeContents a = adv(joueur);
-
-	if (c.x > 1)
-		if (VerifCaseVide((Case) { c.x - 2, c.y }) &&
-			plateau[c.x - 1][c.y] == a)
-			return 1;
-	if (c.x < 5)
-		if (VerifCaseVide((Case) { c.x + 2, c.y }) &&
-			plateau[c.x + 1][c.y] == a)
-			return 1;
-	if (c.y > 1)
-		if (VerifCaseVide((Case) { c.x, c.y - 2 }) &&
-			plateau[c.x][c.y - 1] == a)
-			return 1;
-	if (c.y < 4)
-		if (VerifCaseVide((Case) { c.x, c.y + 2 }) &&
-			plateau[c.x][c.y + 1] == a)
-			return 1;
-	return 0;
-}
-
-
 /* Place un pion sur l'interface graphique et dans le plateau de jeu */
 void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
 				 Ressource sprite, int joueur, Player joueurs[])
@@ -766,7 +777,7 @@ Point clic_souris(Input in)
 
 int main(int argc, char *argv[])
 {
-	int tour= 0, joueur=0, estPremierClic=1, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, JoueurAd;
+	int tour= 0, joueur=0, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, JoueurAd;
 	Point hgDelete;
 
 	Case caseSelection, caseDeplacement;
@@ -866,15 +877,13 @@ int main(int argc, char *argv[])
 		/* a venir */
 
 		// si on est dans le mode jeux simple ou mode variante et il existe des pions pour les deux joueurs sur le plateau et le jeu n'est pas fini
-		if (tour==3 && ( VerifPionsSurPlateau(joueurs[0]) ||
-			VerifPionsSurPlateau(joueurs[1]) || estPremierClic) && !estGameOver)
+		if (tour == 3 && !estGameOver)
 		{
 
 			estCoupValide = 0;
 			if(in.mousebuttons[SDL_BUTTON_LEFT] || estVSIA)
 			{
 				in.mousebuttons[SDL_BUTTON_LEFT]=0;
-				estPremierClic=0;
 
 				if(estVSIA)
 				{
