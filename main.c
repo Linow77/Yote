@@ -3,35 +3,6 @@
 #include <time.h>
 #include "table_score.h"
 #include "affichage.h"
-// Prototypes
-
-/*
-void TireAuSortJoueur(Player joueurs[]);
-void InitPlateau();
-void AffichePlateauCLI();
-void Init_joueur(Player *player);
-void Init_joueurs(Player players[]);
-void PlacerPion(Player *p);
-void RecupCoordonneesCLI(Case *c);
-void ChoisirPion(Player *p, Case *pion);
-void DeplacerPion(Player *p);
-Case *VerifMouvementsValides(Case depart, int *taille);
-void AppliqueCoup(Case pion, Case dest, TypeContents type);
-void SetCase(Case *c, int x, int y);
-int VerifCaseVide(Case c);
-int VerifPionsSurPlateau(TypeContents joueur);
-int VerifDeplacementOrthogonal(Case c1, Case c2);
-int MemeType(Case c, TypeContents type);
-int VerifMouvementsContraires(Move m1, Move m2);
-int EqlCase(Case c1, Case c2);
-int VerifDansPlateau(Case c);
-TypeContents Adversaire(TypeContents joueur);
-*/
-
-// Variable globale
-
-
-// Main
 
 int main()
 {
@@ -168,20 +139,24 @@ int main()
 				{
 					in.mousebuttons[SDL_BUTTON_LEFT]=0;
 
-					//si l'utilisateur a cliqué sur le button gauche de la souris
-					// L'utilisateur clique sur la case d'arrivée
 					UpdateEvents(&in);
 					do {
 						estCoupValide = 0;// faux
 						UpdateEvents(&in);
 
-						if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
-						{
 
+						// L'utilisateur clique sur la case d'arrivée
+						// Paul : j'ai essayé d'enlever ce if le mettant la 1re
+						// condition au prochain, mais le debugger me dit après
+						// que caseDeplacement est pas initialisé
+						if(in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
+						{
 							if (estVSIA && tour_de_homme(joueurs, joueur))
-								caseDeplacement = RecupCaseArriveeIA(caseSelection)
-;								else
+								caseDeplacement = RecupCaseArriveeIA(caseSelection);
+							else
+							{
 								caseDeplacement = PointToCase(clic_souris(in));
+							}
 
 							//si la case destination est dans le plateau
 							if(dans_le_plateau(caseDeplacement))
@@ -284,7 +259,8 @@ int main()
 								}
 							}
 						}
-					}while(!estCoupValide && (!in.key[SDLK_ESCAPE]) && (!in.quit));
+					} while(!estCoupValide && (!in.key[SDLK_ESCAPE]) && (!in.quit));
+
 				}
 
 				if(estCoupValide)
