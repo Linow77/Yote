@@ -1,5 +1,7 @@
 #include "modele.h"
 
+
+
 TypeContents plateau[5][6];
 
 /* Initialise les cases du plateau à VIDE */

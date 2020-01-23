@@ -112,7 +112,8 @@ void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 				   img ecran, Player joueurs[], Ressource sprite, img *case_vide,
 				   img *pion, int *joueur);
 
-
+void AfficheMenu(int nbTour, int *tour, img fond, img ecran);
+void RenitiliserClic(Input *in);
 
 
 

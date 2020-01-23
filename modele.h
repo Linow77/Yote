@@ -28,6 +28,7 @@ typedef struct Move {
     Case nouvelle_position;
 } Move;
 
+
 TypeContents plateau[5][6];
 
 Case DetermineCaseASupprimer (Case case1, Case case2);
@@ -67,6 +68,5 @@ void SetCase(Case *c, int x, int y);
 void TireAuSortJoueur(Player joueurs[]);
 void ia_pioche_pion(Case *caseSelection);
 void set_case(Case *c, int x, int y);
-
 #endif
 

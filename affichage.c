@@ -362,7 +362,31 @@ Point clic_souris(Input in)
 }
 
 
+/** Permet d'afficher le menu convenable selon le NbTour passer en parametre **/
+void AfficheMenu(int nbTour, int *tour, img fond, img ecran)
+{	if (nbTour==1)
+	{	*tour=1;
+		fond.image=SDL_LoadBMP("ChoixAdv.bmp");	
+	}
+	
+	if (nbTour==2)
+	{
+		*tour=2;
+		fond.image=SDL_LoadBMP("menuChoix.bmp");
+	}
+	
+	if (nbTour==3)
+	{
+		*tour=3;
+		fond.image=SDL_LoadBMP("table.bmp");
+	}
+	
+	affiche_menu(fond,ecran);
+}
 
- //MAIN
-
+/** Permet de remet le compteur de clic à 0 pour pouvoir récuperer d'autres clic **/
+void RenitiliserClic( Input *in)
+{
+	in->mousebuttons[SDL_BUTTON_LEFT]=0;		
+}
 
