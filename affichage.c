@@ -74,7 +74,10 @@ void UpdateEvents(Input* in)
 		}
 }
 
-
+/*
+ * Laisse le joueur cliquer dans la fenêtre, et retourne les coordonnées
+ * dans une variable de type Point
+ */
 Point clic()
 {
 	SDL_Event event;
@@ -106,14 +109,25 @@ Point clic()
 	return p;
 }
 
-/*
-int verif_quitter_jeu()
+void verif_quitter_jeu()
 {
-	SDL_Event e;
+	SDL_Event event;
 
-	SDL_
+	if (SDL_PollEvent(&event))
+	{
+		if (event.type == SDL_QUIT)
+		{
+			SDL_Quit();
+			exit(0);
+		}
+		else if (event.type == SDL_KEYDOWN)
+			if (event.key.keysym.sym == SDLK_ESCAPE)
+			{
+				SDL_Quit();
+				exit(0);
+			}
+	}
 }
-*/
 
 void print_point(Point p)
 {
