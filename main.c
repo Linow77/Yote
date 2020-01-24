@@ -9,6 +9,7 @@ int main()
 	int tour= 0, joueur=0, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, JoueurAd;
 	Point hgDelete;
 
+
 	Case caseSelection, caseDeplacement;
 	Player joueurs[2];
 	img fond,ecran,pion, case_vide;
@@ -70,16 +71,16 @@ int main()
 		//si on choisit le mode simple
 		if (VerifModeSimple(in)&&(tour==2))
 		{	AfficheMenu(3,&tour,fond,ecran);
-			infoPartie(ecran, joueurs,sprite);
-			RenitiliserClic(&in);
-		}
-
+			infoPartie(ecran, joueurs,sprite,1);//Le 1 correpond a la variable "joueur", elle s'actualise après
+			RenitiliserClic(&in);				// l'affichage du pion du joueur actuel, ce problème est réglé
+		}										// dans infopartie mais pour le premier affichage il faut manuellement
+												// afficher un démon (1er joueur)
 		//si on choisit le mode variante
 		if (VerifModeVariante(in)&&(tour==2))
 		{  // On met à 1 estModeVariante
 			estModeVariante = 1;
 			AfficheMenu(3,&tour,fond,ecran);
-			infoPartie(ecran, joueurs,sprite);
+			infoPartie(ecran, joueurs,sprite,1); 
 			RenitiliserClic(&in);
 		}
 
@@ -144,7 +145,7 @@ int main()
 										SupprimerPion(&case_vide,sprite, hgDelete, joueur_adv(joueur));
 										
 										// ON REVIENT SUR LE JOUEUR INITIAL
-										infoPartie(ecran, joueurs,sprite);
+										infoPartie(ecran, joueurs,sprite,joueur);
 										SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
 										SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 										SDL_Flip(ecran.image);
@@ -199,7 +200,7 @@ int main()
 													SupprimerPion(&case_vide,sprite, hgDelete, joueur_adv(joueur));
 													
 													// ON REVIENT SUR LE JOUEUR INITIAL
-													infoPartie(ecran, joueurs,sprite);
+													infoPartie(ecran, joueurs,sprite,joueur);
 													SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
 													SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 													SDL_Flip(ecran.image);
