@@ -47,6 +47,11 @@
 #define BOUTTONVARIANTEY1 430
 #define BOUTTONVARIANTEY2 560
 
+#define BOUTTONRETOURX1 689
+#define BOUTTONRETOURX2 918
+#define BOUTTONRETOURY1 577
+#define BOUTTONRETOURY2 683
+
 //STRUCTURES
 
 /** EVENEMENT **/
@@ -99,6 +104,8 @@ void AfficherPion(img ecran, img *pion, Ressource sprite, Point hg, int joueur);
 void SupprimerPion(img *caseVide, Ressource sprite, Point hg, int joueur);
 int VerifQuitter(Input in);
 int VerifMenu1(Input in);
+int VerifMenuScore(Input in);
+int VerifBoutonRetour(Input in);
 int Verif1Vs1(Input in);
 int Verif1VsIA(Input in);
 int VerifModeSimple(Input in);
@@ -114,6 +121,7 @@ void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 
 void AfficheMenu(int nbTour, int *tour, img fond, img ecran);
 void RenitiliserClic(Input *in);
+void AfficheScore(img fond, img ecran,int *tour,TableScore *scores);
 
 
 

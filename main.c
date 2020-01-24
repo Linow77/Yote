@@ -9,6 +9,7 @@ int main()
 	int tour= 0, joueur=0, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, JoueurAd;
 	Point hgDelete;
 
+	TableScore scores;
 
 	Case caseSelection, caseDeplacement;
 	Player joueurs[2];
@@ -24,6 +25,9 @@ int main()
 	TireAuSortJoueur(joueurs);
 	/** CHARGEMENT DES IMAGES **/
 	chargement(&sprite);
+	/**Initialisation du fichier des scores **/
+	init_table_score(&scores);
+	alloc_table_score(&scores);
 
 	//CHARGEMENT DES IMAGES & POSITIONS DES OBJETS
 	chargement_objets(&fond, &ecran);
@@ -85,6 +89,20 @@ int main()
 		}
 
 		//SI ON CLIC SUR SCORE (a faire) 
+		if (VerifMenuScore(in)&&(tour==0))
+		{	
+			AfficheScore(fond,ecran,&tour,&scores);
+			RenitiliserClic(&in);
+		}
+
+		if(VerifBoutonRetour(in)&&(tour==4))
+		{
+			fond.image=SDL_LoadBMP("menu_principal.bmp");
+			affiche_menu(fond,ecran);
+			tour=0;
+			RenitiliserClic(&in);
+		}
+
 
 		// tantque le jeu n'est pas fini
 		if (tour == 3 && !estGameOver)
@@ -244,6 +262,7 @@ int main()
 		}
 	}
 
+	free_table_score(&scores);
 	return EXIT_SUCCESS;
 }
 

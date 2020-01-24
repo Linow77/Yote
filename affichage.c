@@ -147,6 +147,17 @@ int VerifMenu1(Input in)
 	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONJOUERX1)&&(in.mousex<BOUTTONJOUERX2)&&(in.mousey>BOUTTONJOUERY1)&&(in.mousey<BOUTTONJOUERY2);
 }
 
+/**  Permet de vérifier si l’utilisateur a cliqué sur le bouton score dans le premier menu  **/
+int VerifMenuScore(Input in)
+{
+	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONSCOREX1)&&(in.mousex<BOUTTONSCOREX2)&&(in.mousey>BOUTTONSCOREY1)&&(in.mousey<BOUTTONSCOREY2);
+}
+/**  Permet de vérifier si l’utilisateur a cliqué sur le bouton retour dans le menu score **/
+int VerifBoutonRetour(Input in)
+{
+	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONRETOURX1)&&(in.mousex<BOUTTONRETOURX2)&&(in.mousey>BOUTTONRETOURY1)&&(in.mousey<BOUTTONRETOURY2);
+}
+
 /**  Permet de vérifier si l’utilisateur clique sur le bouton 1 VS 1 **/
 int Verif1Vs1(Input in)
 {
@@ -437,8 +448,6 @@ void AfficheMenu(int nbTour, int *tour, img fond, img ecran)
 		SDL_FreeSurface(textepseudo1);
 		SDL_FreeSurface(textepseudo2);
 	}
-	
-	
 }
 
 /** Permet de remet le compteur de clic à 0 pour pouvoir récuperer d'autres clic **/
@@ -447,3 +456,83 @@ void RenitiliserClic( Input *in)
 	in->mousebuttons[SDL_BUTTON_LEFT]=0;		
 }
 
+/** Affiche le menu des scores **/
+void AfficheScore(img fond, img ecran,int *tour,TableScore *scores){
+
+	unsigned int num; //num est le nombre de scores dans le fichier
+	*tour=4;
+	fond.image=SDL_LoadBMP("menuscore.bmp");
+	affiche_menu(fond,ecran);
+
+	/** récupération des scores dans le fichier texte score.txt**/
+	get_scores(scores);
+	/** Affichages des scores sur le menu **/
+	TTF_Font *police = NULL; //initialisation de la police
+	TTF_Init(); // Appel de la fct qui perlet d'écrire
+	police = TTF_OpenFont("RuneicityDecorative001.ttf", 50); //on charge la police
+	SDL_Color couleurBordeau = {139, 3, 3};
+	SDL_Color couleurNoire = {0, 0, 0};
+	TTF_SetFontStyle(police, TTF_STYLE_BOLD | TTF_STYLE_UNDERLINE);
+
+	char pseudo[10] = "";
+	char score[3] = "";
+	char numero[2] = "";
+	char rang[5] = "RANG";
+	char joueur[7] = "JOUEUR";
+	char points[7] = "POINTS";
+
+	SDL_Surface *textepseudo = NULL , *textescore = NULL, *textenumero = NULL, *texterang = NULL, *textejoueur = NULL, *textepoints = NULL; //initialisation des surface de texte
+	SDL_Rect positionpseudo, positionscore, positionnumero, positionrang, positionjoueur, positionpoints; //initialisation des positions des surfaces
+
+	positionnumero.x=150;	positionnumero.y=270;
+	positionpseudo.x=300;	positionpseudo.y=270;
+	positionscore.x=750;	positionscore.y=270;
+
+	positionrang.x=110;		positionrang.y=210;
+	positionjoueur.x=330;	positionjoueur.y=210;
+	positionpoints.x=700;	positionpoints.y=210;
+
+	texterang = TTF_RenderText_Blended(police,rang, couleurNoire);
+	textejoueur = TTF_RenderText_Blended(police,joueur, couleurNoire);
+	textepoints = TTF_RenderText_Blended(police,points, couleurNoire);
+
+	SDL_BlitSurface(texterang, NULL, ecran.image, &positionrang);
+	SDL_BlitSurface(textejoueur, NULL, ecran.image, &positionjoueur);
+	SDL_BlitSurface(textepoints, NULL, ecran.image, &positionpoints);
+
+	TTF_SetFontStyle(police, TTF_STYLE_BOLD); // on enleve le surlignement
+	for(num=0;num<scores->number;num++)
+	{
+		
+		sprintf(pseudo, "%s", scores->players[num]);
+		sprintf(score, "%u", scores->scores[num]);
+		sprintf(numero, "%u", num+1);
+
+		
+
+		textepseudo = TTF_RenderText_Blended(police,pseudo, couleurBordeau);
+		textescore = TTF_RenderText_Blended(police,score, couleurBordeau);
+		textenumero = TTF_RenderText_Blended(police,numero, couleurBordeau);
+
+		
+
+		SDL_BlitSurface(textepseudo, NULL, ecran.image, &positionpseudo);
+		SDL_BlitSurface(textescore, NULL, ecran.image, &positionscore);
+		SDL_BlitSurface(textenumero, NULL, ecran.image, &positionnumero);
+		
+		SDL_Flip(ecran.image);
+		positionpseudo.y=positionpseudo.y+60;
+		positionscore.y=positionscore.y+60;
+		positionnumero.y=positionnumero.y+60;
+	}
+
+	TTF_CloseFont(police);
+    TTF_Quit();
+
+    SDL_FreeSurface(textepseudo);
+	SDL_FreeSurface(textescore);
+	SDL_FreeSurface(textenumero);
+	SDL_FreeSurface(texterang);
+	SDL_FreeSurface(textejoueur);
+	SDL_FreeSurface(textepoints);
+}

@@ -517,8 +517,3 @@ int tour_de_homme(Player joueurs[], int joueur)
 }
 
 
-
-
-
-
-
