@@ -117,7 +117,7 @@ void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
 				 Ressource sprite, int joueur, Player joueurs[]);
 void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 				   img ecran, Player joueurs[], Ressource sprite, img *case_vide,
-				   img *pion, int *joueur);
+				   img *pion, int *joueur,int permission);
 
 void AfficheMenu(int nbTour, int *tour, img fond, img ecran);
 void RenitiliserClic(Input *in);
