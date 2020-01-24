@@ -57,7 +57,7 @@ int main()
 
 
 	//TANT QUE L'UTILISATEUR N'A PAS QUITTÉ ou qu'il n'a pas gagné
-	while((!in.key[SDLK_ESCAPE]) && (!in.quit))
+	while (1)
 	{
 		//UpdateEvents(&in);
 

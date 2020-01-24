@@ -73,39 +73,16 @@ void UpdateEvents(Input* in)
 				}
 		}
 }
-void events(Input* in)
+
+void verif_quitter()
 {
-		SDL_Event event;
-		while(SDL_WaitEvent(&event))
-		{
-				switch (event.type)
-				{
-				case SDL_KEYDOWN:
-						in->key[event.key.keysym.sym]=1;
-						break;
-				case SDL_KEYUP:
-						in->key[event.key.keysym.sym]=0;
-						break;
-				case SDL_MOUSEMOTION:
-						in->mousex=event.motion.x;
-						in->mousey=event.motion.y;
-						in->mousexrel=event.motion.xrel;
-						in->mouseyrel=event.motion.yrel;
-						break;
-				case SDL_MOUSEBUTTONDOWN:
-						in->mousebuttons[event.button.button]=1;
-						break;
-				case SDL_MOUSEBUTTONUP:
-						in->mousebuttons[event.button.button]=0;
-						break;
-				case SDL_QUIT:
-						in->quit = 1;
-						break;
-				default:
-						break;
-				}
-		}
+	SDL_Event event;
+
+	if (SDL_PollEvent(&event))
+		if (event.type == SDL_QUIT)
+			exit(0);
 }
+
 Point clic()
 {
 	SDL_Event event;
@@ -121,6 +98,13 @@ Point clic()
 			p = (Point) { event.button.x, event.button.y };
 			pas_de_clic = !pas_de_clic;
 		}
+		else if (event.type == SDL_QUIT)
+		{
+			exit(0);
+		}
+		else if (event.type == SDL_KEYDOWN)
+			if (event.key.keysym.sym == SDLK_ESCAPE)
+				exit(0);
 	}
 
 	return p;
