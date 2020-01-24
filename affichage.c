@@ -106,6 +106,15 @@ Point clic()
 	return p;
 }
 
+/*
+int verif_quitter_jeu()
+{
+	SDL_Event e;
+
+	SDL_
+}
+*/
+
 void print_point(Point p)
 {
 	printf("x : %d | y : %d\n", p.x, p.y);
