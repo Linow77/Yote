@@ -109,6 +109,10 @@ Point clic()
 	return p;
 }
 
+/*
+ * Pas testé
+ * Vérifie que l'utilisateur quitte le jeu
+ */
 void verif_quitter_jeu()
 {
 	SDL_Event event;
@@ -129,12 +133,20 @@ void verif_quitter_jeu()
 	}
 }
 
+/* Affiche un point dans le terminal */
 void print_point(Point p)
 {
 	printf("x : %d | y : %d\n", p.x, p.y);
 }
 
 
+/*
+ * En mode joueur contre joueur, les joueurs entrent leurs pseudos
+ * Le joueur qui joue en premier est tiré au sort
+ * En mode IA, le joueur entre son nom; il est le DEMON (convenu)
+ * l'IA est donc l'HOMME
+ * Le DEMON est à l'indice 0, l'HOMME l'indice 1
+ */
 void joueurs_entrent_noms(int ia_mode, Player joueurs[])
 {
 	int rst;
@@ -486,7 +498,10 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 }
 
 
-/* Place un pion sur l'interface graphique et dans le plateau de jeu */
+/*
+ * Place un pion sur l'interface graphique et dans le plateau de jeu
+ * Pas beau, TODO à enlever
+ */
 void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
 				 Ressource sprite, int joueur, Player joueurs[])
 {
@@ -498,7 +513,9 @@ void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
 	SDL_Flip(ecran.image);
 }
 
-
+/*
+ * Pas beau, TODO à enlever
+ */
 void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 				   img ecran, Player joueurs[], Ressource sprite, img *case_vide,
 				   img *pion, int *joueur)

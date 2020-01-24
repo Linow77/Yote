@@ -74,6 +74,5 @@ void TireAuSortJoueur(Player joueurs[]);
 void ia_pioche_pion(Case *caseSelection);
 void set_case(Case *c, int x, int y);
 char *entre_nom_dans_terminal();
-void affiche_type_joueur(TypeContents type);
 #endif
 

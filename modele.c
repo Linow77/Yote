@@ -17,7 +17,10 @@ void InitPlateau() {
 
 
 
-/* Au début du jeu le 1er joueur est tiré au sort */
+/*
+ * Au début du jeu le 1er joueur est tiré au sort
+ * Ne sert plus TODO à enlever
+ */
 void TireAuSortJoueur(Player joueurs[]) {
 	if (rand() % 2) {
 		joueurs[0].JoueurT = HOMME;
@@ -507,9 +510,9 @@ void ia_pioche_pion(Case *caseSelection)
 }
 
 
-
-
-
+/*
+ * Vérifie si le joueur courant est l'HOMME
+ */
 int tour_de_homme(Player joueurs[], int joueur)
 {
 	return joueurs[joueur].JoueurT == HOMME;
@@ -533,10 +536,5 @@ char *entre_nom_dans_terminal()
 }
 
 
-void affiche_type_joueur(TypeContents type)
-{
-	if (type == HOMME) printf("HOMME");
-	else printf("DEMON");
-}
 
 

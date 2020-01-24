@@ -103,39 +103,7 @@ int main()
 			SDL_Quit();
 		}
 
-		printf("%d\n", tour);
 	} while (tour != 3);
-
-	/*
-	int rst = rand();
-	joueurs[0].JoueurT = DEMON;
-	if (estVSIA)
-	{
-		puts("Joueur 1, entrez votre pseudo");
-		joueurs[0].nom = "IA";
-		joueurs[1].nom = entre_nom_dans_terminal();
-	}
-	else
-	{
-		if (rst % 2 == 0)
-		{
-			puts("Joueur 1, entrez votre pseudo");
-			joueurs[0].nom = entre_nom_dans_terminal();
-			puts("Joueur 2, entrez votre pseudo");
-			joueurs[1].nom = entre_nom_dans_terminal();
-		}
-		else
-		{
-			puts("Joueur 1, entrez votre pseudo");
-			joueurs[1].nom = entre_nom_dans_terminal();
-			puts("Joueur 2, entrez votre pseudo");
-			joueurs[0].nom = entre_nom_dans_terminal();
-		}
-		puts("Résultat du tirage au sort");
-	}
-	printf("Joueur %s : %s | Joueur %s : %s\n", joueurs[0].nom, types[joueurs[0].JoueurT], joueurs[1].nom, types[joueurs[1].JoueurT]);
-	puts("Vous pouvez retourner dans l'interface graphique pour jouer c:");
-	*/
 
 	joueurs_entrent_noms(estVSIA, joueurs);
 	//SI ON CLIC SUR SCORE (a faire)
