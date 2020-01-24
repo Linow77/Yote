@@ -31,7 +31,7 @@ void TireAuSortJoueur(Player joueurs[]) {
 }
 
 void Init_joueur(Player *player) {
-	*player = (Player) { HOMME, 0, 12, 0 };
+	*player = (Player) { HOMME, 0, 12, 0, NULL };
 }
 
 void Init_joueurs(Player players[]) {
@@ -519,21 +519,25 @@ int tour_de_homme(Player joueurs[], int joueur)
 /* Retourne une chaîne de caractères entrée dans le terminal */
 char *entre_nom_dans_terminal()
 {
-    char *str = (char *) malloc(sizeof(char) * TAILLE_MAX_NOM);
-    char *skip_line;
+	char *str = (char *) malloc(sizeof(char) * TAILLE_MAX_NOM);
+	char *skip_line;
 
-    do
-    {
-        fgets(str, sizeof(str), stdin);
-        skip_line = strchr(str, '\n');
-        *skip_line = '\0';
-    } while (strlen(str) >= TAILLE_MAX_NOM || str[0] == '\0');
+	do
+	{
+		puts(" entrez votre nom : ");
+		fgets(str, sizeof(str), stdin);
+		skip_line = strchr(str, '\n');
+		*skip_line = '\0';
+	} while (strlen(str) >= TAILLE_MAX_NOM || str[0] == '\0');
 
-    return str;
+	return str;
 }
 
 
-
-
+void affiche_type_joueur(TypeContents type)
+{
+	if (type == HOMME) printf("HOMME");
+	else printf("DEMON");
+}
 
 

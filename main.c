@@ -14,13 +14,15 @@ int main()
 	img fond,ecran,pion, case_vide;
 	Input in; //VARIABLE GESTION EVENEMENT
 	Ressource sprite;
+	srand(time(NULL));
 
 	/** INITIALISATION DU PLATEAU **/
 	InitPlateau();
 	/** INITIALISATION DES JOUEURS **/
 	Init_joueurs(joueurs);
-	/** tiré au sort du joueur **/
 	TireAuSortJoueur(joueurs);
+	affiche_type_joueur(joueurs[0].JoueurT);
+	affiche_type_joueur(joueurs[1].JoueurT);
 	/** CHARGEMENT DES IMAGES **/
 	chargement(&sprite);
 
@@ -33,18 +35,31 @@ int main()
 	//On affiche le menu si la partie n'a pas commencée MENU 0
 	affiche_menu(fond,ecran);
 
+	Point p = clic(&in);
+	print_point(p);
+	SDL_Event event;
+	while (event.type != SDL_QUIT)
+	{
+		SDL_WaitEvent(&event);
+	}
+	SDL_Quit();
+
+	return 0;
+
 	//AFFICHAGE FIN DE PARTIE
+	/*
 	int victoire = 0;
     if(victoire==0)
 	{
 		afficheFinJeu(ecran,sprite,joueurs[0]);
 	}
+	*/
 
 
 	//TANT QUE L'UTILISATEUR N'A PAS QUITTÉ ou qu'il n'a pas gagné
 	while((!in.key[SDLK_ESCAPE]) && (!in.quit))
 	{
-		UpdateEvents(&in);
+		//UpdateEvents(&in);
 
 		// Si on clic sur bouton jouer du menu 0
 		if (VerifMenu1(in)&&(tour==0))
@@ -66,6 +81,24 @@ int main()
 			AfficheMenu(2,&tour,fond,ecran);
 			RenitiliserClic(&in);
 		}
+
+
+		/*
+		if (estVSIA)
+		{
+			printf("DEMON");
+			joueurs[1].JoueurT = DEMON;
+			joueurs[1].nom = entre_nom_dans_terminal();
+		}
+		else
+		{
+			affiche_type_joueur(joueurs[0].JoueurT);
+			joueurs[0].nom = entre_nom_dans_terminal();
+			affiche_type_joueur(joueurs[1].JoueurT);
+			joueurs[1].nom = entre_nom_dans_terminal();
+		}
+		*/
+
 
 		//si on choisit le mode simple
 		if (VerifModeSimple(in)&&(tour==2))
@@ -111,10 +144,10 @@ int main()
 				//si la case de sélection contient un pion qui appartient au joueur
 				else if(VerifMemeType(caseSelection, joueurs[joueur]))
 				{	RenitiliserClic(&in);
-					UpdateEvents(&in);
+					//UpdateEvents(&in);
 
 					do {	estCoupValide = 0;// faux
-							UpdateEvents(&in);
+							//UpdateEvents(&in);
 
 						//si L'utilisateur clique sur la case d'arrivée ou s'il s'agit du joueur HOMME contrôlé par l'IA
 						if(in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
@@ -169,7 +202,7 @@ int main()
 
 										estCoupValide = 0;
 										do {
-											UpdateEvents(&in);
+											//UpdateEvents(&in);
 
 											if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
 											{

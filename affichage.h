@@ -115,6 +115,8 @@ void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 void AfficheMenu(int nbTour, int *tour, img fond, img ecran);
 void RenitiliserClic(Input *in);
 
+void print_point(Point p);
+Point clic();
 
 
 

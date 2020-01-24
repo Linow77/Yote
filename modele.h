@@ -23,7 +23,7 @@ typedef struct Player {
     int piece_cap;// nombre de pièces capturées
     int piece_reserve;// - dans la réserve
     int piece_plateau;// - sur le plateau
-    const char *nom;
+    char *nom;
     // int score;
 } Player;
 
@@ -73,5 +73,6 @@ void TireAuSortJoueur(Player joueurs[]);
 void ia_pioche_pion(Case *caseSelection);
 void set_case(Case *c, int x, int y);
 char *entre_nom_dans_terminal();
+void affiche_type_joueur(TypeContents type);
 #endif
 

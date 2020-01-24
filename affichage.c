@@ -73,6 +73,63 @@ void UpdateEvents(Input* in)
 				}
 		}
 }
+void events(Input* in)
+{
+		SDL_Event event;
+		while(SDL_WaitEvent(&event))
+		{
+				switch (event.type)
+				{
+				case SDL_KEYDOWN:
+						in->key[event.key.keysym.sym]=1;
+						break;
+				case SDL_KEYUP:
+						in->key[event.key.keysym.sym]=0;
+						break;
+				case SDL_MOUSEMOTION:
+						in->mousex=event.motion.x;
+						in->mousey=event.motion.y;
+						in->mousexrel=event.motion.xrel;
+						in->mouseyrel=event.motion.yrel;
+						break;
+				case SDL_MOUSEBUTTONDOWN:
+						in->mousebuttons[event.button.button]=1;
+						break;
+				case SDL_MOUSEBUTTONUP:
+						in->mousebuttons[event.button.button]=0;
+						break;
+				case SDL_QUIT:
+						in->quit = 1;
+						break;
+				default:
+						break;
+				}
+		}
+}
+Point clic()
+{
+	SDL_Event event;
+
+	while (1)
+	{
+		SDL_WaitEvent(&event);
+		/*
+		if (event.type == SDL_BUTTON_LEFT)
+		{
+			return (Point) { event.motion.x, event.motion.y };
+		}
+		*/
+		if (event.type == SDL_MOUSEBUTTONUP)
+			return (Point) { event.button.x, event.button.y };
+	}
+
+	return (Point) { 0, 0 };
+}
+
+void print_point(Point p)
+{
+	printf("x : %d | y : %d\n", p.x, p.y);
+}
 
 void chargement_objets(img* fond,img* ecran)
 {
@@ -326,7 +383,7 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	SDL_FreeSurface(scorevainqueur);
 	SDL_FreeSurface(scoreperdant);
 	free(pseudo_joueur1);
-	free(pseudo_joueur2);
+	free(pseudo_joueur1);
 }
 
 
