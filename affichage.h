@@ -11,7 +11,7 @@
 
 //MACROCONSTANTES
 
-/*Coordonnées des boutons*/
+/*CoordonnÃ©es des boutons*/
 #define BOUTTONJOUERX1 94
 #define BOUTTONJOUERX2 344
 #define BOUTTONJOUERY1 502
@@ -58,8 +58,8 @@
 typedef struct
 {
 	char key[SDLK_LAST]; //clavier
-	int mousex,mousey; //coordonnés de la souris
-	int mousexrel,mouseyrel; //le vecteur déplacement souris
+	int mousex,mousey; //coordonnÃ©s de la souris
+	int mousexrel,mouseyrel; //le vecteur dÃ©placement souris
 	char mousebuttons[8]; //boutons de la souris
     char quit;
 }Input;
@@ -74,7 +74,7 @@ typedef struct
 /** LOAD IMAGES **/
 typedef struct
 {
-	// Création des surfaces
+	// CrÃ©ation des surfaces
 	SDL_Surface* pion_d;
 	SDL_Surface* pion_h;
 	SDL_Surface* case_v;
@@ -117,7 +117,7 @@ void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
 				 Ressource sprite, int joueur, Player joueurs[]);
 void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 				   img ecran, Player joueurs[], Ressource sprite, img *case_vide,
-				   img *pion, int *joueur);
+				   img *pion, int *joueur,int permission);
 
 void AfficheMenu(int nbTour, int *tour, img fond, img ecran);
 void RenitiliserClic(Input *in);

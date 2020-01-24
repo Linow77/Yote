@@ -218,9 +218,6 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur)
 	hgpion.x = 445;
 	hgpion.y = 15;
 
-	
-	
-
 	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position); // efface le texte potentielment précedement
 	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position1);
 	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position2);
@@ -238,7 +235,7 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur)
 	//AFFICHAGE DU JOUEUR ACTUEL (PION SUR LA PLANCHE)
 	if(joueur==-1){
 		// on vient de manger le pion on laisse le même pion affiché
-	}else if(joueur==0){	// ON INVERSE CAR LAFFICHAGE SE FAIT APRES LE COUP JOUE IL FAUT DONC 
+	}else if(joueur==0){	// ON INVERSE CAR L'AFFICHAGE SE FAIT APRES LE COUP JOUE IL FAUT DONC 
 		joueur=1;	// INVERSER LES PIONS
 	}else if (joueur==1){
 		joueur=0;
@@ -254,9 +251,6 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur)
 	SDL_FreeSurface(texte1);
 	SDL_FreeSurface(texte2);
 	SDL_FreeSurface(texte3);
-
-	
-
 
 }
 
@@ -380,14 +374,17 @@ void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
 
 void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 				   img ecran, Player joueurs[], Ressource sprite, img *case_vide,
-				   img *pion, int *joueur)
+				   img *pion, int *joueur,int permission)
 {
 	*estCoupValide = 1;
 
 	Point hg1 = CaseToPointhg(caseSelection);
 	Point hg2 = CaseToPointhg(caseDeplacement);
-
-	infoPartie(ecran, joueurs, sprite,*joueur);
+	
+	if (permission == 0)
+	{
+		infoPartie(ecran, joueurs, sprite,*joueur);
+	}
 	AfficherPion(ecran, pion, sprite, hg2, *joueur);
 	SupprimerPion(case_vide, sprite, hg1, *joueur);
 }

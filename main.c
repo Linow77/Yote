@@ -6,7 +6,7 @@
 
 int main()
 {
-	int tour= 0, joueur=0, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, JoueurAd;
+	int tour= 0, joueur=0, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, permission= 0, JoueurAd;
 	Point hgDelete;
 
 	TableScore scores;
@@ -104,7 +104,7 @@ int main()
 		}
 
 
-		// tantque le jeu n'est pas fini
+		// tant que le jeu n'est pas fini
 		if (tour == 3 && !estGameOver)
 		{	estCoupValide = 0;
 			
@@ -146,24 +146,24 @@ int main()
 							if(dans_le_plateau(caseDeplacement))
 							{	RenitiliserClic(&in);
 								
-								//si la case distation est vide et il s'agit d'un mouvement orthogonal ou le joueur va manger un pion adversaire
+								//si la case destination est vide et il s'agit d'un mouvement orthogonal ou le joueur va manger un pion adversaire
 								if(VerifCaseVide(caseDeplacement) && (VerifDeplacementOrthogonal(caseSelection,caseDeplacement)
 									|| VerifCoupValide(caseSelection, caseDeplacement, joueurs[joueur].JoueurT)))
 								{	
 									// DANS LE CAS OU LE JOUEUR VEUT MANGER LE PION DE L'ADVERSAIRE
 									if(VerifCoupValide(caseSelection, caseDeplacement, joueurs[joueur].JoueurT))
 									{	aMangerAdversaire = 1;
+										permission =1;
 										Case caseASupprimer = DetermineCaseASupprimer(caseSelection, caseDeplacement);
 										hgDelete=CaseToPointhg(caseASupprimer);
-
 										JoueurAd=NbJoueurAdv(joueur);
 										AppliqueCoupV2(caseSelection, caseASupprimer, caseDeplacement, &joueurs[joueur], &joueurs[JoueurAd] );
 
-										// ON CHANGE LE JOUEUR POUR SUPPRIMER LE PION DE LADVERSAIRE
+										// ON CHANGE LE JOUEUR POUR SUPPRIMER LE PION DE L'ADVERSAIRE
 										SupprimerPion(&case_vide,sprite, hgDelete, joueur_adv(joueur));
 										
 										// ON REVIENT SUR LE JOUEUR INITIAL
-										infoPartie(ecran, joueurs,sprite,joueur);
+										infoPartie(ecran, joueurs,sprite,JoueurAd);
 										SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
 										SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 										SDL_Flip(ecran.image);
@@ -173,8 +173,8 @@ int main()
 
 									//deplacement du pion sera appliquer qq soit le type de mouvementdans 
 									//(manger adversaire ou faire un mouvement orthogonal)
-									 
-									deplacer_pion(&estCoupValide, caseSelection, caseDeplacement,ecran, joueurs, sprite, &case_vide,&pion, &joueur);
+									deplacer_pion(&estCoupValide, caseSelection, caseDeplacement,ecran, joueurs, sprite, &case_vide,&pion, &joueur,permission);
+									permission =0;
 									SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 									SDL_Flip(ecran.image);
 
