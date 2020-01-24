@@ -35,8 +35,14 @@ int main()
 	//On affiche le menu si la partie n'a pas commencée MENU 0
 	affiche_menu(fond,ecran);
 
-	Point p = clic(&in);
+	Point p = clic();
 	print_point(p);
+	Point p2 = clic();
+	print_point(p2);
+	Point p3 = clic();
+	print_point(p3);
+	if (verif_dans_rectangle(p, p2, p3))
+		printf("Dans rectangle\n");
 	SDL_Event event;
 	while (event.type != SDL_QUIT)
 	{

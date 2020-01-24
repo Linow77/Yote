@@ -117,8 +117,15 @@ void RenitiliserClic(Input *in);
 
 void print_point(Point p);
 Point clic();
+int verif_dans_rectangle(Point p, Point hg, Point bd);
 
 
+int verif_mode_simple(Point clic);
+int verif_mode_variante(Point clic);
+int verif_pvia(Point clic);
+int verif_pvp(Point clic);
+int verif_menu1(Point clic);
+int verif_quitter(Point clic);
 
 
 

@@ -74,14 +74,6 @@ void UpdateEvents(Input* in)
 		}
 }
 
-void verif_quitter()
-{
-	SDL_Event event;
-
-	if (SDL_PollEvent(&event))
-		if (event.type == SDL_QUIT)
-			exit(0);
-}
 
 Point clic()
 {
@@ -114,6 +106,15 @@ void print_point(Point p)
 {
 	printf("x : %d | y : %d\n", p.x, p.y);
 }
+
+/* Vérifie qu'un point est dans une zone rectangulaire de la fenêtre */
+int verif_dans_rectangle(Point p, Point hg, Point bd)
+{
+	return p.x >= hg.x && p.y >= hg.y &&
+		p.x <= bd.x && p.y <= bd.y;
+}
+
+
 
 void chargement_objets(img* fond,img* ecran)
 {
@@ -182,11 +183,26 @@ int VerifQuitter(Input in)
 	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONQUITTERX1)&&(in.mousex<BOUTTONQUITTERX2)&&(in.mousey>BOUTTONQUITTERY1)&&(in.mousey<BOUTTONQUITTERY2);
 }
 
+int verif_quitter(Point clic)
+{
+	Point hg = { BOUTTONQUITTERX1, BOUTTONQUITTERY1 };
+	Point bd = { BOUTTONQUITTERX2, BOUTTONQUITTERY2 };
+	return verif_dans_rectangle(clic, hg, bd);
+}
+
 /**  Permet de vérifier si l’utilisateur a cliqué sur le bouton jouer dans le premier menu  **/
 int VerifMenu1(Input in)
 {
 	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONJOUERX1)&&(in.mousex<BOUTTONJOUERX2)&&(in.mousey>BOUTTONJOUERY1)&&(in.mousey<BOUTTONJOUERY2);
 }
+
+int verif_menu1(Point clic)
+{
+	Point hg = { BOUTTONJOUERX1, BOUTTONJOUERY1 };
+	Point bd = { BOUTTONJOUERX2, BOUTTONJOUERY2 };
+	return verif_dans_rectangle(clic, hg, bd);
+}
+
 
 /**  Permet de vérifier si l’utilisateur clique sur le bouton 1 VS 1 **/
 int Verif1Vs1(Input in)
@@ -194,10 +210,25 @@ int Verif1Vs1(Input in)
 	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTON1V1X1)&&(in.mousex<BOUTTON1V1X2)&&(in.mousey>BOUTTON1V1Y1)&&(in.mousey<BOUTTON1V1Y2);
 }
 
+/* Verif1VS1 */
+int verif_pvp(Point clic)
+{
+	Point hg = { BOUTTON1V1X1, BOUTTON1V1Y1 };
+	Point bd = { BOUTTON1V1X2, BOUTTON1V1Y2 };
+	return verif_dans_rectangle(clic, hg, bd);
+}
 /**  Permet de vérifier si l’utilisateur clique sur le bouton 1 VS IA **/
 int Verif1VsIA(Input in)
 {
 	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTON1VSIAX1)&&(in.mousex<BOUTTON1VSIAX2)&&(in.mousey>BOUTTON1VSIAY1)&&(in.mousey<BOUTTON1VSIAY2);
+}
+
+/* Verif1VSIA */
+int verif_pvia(Point clic)
+{
+	Point hg = { BOUTTON1VSIAX1, BOUTTON1VSIAY1 };
+	Point bd = { BOUTTON1VSIAX2, BOUTTON1VSIAY2 };
+	return verif_dans_rectangle(clic, hg, bd);
 }
 
 /**  Permet de vérifier si l’utilisateur clique sur le bouton Mode simple **/
@@ -205,12 +236,29 @@ int VerifModeSimple(Input in)
 {
 	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONSIMPLEX1)&&(in.mousex<BOUTTONSIMPLEX2)&&(in.mousey>BOUTTONSIMPLEY1)&&(in.mousey<BOUTTONSIMPLEY2);
 }
+int verif_mode_simple(Point clic)
+{
+	Point hg = { BOUTTONSIMPLEX1, BOUTTONSIMPLEY1 };
+	Point bd = { BOUTTONSIMPLEX2, BOUTTONSIMPLEY2 };
+	return verif_dans_rectangle(clic, hg, bd);
+}
+
+
+
 
 /**  Permet de vérifier si l’utilisateur clique sur le bouton Mode variante **/
 int VerifModeVariante(Input in)
 {
 	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONVARIANTEX1)&&(in.mousex<BOUTTONVARIANTEX2)&&(in.mousey>BOUTTONVARIANTEY1)&&(in.mousey<BOUTTONVARIANTEY2);
 }
+int verif_mode_variante(Point clic)
+{
+	Point hg = { BOUTTONVARIANTEX1, BOUTTONVARIANTEY1 };
+	Point bd = { BOUTTONVARIANTEX2, BOUTTONVARIANTEY2 };
+	return verif_dans_rectangle(clic, hg, bd);
+}
+
+
 
 void infoPartie(img ecran, Player joueurs[],Ressource sprite)
 {
