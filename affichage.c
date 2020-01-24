@@ -109,21 +109,21 @@ void events(Input* in)
 Point clic()
 {
 	SDL_Event event;
+	Point p;
+	int pas_de_clic = 1;
 
-	while (1)
+	while (pas_de_clic)
 	{
 		SDL_WaitEvent(&event);
-		/*
-		if (event.type == SDL_BUTTON_LEFT)
-		{
-			return (Point) { event.motion.x, event.motion.y };
-		}
-		*/
+
 		if (event.type == SDL_MOUSEBUTTONUP)
-			return (Point) { event.button.x, event.button.y };
+		{
+			p = (Point) { event.button.x, event.button.y };
+			pas_de_clic = !pas_de_clic;
+		}
 	}
 
-	return (Point) { 0, 0 };
+	return p;
 }
 
 void print_point(Point p)
