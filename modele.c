@@ -2,7 +2,6 @@
 
 
 
-TypeContents plateau[5][6];
 
 /* Initialise les cases du plateau à VIDE */
 void InitPlateau() {
@@ -524,7 +523,7 @@ char *entre_nom_dans_terminal()
 
 	do
 	{
-		puts(" entrez votre nom : ");
+		//puts(" entrez votre nom : ");
 		fgets(str, sizeof(str), stdin);
 		skip_line = strchr(str, '\n');
 		*skip_line = '\0';

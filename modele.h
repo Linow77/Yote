@@ -8,6 +8,7 @@
 
 #define TAILLE_MAX_NOM 10
 
+
 typedef struct Case {
     int x;
     int y;
