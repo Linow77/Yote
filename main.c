@@ -7,7 +7,6 @@
 int main()
 {
 	int tour= 0, joueur=0, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, JoueurAd;
-	const char *types[] = { "VIDE", "HOMME", "DEMON" };
 	Point hgDelete;
 
 	Case caseSelection, caseDeplacement;
@@ -107,15 +106,17 @@ int main()
 		printf("%d\n", tour);
 	} while (tour != 3);
 
+	/*
+	int rst = rand();
+	joueurs[0].JoueurT = DEMON;
 	if (estVSIA)
 	{
-		printf("DEMON");
-		joueurs[1].JoueurT = DEMON;
+		puts("Joueur 1, entrez votre pseudo");
+		joueurs[0].nom = "IA";
 		joueurs[1].nom = entre_nom_dans_terminal();
 	}
 	else
 	{
-		int rst = rand();
 		if (rst % 2 == 0)
 		{
 			puts("Joueur 1, entrez votre pseudo");
@@ -130,11 +131,13 @@ int main()
 			puts("Joueur 2, entrez votre pseudo");
 			joueurs[0].nom = entre_nom_dans_terminal();
 		}
-		joueurs[1].JoueurT = DEMON;
 		puts("Résultat du tirage au sort");
-		printf("Joueur %s : %s | Joueur %s : %s\n", joueurs[0].nom, types[joueurs[0].JoueurT], joueurs[1].nom, types[joueurs[1].JoueurT]);
-		puts("Vous pouvez retourner dans l'interface graphique pour jouer c:");
 	}
+	printf("Joueur %s : %s | Joueur %s : %s\n", joueurs[0].nom, types[joueurs[0].JoueurT], joueurs[1].nom, types[joueurs[1].JoueurT]);
+	puts("Vous pouvez retourner dans l'interface graphique pour jouer c:");
+	*/
+
+	joueurs_entrent_noms(estVSIA, joueurs);
 	//SI ON CLIC SUR SCORE (a faire)
 
 	// tant que le jeu n'est pas fini

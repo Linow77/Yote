@@ -127,6 +127,7 @@ int verif_pvp(Point clic);
 int verif_menu1(Point clic);
 int verif_quitter(Point clic);
 void verif_quitter_jeu();
+void joueurs_entrent_noms(int ia_mode, Player joueurs[]);
 
 
 
