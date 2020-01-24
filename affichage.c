@@ -92,11 +92,15 @@ Point clic()
 		}
 		else if (event.type == SDL_QUIT)
 		{
+			SDL_Quit();
 			exit(0);
 		}
 		else if (event.type == SDL_KEYDOWN)
 			if (event.key.keysym.sym == SDLK_ESCAPE)
+			{
+				SDL_Quit();
 				exit(0);
+			}
 	}
 
 	return p;

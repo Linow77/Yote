@@ -21,8 +21,8 @@ int main()
 	/** INITIALISATION DES JOUEURS **/
 	Init_joueurs(joueurs);
 	TireAuSortJoueur(joueurs);
-	affiche_type_joueur(joueurs[0].JoueurT);
-	affiche_type_joueur(joueurs[1].JoueurT);
+	//affiche_type_joueur(joueurs[0].JoueurT);
+	//affiche_type_joueur(joueurs[1].JoueurT);
 	/** CHARGEMENT DES IMAGES **/
 	chargement(&sprite);
 
@@ -34,7 +34,7 @@ int main()
 
 	//On affiche le menu si la partie n'a pas commencée MENU 0
 	affiche_menu(fond,ecran);
-
+/*
 	Point p = clic();
 	print_point(p);
 	Point p2 = clic();
@@ -51,6 +51,7 @@ int main()
 	SDL_Quit();
 
 	return 0;
+	*/
 
 	//AFFICHAGE FIN DE PARTIE
 	/*
@@ -61,66 +62,51 @@ int main()
 	}
 	*/
 
+	Point c;
 
 	//TANT QUE L'UTILISATEUR N'A PAS QUITTÉ ou qu'il n'a pas gagné
 	while (1)
 	{
-		//UpdateEvents(&in);
-
-		// Si on clic sur bouton jouer du menu 0
-		if (VerifMenu1(in)&&(tour==0))
+		do
 		{
-			AfficheMenu(1,&tour,fond,ecran);
-			RenitiliserClic(&in);
-		}
+			c = clic();
+			if (verif_menu1(c) &&(tour==0))
+			{
+				AfficheMenu(1,&tour,fond,ecran);
+			}
 
-		// Si on clic sur 1 VS 1
-		if (Verif1Vs1(in)&&(tour==1))
-		{	AfficheMenu(2,&tour,fond,ecran);
-			RenitiliserClic(&in);
-		}
+			// Si on clic sur 1 VS 1
+			else if (verif_pvp(c) &&(tour==1))
+			{
+				AfficheMenu(2,&tour,fond,ecran);
+			}
 
-		// Si on clic sur 1 VS IA
-		if (Verif1VsIA(in)&&(tour==1))
-		{	// On met à 1 estVSIA
-			estVSIA = 1;
-			AfficheMenu(2,&tour,fond,ecran);
-			RenitiliserClic(&in);
-		}
+			// Si on clic sur 1 VS IA
+			else if (verif_pvia(c) &&(tour==1))
+			{
+				estVSIA = 1;
+				AfficheMenu(2,&tour,fond,ecran);
+			}
 
+			else if (verif_mode_simple(c) &&(tour==2))
+			{
+				AfficheMenu(3,&tour,fond,ecran);
+				infoPartie(ecran, joueurs,sprite);
+			}
 
-		/*
-		if (estVSIA)
-		{
-			printf("DEMON");
-			joueurs[1].JoueurT = DEMON;
-			joueurs[1].nom = entre_nom_dans_terminal();
-		}
-		else
-		{
-			affiche_type_joueur(joueurs[0].JoueurT);
-			joueurs[0].nom = entre_nom_dans_terminal();
-			affiche_type_joueur(joueurs[1].JoueurT);
-			joueurs[1].nom = entre_nom_dans_terminal();
-		}
-		*/
+			else if (verif_mode_variante(c) &&(tour==2))
+			{
+				estModeVariante = 1;
+				AfficheMenu(3,&tour,fond,ecran);
+				infoPartie(ecran, joueurs,sprite);
+			}
 
+			else if (verif_quitter(c) &&(tour==0))
+			{
+				SDL_Quit();
+			}
 
-		//si on choisit le mode simple
-		if (VerifModeSimple(in)&&(tour==2))
-		{	AfficheMenu(3,&tour,fond,ecran);
-			infoPartie(ecran, joueurs,sprite);
-			RenitiliserClic(&in);
-		}
-
-		//si on choisit le mode variante
-		if (VerifModeVariante(in)&&(tour==2))
-		{  // On met à 1 estModeVariante
-			estModeVariante = 1;
-			AfficheMenu(3,&tour,fond,ecran);
-			infoPartie(ecran, joueurs,sprite);
-			RenitiliserClic(&in);
-		}
+		} while (tour == 3);
 
 		//SI ON CLIC SUR SCORE (a faire)
 
@@ -129,8 +115,8 @@ int main()
 		{	estCoupValide = 0;
 
 			//si l'utilisateur a cliqué sur le button gauche de la souris ou s'il s'agit du joueur HOMME contrôlé par l'IA
-			if(in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
-			{	RenitiliserClic(&in);
+			//if(in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
+			//{	//;
 
 				// s'il s'agit du joueur HOMME contrôlé par l'IA
 				if(estVSIA && tour_de_homme(joueurs, joueur))
@@ -139,7 +125,7 @@ int main()
 				}
 				else
 				{	do
-					{caseSelection = PointToCase(clic_souris(in));
+					{caseSelection = PointToCase(clic());
 					} while (!dans_le_plateau(caseSelection));
 				}
 
@@ -149,22 +135,23 @@ int main()
 
 				//si la case de sélection contient un pion qui appartient au joueur
 				else if(VerifMemeType(caseSelection, joueurs[joueur]))
-				{	RenitiliserClic(&in);
+				{	//;
 					//UpdateEvents(&in);
 
-					do {	estCoupValide = 0;// faux
-							//UpdateEvents(&in);
+					do {
+						estCoupValide = 0;// faux
 
 						//si L'utilisateur clique sur la case d'arrivée ou s'il s'agit du joueur HOMME contrôlé par l'IA
-						if(in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
-						{	if (estVSIA && tour_de_homme(joueurs, joueur))
+						//if(in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
+						//{
+							if (estVSIA && tour_de_homme(joueurs, joueur))
 								{caseDeplacement = RecupCaseArriveeIA(caseSelection);}
 							else
-								{caseDeplacement = PointToCase(clic_souris(in));}
+								{caseDeplacement = PointToCase(clic());}
 
 							//si la case destination est dans le plateau
 							if(dans_le_plateau(caseDeplacement))
-							{	RenitiliserClic(&in);
+							{	//;
 
 								//si la case distation est vide et il s'agit d'un mouvement orthogonal ou le joueur va manger un pion adversaire
 								if(VerifCaseVide(caseDeplacement) && (VerifDeplacementOrthogonal(caseSelection,caseDeplacement)
@@ -204,14 +191,12 @@ int main()
 									if((!estModeVariante && aMangerAdversaire && joueurs[JoueurAd].piece_plateau > 0) ||
 									(estModeVariante && aMangerAdversaire && joueurs[JoueurAd].piece_reserve > 0))
 									{
-										RenitiliserClic(&in);
 
 										estCoupValide = 0;
 										do {
-											//UpdateEvents(&in);
 
-											if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
-											{
+											//if (in.mousebuttons[SDL_BUTTON_LEFT] || (estVSIA && tour_de_homme(joueurs, joueur)))
+											//{
 												//si on a mangé un pion, le deuxieme pion à manger est le premier pion DEMON
 												// que l'on trouve dans le plateau
 												if(estVSIA && tour_de_homme(joueurs, joueur))
@@ -220,8 +205,8 @@ int main()
 												}
 												else
 												{
-													caseSelection=PointToCase(clic_souris(in));
-													RenitiliserClic(&in);
+													caseSelection=PointToCase(clic());
+													//;
 												}
 
 												// on vérifie que caseSelection s'agit d'une case de l'adversaire et qu'elle n'est pas vide
@@ -243,15 +228,15 @@ int main()
 													SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 													SDL_Flip(ecran.image);
 												}
-											}
+											//}
 
 										} while(!estCoupValide && (!in.key[SDLK_ESCAPE]) && (!in.quit));
 
 									}
 								}
 							}
-						}
-					} while(!estCoupValide && (!in.key[SDLK_ESCAPE]) && (!in.quit));
+						//}
+					} while(!estCoupValide); //&& (!in.key[SDLK_ESCAPE]) && (!in.quit));
 
 				}
 
@@ -272,16 +257,27 @@ int main()
 					}
 					aMangerAdversaire = 0;
 				}
-			}
+			//}
 		}
 
-		//SI ON CLIC SUR QUITTER
-		if (VerifQuitter(in) &&(tour==0))
-		{
-			SDL_Quit();
-		}
 	}
 
 	return EXIT_SUCCESS;
 }
 
+
+		/*
+		if (estVSIA)
+		{
+			printf("DEMON");
+			joueurs[1].JoueurT = DEMON;
+			joueurs[1].nom = entre_nom_dans_terminal();
+		}
+		else
+		{
+			affiche_type_joueur(joueurs[0].JoueurT);
+			joueurs[0].nom = entre_nom_dans_terminal();
+			affiche_type_joueur(joueurs[1].JoueurT);
+			joueurs[1].nom = entre_nom_dans_terminal();
+		}
+		*/
