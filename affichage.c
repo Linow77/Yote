@@ -227,8 +227,8 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 {
 	// a enlever
 	int score_joueur1=5, score_joueur2=0;
-	char pseudo_joueur1[10] = "Anastasii"; //LE PSEUDO EST DE 9 CARACTERE MAXIMUM
-	char pseudo_joueur2[10] = "Carla";
+	char *pseudo_joueur1 = entre_nom_dans_terminal(); //LE PSEUDO EST DE 9 CARACTERE MAXIMUM
+	char *pseudo_joueur2 = entre_nom_dans_terminal();
 	// a enlever
 
 	/** AFFICHAGE DU FOND **/
@@ -325,6 +325,8 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	SDL_FreeSurface(pseudoperdant);
 	SDL_FreeSurface(scorevainqueur);
 	SDL_FreeSurface(scoreperdant);
+	free(pseudo_joueur1);
+	free(pseudo_joueur2);
 }
 
 
@@ -366,27 +368,27 @@ Point clic_souris(Input in)
 void AfficheMenu(int nbTour, int *tour, img fond, img ecran)
 {	if (nbTour==1)
 	{	*tour=1;
-		fond.image=SDL_LoadBMP("ChoixAdv.bmp");	
+		fond.image=SDL_LoadBMP("ChoixAdv.bmp");
 	}
-	
+
 	if (nbTour==2)
 	{
 		*tour=2;
 		fond.image=SDL_LoadBMP("menuChoix.bmp");
 	}
-	
+
 	if (nbTour==3)
 	{
 		*tour=3;
 		fond.image=SDL_LoadBMP("table.bmp");
 	}
-	
+
 	affiche_menu(fond,ecran);
 }
 
 /** Permet de remet le compteur de clic à 0 pour pouvoir récuperer d'autres clic **/
 void RenitiliserClic( Input *in)
 {
-	in->mousebuttons[SDL_BUTTON_LEFT]=0;		
+	in->mousebuttons[SDL_BUTTON_LEFT]=0;
 }
 

@@ -516,6 +516,21 @@ int tour_de_homme(Player joueurs[], int joueur)
 	return joueurs[joueur].JoueurT == HOMME;
 }
 
+/* Retourne une chaîne de caractères entrée dans le terminal */
+char *entre_nom_dans_terminal()
+{
+    char *str = (char *) malloc(sizeof(char) * TAILLE_MAX_NOM);
+    char *skip_line;
+
+    do
+    {
+        fgets(str, sizeof(str), stdin);
+        skip_line = strchr(str, '\n');
+        *skip_line = '\0';
+    } while (strlen(str) >= TAILLE_MAX_NOM || str[0] == '\0');
+
+    return str;
+}
 
 
 
