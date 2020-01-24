@@ -1,5 +1,9 @@
 ## TODO
 
+- enlever les fonctions inutilisées
+- fuites mémoires
+- fichier controleur.c .h
+- gestion des scores dans le main
 - match nul
 - simplifier le code
 - partie contrôleur
