@@ -83,9 +83,11 @@ int main()
 		else if (verif_mode_simple(c) &&(tour==2))
 		{
 			AfficheMenu(3,&tour,fond,ecran, joueurs);
-			infoPartie(ecran, joueurs,sprite, 1);
-		}
-
+			infoPartie(ecran, joueurs,sprite, 1); 
+		}	//Ici on met 1 au lieu de joueur car le premier affichage est un démon,
+			// or l'affichage de infopartie se faisant après le tour joué, il faut prévoir
+			//le début de la partie
+		
 		else if (verif_mode_variante(c) &&(tour==2))
 		{
 			estModeVariante = 1;
@@ -102,7 +104,6 @@ int main()
 
 	} while (tour != 3);
 
-	//SI ON CLIC SUR SCORE (a faire)
 
 	// tant que le jeu n'est pas fini
 	while (tour == 3 && !estGameOver)
