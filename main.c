@@ -258,6 +258,8 @@ int main()
 
 	wait_quit();
 	free_table_score(&scores);
+	free(joueurs[0].nom);
+	free(joueurs[1].nom);
 	SDL_Quit();
 	return EXIT_SUCCESS;
 }
