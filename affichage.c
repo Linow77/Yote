@@ -640,8 +640,8 @@ void AfficheMenu(int nbTour, int *tour, img fond, img ecran, Player joueurs[])
 		SDL_Surface *textepseudo1 = NULL, *textepseudo2 = NULL; //initialisation des surface de texte et d'effacement
 		SDL_Rect positionpseudo1, positionpseudo2;
 
-		textepseudo1 = TTF_RenderText_Blended(police, joueurs[0].nom, couleurNoire);
-		textepseudo2 = TTF_RenderText_Blended(police,joueurs[1].nom, couleurNoire);
+		textepseudo1 = TTF_RenderText_Blended(police, joueurs[1].nom, couleurNoire);
+		textepseudo2 = TTF_RenderText_Blended(police,joueurs[0].nom, couleurNoire);
 		positionpseudo1.x = 10;	positionpseudo1.y = 120;
 		positionpseudo2.x = 850;	positionpseudo2.y = 120;
 
