@@ -20,7 +20,8 @@ typedef struct Player {
     int piece_cap;// nombre de pièces capturées
     int piece_reserve;// - dans la réserve
     int piece_plateau;// - sur le plateau
-    // char nom[20];
+	unsigned int score;
+    char *nom;
 } Player;
 
 typedef struct Move {
@@ -68,5 +69,7 @@ void SetCase(Case *c, int x, int y);
 void TireAuSortJoueur(Player joueurs[]);
 void ia_pioche_pion(Case *caseSelection);
 void set_case(Case *c, int x, int y);
+void joueurs_par_defaut(Player joueurs[]);
+void print_player(Player p);
 #endif
 

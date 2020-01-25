@@ -508,12 +508,29 @@ void ia_pioche_pion(Case *caseSelection)
 }
 
 
-
-
-
 int tour_de_homme(Player joueurs[], int joueur)
 {
 	return joueurs[joueur].JoueurT == HOMME;
 }
 
+/*
+ * Donne un nom par défaut aux joueurs
+ */
+void joueurs_par_defaut(Player joueurs[])
+{
+	joueurs[0].nom = "Toto";
+	joueurs[1].nom = "Tata";
+}
+
+/*
+ * Affiche les champs d'un joueur : nom, score, nombre de pièces...
+ */
+void print_player(Player p)
+{
+	printf("Nom : %s\n", p.nom);
+	printf("Score : %d\n", p.score);
+	printf("Pièces en réserve : %d\n", p.piece_reserve);
+	printf("Pièces capturées : %d\n", p.piece_cap);
+	printf("Pièces sur le plateau : %d\n", p.piece_plateau);
+}
 

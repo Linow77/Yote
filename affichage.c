@@ -188,7 +188,7 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur)
 	char pionM2[2] = "";  /*Tableau de char suffisamment grand pour contenir le nombre de pions mangés du J2*/
 	char pionR1[2] = "";  /*Tableau de char suffisamment grand pour contenir le nombre de pions restants du J1*/
 	char pionR2[2] = "";  /*Tableau de char suffisamment grand pour contenir le nombre de pions restants du J2*/
-	
+
 
 	TTF_Font *police = NULL; //initialisation de la police
 
@@ -210,7 +210,7 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur)
 	texte1 = TTF_RenderText_Blended(police,pionM2, couleurNoire);
 	texte2 = TTF_RenderText_Blended(police,pionR1, couleurNoire);
 	texte3 = TTF_RenderText_Blended(police,pionR2, couleurNoire);
-	
+
 
 	position.x = 195;	position1.x = 780;	position2.x = 315;	position3.x = 640;
 	position.y = 20;	position1.y = 20;	position2.y = 65;	position3.y = 65;
@@ -235,7 +235,7 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur)
 	//AFFICHAGE DU JOUEUR ACTUEL (PION SUR LA PLANCHE)
 	if(joueur==-1){
 		// on vient de manger le pion on laisse le même pion affiché
-	}else if(joueur==0){	// ON INVERSE CAR L'AFFICHAGE SE FAIT APRES LE COUP JOUE IL FAUT DONC 
+	}else if(joueur==0){	// ON INVERSE CAR L'AFFICHAGE SE FAIT APRES LE COUP JOUE IL FAUT DONC
 		joueur=1;	// INVERSER LES PIONS
 	}else if (joueur==1){
 		joueur=0;
@@ -254,12 +254,10 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur)
 
 }
 
-void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCUPÉRER LES SCORES DES JOUEURS
+void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant) // IL FAUT RÉCUPÉRER LES SCORES DES JOUEURS
 {
 	// a enlever
-	int score_joueur1=5, score_joueur2=0;
-	char pseudo_joueur1[10] = "Anastasii"; //LE PSEUDO EST DE 9 CARACTERE MAXIMUM
-	char pseudo_joueur2[10] = "Carla";
+	int score_joueur1=joueurs[0].score, score_joueur2=joueurs[1].score;
 	// a enlever
 
 	/** AFFICHAGE DU FOND **/
@@ -276,7 +274,7 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	position_pion.x = 220;
 	position_pion.y = 350;
 
-	if (gagnant.JoueurT == HOMME)
+	if (joueurs[gagnant].JoueurT == HOMME)
 	{
 		//affichage pion homme
 		AfficherPion(ecran,&pion, sprite, position_pion, 1);
@@ -320,8 +318,8 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 
 	sprintf(score_vainqueur, "%d", score_joueur1);
 	sprintf(score_perdant, "%d", score_joueur2);
-	sprintf(pseudo_vainqueur, "%s", pseudo_joueur1);
-	sprintf(pseudo_perdant, "%s", pseudo_joueur2);
+	sprintf(pseudo_vainqueur, "%s", joueurs[0].nom);
+	sprintf(pseudo_perdant, "%s", joueurs[1].nom);
 
 
 	TTF_SetFontStyle(police, TTF_STYLE_BOLD | TTF_STYLE_UNDERLINE);
@@ -380,7 +378,7 @@ void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 
 	Point hg1 = CaseToPointhg(caseSelection);
 	Point hg2 = CaseToPointhg(caseDeplacement);
-	
+
 	if (permission == 0)
 	{
 		infoPartie(ecran, joueurs, sprite,*joueur);
@@ -397,30 +395,29 @@ Point clic_souris(Input in)
 
 
 /** Permet d'afficher le menu convenable selon le NbTour passer en parametre **/
-void AfficheMenu(int nbTour, int *tour, img fond, img ecran)
-{	if (nbTour==1)
+void AfficheMenu(int nbTour, int *tour, img fond, img ecran, Player joueurs[])
+{
+	if (nbTour==1)
 	{	*tour=1;
 		fond.image=SDL_LoadBMP("ChoixAdv.bmp");
-		affiche_menu(fond,ecran);	
+		affiche_menu(fond,ecran);
 	}
-	
+
 	if (nbTour==2)
 	{
 		*tour=2;
 		fond.image=SDL_LoadBMP("menuChoix.bmp");
 		affiche_menu(fond,ecran);
 	}
-	
+
 	if (nbTour==3)
-	{	
-		
+	{
+
 		*tour=3;
 		fond.image=SDL_LoadBMP("table.bmp");
 		affiche_menu(fond,ecran);
 
 		//afichage des pseudos des joueurs
-		char pseudo1[10]="aninitlme";
-		char pseudo2[10]="aboubietr";
 
 		TTF_Font *police = NULL; //initialisation de la police
 
@@ -430,8 +427,8 @@ void AfficheMenu(int nbTour, int *tour, img fond, img ecran)
 		SDL_Surface *textepseudo1 = NULL, *textepseudo2 = NULL; //initialisation des surface de texte et d'effacement
 		SDL_Rect positionpseudo1, positionpseudo2;
 
-		textepseudo1 = TTF_RenderText_Blended(police,pseudo1, couleurNoire);
-		textepseudo2 = TTF_RenderText_Blended(police,pseudo2, couleurNoire);
+		textepseudo1 = TTF_RenderText_Blended(police, joueurs[0].nom, couleurNoire);
+		textepseudo2 = TTF_RenderText_Blended(police,joueurs[1].nom, couleurNoire);
 		positionpseudo1.x = 10;	positionpseudo1.y = 120;
 		positionpseudo2.x = 850;	positionpseudo2.y = 120;
 
@@ -450,7 +447,7 @@ void AfficheMenu(int nbTour, int *tour, img fond, img ecran)
 /** Permet de remet le compteur de clic à 0 pour pouvoir récuperer d'autres clic **/
 void RenitiliserClic( Input *in)
 {
-	in->mousebuttons[SDL_BUTTON_LEFT]=0;		
+	in->mousebuttons[SDL_BUTTON_LEFT]=0;
 }
 
 /** Affiche le menu des scores **/
@@ -500,23 +497,23 @@ void AfficheScore(img fond, img ecran,int *tour,TableScore *scores){
 	TTF_SetFontStyle(police, TTF_STYLE_BOLD); // on enleve le surlignement
 	for(num=0;num<scores->number;num++)
 	{
-		
+
 		sprintf(pseudo, "%s", scores->players[num]);
 		sprintf(score, "%u", scores->scores[num]);
 		sprintf(numero, "%u", num+1);
 
-		
+
 
 		textepseudo = TTF_RenderText_Blended(police,pseudo, couleurBordeau);
 		textescore = TTF_RenderText_Blended(police,score, couleurBordeau);
 		textenumero = TTF_RenderText_Blended(police,numero, couleurBordeau);
 
-		
+
 
 		SDL_BlitSurface(textepseudo, NULL, ecran.image, &positionpseudo);
 		SDL_BlitSurface(textescore, NULL, ecran.image, &positionscore);
 		SDL_BlitSurface(textenumero, NULL, ecran.image, &positionnumero);
-		
+
 		SDL_Flip(ecran.image);
 		positionpseudo.y=positionpseudo.y+60;
 		positionscore.y=positionscore.y+60;

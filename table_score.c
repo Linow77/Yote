@@ -83,8 +83,10 @@ unsigned int get_score_by_name(TableScore *t, char *name)
     else return t->scores[r];
 }
 
-/* Returns a score with a given name
- * If the score isn't found, -1 is returned */
+/*
+ * Returns a score with a given name
+ * If the score isn't found, -1 is returned
+ */
 unsigned int search_by_name(TableScore *t, char *name)
 {
     int r;
@@ -114,7 +116,9 @@ void print_tablescore(TableScore *t)
     return;
 }
 
-// Save the scores in a file (see name of file in DEFINE's)
+/*
+ * Saves the scores in a file (see name of file in DEFINE's)
+ */
 int save_score(TableScore *table_s)
 {
     int num;
@@ -145,7 +149,7 @@ int save_score(TableScore *table_s)
  * the player's score is replaced with p_score.
  * The score can be either 'inserted' or appended to the end
  * of the structure
- * */
+ */
 void insert(TableScore *t, unsigned int p_score, char *name)
 {
     int r;
@@ -196,11 +200,12 @@ int min(int a, int b)
     return b;
 }
 
-/* Push an array from a given index
+/*
+ * Push an array from a given index
  * [a, b, c, d, e]
  * push(2, x)
  * [a, b, x, c, d, e]
- * */
+ */
 void push(TableScore *t, unsigned int index, unsigned int s, char *n)
 {
     int i = min(t->number, MAX_SCORE - 1);
@@ -214,11 +219,12 @@ void push(TableScore *t, unsigned int index, unsigned int s, char *n)
     increase_size(t);
 }
 
-/* Shift an array from a given index
+/*
+ * Shift an array from a given index
  * [a, b, c, d, e]
  * shift(2)
  * [a, b, d, e]
- * */
+ */
 void shift(TableScore *t, unsigned int index)
 {
     int i;
@@ -237,8 +243,10 @@ void set(TableScore *t, unsigned int index, unsigned int s, char *n)
     strcpy(t->players[index], n);
 }
 
-// Free memory of the table of scores
-// Still some memory leaks though @.@ ?
+/*
+ * Free memory of the table of scores
+ * Still some memory leaks though @.@ ?
+ */
 void free_table_score(TableScore *table)
 {
     int num;

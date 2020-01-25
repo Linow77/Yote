@@ -111,7 +111,6 @@ int Verif1VsIA(Input in);
 int VerifModeSimple(Input in);
 int VerifModeVariante(Input in);
 void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur);
-void afficheFinJeu(img ecran, Ressource sprite, Player gagnant);
 Point clic_souris(Input in);
 void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
 				 Ressource sprite, int joueur, Player joueurs[]);
@@ -119,9 +118,10 @@ void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 				   img ecran, Player joueurs[], Ressource sprite, img *case_vide,
 				   img *pion, int *joueur,int permission);
 
-void AfficheMenu(int nbTour, int *tour, img fond, img ecran);
+void AfficheMenu(int nbTour, int *tour, img fond, img ecran, Player joueurs[]);
 void RenitiliserClic(Input *in);
 void AfficheScore(img fond, img ecran,int *tour,TableScore *scores);
+void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant);
 
 
 
