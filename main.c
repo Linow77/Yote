@@ -83,14 +83,14 @@ int main()
 		else if (verif_mode_simple(c) &&(tour==2))
 		{
 			AfficheMenu(3,&tour,fond,ecran, joueurs);
-			infoPartie(ecran, joueurs,sprite, joueur);
+			infoPartie(ecran, joueurs,sprite, 1);
 		}
 
 		else if (verif_mode_variante(c) &&(tour==2))
 		{
 			estModeVariante = 1;
 			AfficheMenu(3,&tour,fond,ecran, joueurs);
-			infoPartie(ecran, joueurs,sprite, joueur);
+			infoPartie(ecran, joueurs,sprite, 1);
 		}
 
 		else if (verif_quitter(c) &&(tour==0))

@@ -1,7 +1,3 @@
 Pablo 44
 Bidule 33
-Ouit 20
-Toto 5
-Titi 3
-hey 2
-link 1
+Toto 1
