@@ -606,7 +606,7 @@ Point clic_souris(Input in)
 
 
 /** Permet d'afficher le menu convenable selon le NbTour passer en parametre **/
-void AfficheMenu(int nbTour, int *tour, img fond, img ecran)
+void AfficheMenu(int nbTour, int *tour, img fond, img ecran, Player joueurs[])
 {
 	if (nbTour==1)
 	{
@@ -629,9 +629,6 @@ void AfficheMenu(int nbTour, int *tour, img fond, img ecran)
 		fond.image=SDL_LoadBMP("table.bmp");
 		affiche_menu(fond,ecran);
 
-		//afichage des pseudos des joueurs
-		char pseudo1[10]="aninitlme";
-		char pseudo2[10]="aboubietr";
 
 		TTF_Font *police = NULL; //initialisation de la police
 
@@ -641,8 +638,8 @@ void AfficheMenu(int nbTour, int *tour, img fond, img ecran)
 		SDL_Surface *textepseudo1 = NULL, *textepseudo2 = NULL; //initialisation des surface de texte et d'effacement
 		SDL_Rect positionpseudo1, positionpseudo2;
 
-		textepseudo1 = TTF_RenderText_Blended(police,pseudo1, couleurNoire);
-		textepseudo2 = TTF_RenderText_Blended(police,pseudo2, couleurNoire);
+		textepseudo1 = TTF_RenderText_Blended(police, joueurs[0].nom, couleurNoire);
+		textepseudo2 = TTF_RenderText_Blended(police,joueurs[1].nom, couleurNoire);
 		positionpseudo1.x = 10;	positionpseudo1.y = 120;
 		positionpseudo2.x = 850;	positionpseudo2.y = 120;
 

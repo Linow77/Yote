@@ -21,18 +21,14 @@ int main()
 	InitPlateau();
 	/** INITIALISATION DES JOUEURS **/
 	Init_joueurs(joueurs);
+	/**Initialisation du fichier des scores **/
 	init_table_score(&scores);
 	alloc_table_score(&scores);
 	get_scores(&scores);
 	joueurs_par_defaut(joueurs);
-	joueurs[0].score = get_score_by_name(&scores, joueurs[0].nom);
-	joueurs[1].score = get_score_by_name(&scores, joueurs[1].nom);
 
 	/** CHARGEMENT DES IMAGES **/
 	chargement(&sprite);
-	/**Initialisation du fichier des scores **/
-	init_table_score(&scores);
-	alloc_table_score(&scores);
 
 	//CHARGEMENT DES IMAGES & POSITIONS DES OBJETS
 	chargement_objets(&fond, &ecran);
@@ -51,22 +47,26 @@ int main()
 		c = clic();
 		if (verif_menu1(c) &&(tour==0))
 		{
-			AfficheMenu(1,&tour,fond,ecran);
+			AfficheMenu(1,&tour,fond,ecran, joueurs);
 		}
 
 		// Si on clic sur 1 VS 1
 		else if (verif_pvp(c) &&(tour==1))
 		{
-			AfficheMenu(2,&tour,fond,ecran);
+			AfficheMenu(2,&tour,fond,ecran, joueurs);
 			joueurs_entrent_noms(estVSIA, joueurs);
+			joueurs[0].score = get_score_by_name(&scores, joueurs[0].nom);
+			joueurs[1].score = get_score_by_name(&scores, joueurs[1].nom);
 		}
 
 		// Si on clic sur 1 VS IA
 		else if (verif_pvia(c) &&(tour==1))
 		{
 			estVSIA = 1;
-			AfficheMenu(2,&tour,fond,ecran);
+			AfficheMenu(2,&tour,fond,ecran, joueurs);
 			joueurs_entrent_noms(estVSIA, joueurs);
+			joueurs[0].score = get_score_by_name(&scores, joueurs[0].nom);
+			joueurs[1].score = get_score_by_name(&scores, joueurs[1].nom);
 		}
 
 		if (verif_menu_score(c) && tour == 0)
@@ -82,14 +82,14 @@ int main()
 		}
 		else if (verif_mode_simple(c) &&(tour==2))
 		{
-			AfficheMenu(3,&tour,fond,ecran);
+			AfficheMenu(3,&tour,fond,ecran, joueurs);
 			infoPartie(ecran, joueurs,sprite, joueur);
 		}
 
 		else if (verif_mode_variante(c) &&(tour==2))
 		{
 			estModeVariante = 1;
-			AfficheMenu(3,&tour,fond,ecran);
+			AfficheMenu(3,&tour,fond,ecran, joueurs);
 			infoPartie(ecran, joueurs,sprite, joueur);
 		}
 
@@ -224,12 +224,12 @@ int main()
 									SDL_Flip(ecran.image);
 								}
 
-							} while(!estCoupValide && (!in.key[SDLK_ESCAPE]) && (!in.quit));
+							} while(!estCoupValide);
 
 						}
 					}
 				}
-			} while(!estCoupValide); //&& (!in.key[SDLK_ESCAPE]) && (!in.quit));
+			} while(!estCoupValide);
 
 		}
 
@@ -245,7 +245,10 @@ int main()
 			{
 				Changer_joueur(&joueur);
 				joueurs[joueur].score++;
+				print_player(joueurs[0]);
+				print_player(joueurs[1]);
 				insert(&scores, joueurs[joueur].score, joueurs[joueur].nom);
+				save_score(&scores);
 				afficheFinJeu(ecran, sprite, joueurs, joueur);
 
 				estGameOver = 1;
@@ -257,9 +260,8 @@ int main()
 	}
 
 	wait_quit();
-	SDL_Quit();
-	save_score(&scores);
 	free_table_score(&scores);
+	SDL_Quit();
 	return EXIT_SUCCESS;
 }
 
