@@ -95,7 +95,9 @@ int main()
 
 		else if (verif_quitter(c) &&(tour==0))
 		{
+			free_table_score(&scores);
 			SDL_Quit();
+			return EXIT_SUCCESS;
 		}
 
 	} while (tour != 3);
