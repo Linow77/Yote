@@ -9,6 +9,8 @@ int main()
 	int tour= 0, joueur=0, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, permission= 0, JoueurAd;
 	Point hgDelete;
 
+	// int victoire =0;
+
 	TableScore scores;
 
 	Case caseSelection, caseDeplacement;
@@ -39,12 +41,14 @@ int main()
 	affiche_menu(fond,ecran);
 
 	//AFFICHAGE FIN DE PARTIE
-	/*	if(victoire==0)
-		{
-			afficheFinJeu(ecran,sprite,joueurs[0]);
+	/*
+	if(victoire==0)
+	{
+		afficheFinJeu(ecran,sprite,joueurs[0]);
 
-		}
+	}
 	*/
+	
 	
 	//TANT QUE L'UTILISATEUR N'A PAS QUITTÉ ou qu'il n'a pas gagné
 	while((!in.key[SDLK_ESCAPE]) && (!in.quit)) 
@@ -259,6 +263,8 @@ int main()
 		if (VerifQuitter(in) &&(tour==0))
 		{
 			SDL_Quit();
+			return EXIT_SUCCESS;
+
 		}
 	}
 
