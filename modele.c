@@ -473,7 +473,7 @@ int tour_de_homme(Player joueurs[], int joueur)
 char *entre_nom_dans_terminal()
 {
 	char *str = (char *) malloc(sizeof(char) * TAILLE_MAX_NOM);
-	char *skip_line;
+	//char *skip_line;
 
     /*
 	do
