@@ -254,6 +254,7 @@ int main()
 						joueurs[joueur].score++;
 						printf("Joueur %s : %d\n", joueurs[joueur].nom, joueurs[joueur].score);
 						insert(&scores, joueurs[joueur].score, joueurs[joueur].nom);
+						afficheFinJeu(ecran, sprite, joueurs, joueur);
 						//save_score(&scores);
 						//free_table_score(&scores);
 						// ici afficher le message de game over à l'écran
