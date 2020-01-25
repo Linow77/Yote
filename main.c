@@ -25,7 +25,7 @@ int main()
 	init_table_score(&scores);
 	alloc_table_score(&scores);
 	get_scores(&scores);
-	joueurs_par_defaut(joueurs);
+	//joueurs_par_defaut(joueurs);
 
 	/** CHARGEMENT DES IMAGES **/
 	chargement(&sprite);
@@ -258,8 +258,8 @@ int main()
 
 	wait_quit();
 	free_table_score(&scores);
-	free(joueurs[0].nom);
-	free(joueurs[1].nom);
+	//free(joueurs[0].nom);
+	//free(joueurs[1].nom);
 	SDL_Quit();
 	return EXIT_SUCCESS;
 }
