@@ -558,3 +558,4 @@ void print_player(Player p)
 	printf("Pièces capturées : %d\n", p.piece_cap);
 	printf("Pièces sur le plateau : %d\n", p.piece_plateau);
 }
+

@@ -306,6 +306,31 @@ int verif_menu1(Point clic)
 	return verif_dans_rectangle(clic, hg, bd);
 }
 
+/**  Permet de vérifier si l’utilisateur a cliqué sur le bouton score dans le premier menu  **/
+int VerifMenuScore(Input in)
+{
+	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONSCOREX1)&&(in.mousex<BOUTTONSCOREX2)&&(in.mousey>BOUTTONSCOREY1)&&(in.mousey<BOUTTONSCOREY2);
+}
+
+int verif_menu_score(Point clic)
+{
+	Point hg = { BOUTTONSCOREX1, BOUTTONSCOREY1 };
+	Point bd = { BOUTTONSCOREX2, BOUTTONSCOREY2 };
+	return verif_dans_rectangle(clic, hg, bd);
+}
+
+/**  Permet de vérifier si l’utilisateur a cliqué sur le bouton retour dans le menu score **/
+int VerifBoutonRetour(Input in)
+{
+	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONRETOURX1)&&(in.mousex<BOUTTONRETOURX2)&&(in.mousey>BOUTTONRETOURY1)&&(in.mousey<BOUTTONRETOURY2);
+}
+
+int verif_bouton_retour(Point clic)
+{
+	Point hg = { BOUTTONRETOURX1, BOUTTONRETOURY1 };
+	Point bd = { BOUTTONRETOURX2, BOUTTONRETOURY2 };
+	return verif_dans_rectangle(clic, hg, bd);
+}
 
 /**  Permet de vérifier si l’utilisateur clique sur le bouton 1 VS 1 **/
 int Verif1Vs1(Input in)
@@ -371,6 +396,7 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur)
 	char pionR2[2] = "";  /*Tableau de char suffisamment grand pour contenir le nombre de pions restants du J2*/
 
 
+
 	TTF_Font *police = NULL; //initialisation de la police
 
 	TTF_Init(); // Appel de la fct qui permet d'écrire
@@ -391,6 +417,7 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur)
 	texte1 = TTF_RenderText_Blended(police,pionM2, couleurNoire);
 	texte2 = TTF_RenderText_Blended(police,pionR1, couleurNoire);
 	texte3 = TTF_RenderText_Blended(police,pionR2, couleurNoire);
+
 
 
 	position.x = 195;	position1.x = 780;	position2.x = 315;	position3.x = 640;
@@ -556,14 +583,17 @@ void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
  */
 void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 				   img ecran, Player joueurs[], Ressource sprite, img *case_vide,
-				   img *pion, int *joueur)
+				   img *pion, int *joueur,int permission)
 {
 	*estCoupValide = 1;
 
 	Point hg1 = CaseToPointhg(caseSelection);
 	Point hg2 = CaseToPointhg(caseDeplacement);
 
-	infoPartie(ecran, joueurs, sprite, *joueur);
+	if (permission == 0)
+	{
+		infoPartie(ecran, joueurs, sprite,*joueur);
+	}
 	AfficherPion(ecran, pion, sprite, hg2, *joueur);
 	SupprimerPion(case_vide, sprite, hg1, *joueur);
 }
@@ -577,24 +607,56 @@ Point clic_souris(Input in)
 
 /** Permet d'afficher le menu convenable selon le NbTour passer en parametre **/
 void AfficheMenu(int nbTour, int *tour, img fond, img ecran)
-{	if (nbTour==1)
-	{	*tour=1;
+{
+	if (nbTour==1)
+	{
+		*tour=1;
 		fond.image=SDL_LoadBMP("ChoixAdv.bmp");
+		affiche_menu(fond,ecran);
 	}
 
 	if (nbTour==2)
 	{
 		*tour=2;
 		fond.image=SDL_LoadBMP("menuChoix.bmp");
+		affiche_menu(fond,ecran);
 	}
 
 	if (nbTour==3)
 	{
+
 		*tour=3;
 		fond.image=SDL_LoadBMP("table.bmp");
+		affiche_menu(fond,ecran);
+
+		//afichage des pseudos des joueurs
+		char pseudo1[10]="aninitlme";
+		char pseudo2[10]="aboubietr";
+
+		TTF_Font *police = NULL; //initialisation de la police
+
+		TTF_Init(); // Appel de la fct qui permet d'écrire
+		police = TTF_OpenFont("RuneicityDecorative001.ttf", 30); //on charge la police
+		SDL_Color couleurNoire = {0, 0, 0};
+		SDL_Surface *textepseudo1 = NULL, *textepseudo2 = NULL; //initialisation des surface de texte et d'effacement
+		SDL_Rect positionpseudo1, positionpseudo2;
+
+		textepseudo1 = TTF_RenderText_Blended(police,pseudo1, couleurNoire);
+		textepseudo2 = TTF_RenderText_Blended(police,pseudo2, couleurNoire);
+		positionpseudo1.x = 10;	positionpseudo1.y = 120;
+		positionpseudo2.x = 850;	positionpseudo2.y = 120;
+
+		SDL_BlitSurface(textepseudo1, NULL, ecran.image, &positionpseudo1);
+		SDL_BlitSurface(textepseudo2, NULL, ecran.image, &positionpseudo2);
+
+		SDL_Flip(ecran.image);
+		TTF_CloseFont(police);
+	    TTF_Quit();
+
+		SDL_FreeSurface(textepseudo1);
+		SDL_FreeSurface(textepseudo2);
 	}
 
-	affiche_menu(fond,ecran);
 }
 
 /** Permet de remet le compteur de clic à 0 pour pouvoir récuperer d'autres clic **/
@@ -603,3 +665,83 @@ void RenitiliserClic( Input *in)
 	in->mousebuttons[SDL_BUTTON_LEFT]=0;
 }
 
+/** Affiche le menu des scores **/
+void AfficheScore(img fond, img ecran,int *tour,TableScore *scores){
+
+	unsigned int num; //num est le nombre de scores dans le fichier
+	*tour=4;
+	fond.image=SDL_LoadBMP("menuscore.bmp");
+	affiche_menu(fond,ecran);
+
+	/** récupération des scores dans le fichier texte score.txt**/
+	get_scores(scores);
+	/** Affichages des scores sur le menu **/
+	TTF_Font *police = NULL; //initialisation de la police
+	TTF_Init(); // Appel de la fct qui perlet d'écrire
+	police = TTF_OpenFont("RuneicityDecorative001.ttf", 50); //on charge la police
+	SDL_Color couleurBordeau = {139, 3, 3};
+	SDL_Color couleurNoire = {0, 0, 0};
+	TTF_SetFontStyle(police, TTF_STYLE_BOLD | TTF_STYLE_UNDERLINE);
+
+	char pseudo[10] = "";
+	char score[3] = "";
+	char numero[2] = "";
+	char rang[5] = "RANG";
+	char joueur[7] = "JOUEUR";
+	char points[7] = "POINTS";
+
+	SDL_Surface *textepseudo = NULL , *textescore = NULL, *textenumero = NULL, *texterang = NULL, *textejoueur = NULL, *textepoints = NULL; //initialisation des surface de texte
+	SDL_Rect positionpseudo, positionscore, positionnumero, positionrang, positionjoueur, positionpoints; //initialisation des positions des surfaces
+
+	positionnumero.x=150;	positionnumero.y=270;
+	positionpseudo.x=300;	positionpseudo.y=270;
+	positionscore.x=750;	positionscore.y=270;
+
+	positionrang.x=110;		positionrang.y=210;
+	positionjoueur.x=330;	positionjoueur.y=210;
+	positionpoints.x=700;	positionpoints.y=210;
+
+	texterang = TTF_RenderText_Blended(police,rang, couleurNoire);
+	textejoueur = TTF_RenderText_Blended(police,joueur, couleurNoire);
+	textepoints = TTF_RenderText_Blended(police,points, couleurNoire);
+
+	SDL_BlitSurface(texterang, NULL, ecran.image, &positionrang);
+	SDL_BlitSurface(textejoueur, NULL, ecran.image, &positionjoueur);
+	SDL_BlitSurface(textepoints, NULL, ecran.image, &positionpoints);
+
+	TTF_SetFontStyle(police, TTF_STYLE_BOLD); // on enleve le surlignement
+	for(num=0;num<scores->number;num++)
+	{
+
+		sprintf(pseudo, "%s", scores->players[num]);
+		sprintf(score, "%u", scores->scores[num]);
+		sprintf(numero, "%u", num+1);
+
+
+
+		textepseudo = TTF_RenderText_Blended(police,pseudo, couleurBordeau);
+		textescore = TTF_RenderText_Blended(police,score, couleurBordeau);
+		textenumero = TTF_RenderText_Blended(police,numero, couleurBordeau);
+
+
+
+		SDL_BlitSurface(textepseudo, NULL, ecran.image, &positionpseudo);
+		SDL_BlitSurface(textescore, NULL, ecran.image, &positionscore);
+		SDL_BlitSurface(textenumero, NULL, ecran.image, &positionnumero);
+
+		SDL_Flip(ecran.image);
+		positionpseudo.y=positionpseudo.y+60;
+		positionscore.y=positionscore.y+60;
+		positionnumero.y=positionnumero.y+60;
+	}
+
+	TTF_CloseFont(police);
+    TTF_Quit();
+
+    SDL_FreeSurface(textepseudo);
+	SDL_FreeSurface(textescore);
+	SDL_FreeSurface(textenumero);
+	SDL_FreeSurface(texterang);
+	SDL_FreeSurface(textejoueur);
+	SDL_FreeSurface(textepoints);
+}

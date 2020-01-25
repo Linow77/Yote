@@ -6,7 +6,7 @@
 
 int main()
 {
-	int tour= 0, joueur=0, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, JoueurAd;
+	int tour= 0, joueur=0, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, permission= 0, JoueurAd;
 	Point hgDelete;
 	TableScore scores;
 
@@ -30,6 +30,9 @@ int main()
 
 	/** CHARGEMENT DES IMAGES **/
 	chargement(&sprite);
+	/**Initialisation du fichier des scores **/
+	init_table_score(&scores);
+	alloc_table_score(&scores);
 
 	//CHARGEMENT DES IMAGES & POSITIONS DES OBJETS
 	chargement_objets(&fond, &ecran);
@@ -66,6 +69,17 @@ int main()
 			joueurs_entrent_noms(estVSIA, joueurs);
 		}
 
+		if (verif_menu_score(c) && tour == 0)
+		{
+			AfficheScore(fond,ecran,&tour,&scores);
+		}
+
+		if(verif_bouton_retour(c) && tour == 4)
+		{
+			fond.image=SDL_LoadBMP("menu_principal.bmp");
+			affiche_menu(fond,ecran);
+			tour=0;
+		}
 		else if (verif_mode_simple(c) &&(tour==2))
 		{
 			AfficheMenu(3,&tour,fond,ecran);
@@ -139,6 +153,7 @@ int main()
 						// DANS LE CAS OU LE JOUEUR VEUT MANGER LE PION DE L'ADVERSAIRE
 						if(VerifCoupValide(caseSelection, caseDeplacement, joueurs[joueur].JoueurT))
 						{
+							permission =1;
 							aMangerAdversaire = 1;
 							Case caseASupprimer = DetermineCaseASupprimer(caseSelection, caseDeplacement);
 							hgDelete=CaseToPointhg(caseASupprimer);
@@ -150,7 +165,7 @@ int main()
 							SupprimerPion(&case_vide,sprite, hgDelete, joueur_adv(joueur));
 
 							// ON REVIENT SUR LE JOUEUR INITIAL
-							infoPartie(ecran, joueurs,sprite, joueur);
+							infoPartie(ecran, joueurs,sprite, joueur_adv(joueur));
 							SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
 							SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 							SDL_Flip(ecran.image);
@@ -163,7 +178,8 @@ int main()
 						//(manger adversaire ou faire un mouvement orthogonal)
 
 						// fonction pas bien
-						deplacer_pion(&estCoupValide, caseSelection, caseDeplacement,ecran, joueurs, sprite, &case_vide,&pion, &joueur);
+						deplacer_pion(&estCoupValide, caseSelection, caseDeplacement,ecran, joueurs, sprite, &case_vide,&pion, &joueur, permission);
+						permission =0;
 						SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 						SDL_Flip(ecran.image);
 
@@ -248,6 +264,3 @@ int main()
 }
 
 
-		/*
-
-		*/

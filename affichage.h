@@ -47,6 +47,11 @@
 #define BOUTTONVARIANTEY1 430
 #define BOUTTONVARIANTEY2 560
 
+#define BOUTTONRETOURX1 689
+#define BOUTTONRETOURX2 918
+#define BOUTTONRETOURY1 577
+#define BOUTTONRETOURY2 683
+
 //STRUCTURES
 
 /** EVENEMENT **/
@@ -99,6 +104,8 @@ void AfficherPion(img ecran, img *pion, Ressource sprite, Point hg, int joueur);
 void SupprimerPion(img *caseVide, Ressource sprite, Point hg, int joueur);
 int VerifQuitter(Input in);
 int VerifMenu1(Input in);
+int VerifMenuScore(Input in);
+int VerifBoutonRetour(Input in);
 int Verif1Vs1(Input in);
 int Verif1VsIA(Input in);
 int VerifModeSimple(Input in);
@@ -110,10 +117,11 @@ void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
 				 Ressource sprite, int joueur, Player joueurs[]);
 void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 				   img ecran, Player joueurs[], Ressource sprite, img *case_vide,
-				   img *pion, int *joueur);
+				   img *pion, int *joueur,int permission);
 
 void AfficheMenu(int nbTour, int *tour, img fond, img ecran);
 void RenitiliserClic(Input *in);
+void AfficheScore(img fond, img ecran,int *tour,TableScore *scores);
 
 void print_point(Point p);
 Point clic();
@@ -127,6 +135,8 @@ int verif_pvp(Point clic);
 int verif_menu1(Point clic);
 int verif_quitter(Point clic);
 void verif_quitter_jeu();
+int verif_menu_score(Point clic);
+int verif_bouton_retour(Point clic);
 void joueurs_entrent_noms(int ia_mode, Player joueurs[]);
 void wait_quit();
 
