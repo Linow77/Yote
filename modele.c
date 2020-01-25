@@ -475,6 +475,7 @@ char *entre_nom_dans_terminal()
 	char *str = (char *) malloc(sizeof(char) * TAILLE_MAX_NOM);
 	char *skip_line;
 
+    /*
 	do
 	{
 		//puts(" entrez votre nom : ");
@@ -482,6 +483,8 @@ char *entre_nom_dans_terminal()
 		skip_line = strchr(str, '\n');
 		*skip_line = '\0';
 	} while (strlen(str) >= TAILLE_MAX_NOM || str[0] == '\0');
+    */
+    scanf(" %s", str);
 
 	return str;
 }

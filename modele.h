@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#define TAILLE_MAX_NOM 10
+#define TAILLE_MAX_NOM 20
 
 
 typedef struct Case {
