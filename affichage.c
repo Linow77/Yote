@@ -709,7 +709,7 @@ void AfficheScore(img fond, img ecran,int *tour,TableScore *scores){
 	SDL_BlitSurface(textepoints, NULL, ecran.image, &positionpoints);
 
 	TTF_SetFontStyle(police, TTF_STYLE_BOLD); // on enleve le surlignement
-	for(num=0;num<scores->number;num++)
+	for(num=0; num < 5 && num<scores->number;num++)
 	{
 
 		sprintf(pseudo, "%s", scores->players[num]);

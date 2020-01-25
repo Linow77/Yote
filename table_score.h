@@ -12,7 +12,7 @@
 /*               CONSTANTES               */
 /******************************************/
 
-#define MAX_SCORE 5
+#define MAX_SCORE 20
 #define MAX_SIZE  10
 #define SCORE_FILE "score.txt"
 
