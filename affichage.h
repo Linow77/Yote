@@ -104,7 +104,7 @@ int Verif1VsIA(Input in);
 int VerifModeSimple(Input in);
 int VerifModeVariante(Input in);
 void infoPartie(img ecran, Player joueurs[],Ressource sprite);
-void afficheFinJeu(img ecran, Ressource sprite, Player gagnant);
+void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant);
 Point clic_souris(Input in);
 void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
 				 Ressource sprite, int joueur, Player joueurs[]);
@@ -128,6 +128,7 @@ int verif_menu1(Point clic);
 int verif_quitter(Point clic);
 void verif_quitter_jeu();
 void joueurs_entrent_noms(int ia_mode, Player joueurs[]);
+void wait_quit();
 
 
 

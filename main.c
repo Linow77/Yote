@@ -8,6 +8,7 @@ int main()
 {
 	int tour= 0, joueur=0, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, JoueurAd;
 	Point hgDelete;
+	TableScore scores;
 
 	Case caseSelection, caseDeplacement;
 	Player joueurs[2];
@@ -20,9 +21,13 @@ int main()
 	InitPlateau();
 	/** INITIALISATION DES JOUEURS **/
 	Init_joueurs(joueurs);
-	//TireAuSortJoueur(joueurs);
-	//affiche_type_joueur(joueurs[0].JoueurT);
-	//affiche_type_joueur(joueurs[1].JoueurT);
+	init_table_score(&scores);
+	alloc_table_score(&scores);
+	get_scores(&scores);
+	joueurs_par_defaut(joueurs);
+	joueurs[0].score = get_score_by_name(&scores, joueurs[0].nom);
+	joueurs[1].score = get_score_by_name(&scores, joueurs[1].nom);
+
 	/** CHARGEMENT DES IMAGES **/
 	chargement(&sprite);
 
@@ -34,33 +39,7 @@ int main()
 
 	//On affiche le menu si la partie n'a pas commencée MENU 0
 	affiche_menu(fond,ecran);
-/*
-	Point p = clic();
-	print_point(p);
-	Point p2 = clic();
-	print_point(p2);
-	Point p3 = clic();
-	print_point(p3);
-	if (verif_dans_rectangle(p, p2, p3))
-		printf("Dans rectangle\n");
-	SDL_Event event;
-	while (event.type != SDL_QUIT)
-	{
-		SDL_WaitEvent(&event);
-	}
-	SDL_Quit();
 
-	return 0;
-	*/
-
-	//AFFICHAGE FIN DE PARTIE
-	/*
-	int victoire = 0;
-    if(victoire==0)
-	{
-		afficheFinJeu(ecran,sprite,joueurs[0]);
-	}
-	*/
 
 	Point c;
 
@@ -76,6 +55,7 @@ int main()
 		else if (verif_pvp(c) &&(tour==1))
 		{
 			AfficheMenu(2,&tour,fond,ecran);
+			joueurs_entrent_noms(estVSIA, joueurs);
 		}
 
 		// Si on clic sur 1 VS IA
@@ -83,6 +63,7 @@ int main()
 		{
 			estVSIA = 1;
 			AfficheMenu(2,&tour,fond,ecran);
+			joueurs_entrent_noms(estVSIA, joueurs);
 		}
 
 		else if (verif_mode_simple(c) &&(tour==2))
@@ -105,7 +86,6 @@ int main()
 
 	} while (tour != 3);
 
-	joueurs_entrent_noms(estVSIA, joueurs);
 	//SI ON CLIC SUR SCORE (a faire)
 
 	// tant que le jeu n'est pas fini
@@ -245,10 +225,13 @@ int main()
 			// Pour le mode simple le message game over s'affiche si le nombre de piece dans de le plateau est égale
 			// à 0
 			if( (estModeVariante && joueurs[joueur].piece_plateau == 0 && joueurs[joueur].piece_reserve == 0) ||
-				(!estModeVariante && joueurs[joueur].piece_plateau == 0 && aMangerAdversaire)) {
+				(!estModeVariante && joueurs[joueur].piece_plateau == 0 && aMangerAdversaire))
+			{
+				Changer_joueur(&joueur);
+				joueurs[joueur].score++;
+				insert(&scores, joueurs[joueur].score, joueurs[joueur].nom);
+				afficheFinJeu(ecran, sprite, joueurs, joueur);
 
-				// ici afficher le message de game over à l'écran
-				printf("Game over\n");
 				estGameOver = 1;
 
 			}
@@ -257,8 +240,10 @@ int main()
 
 	}
 
+	wait_quit();
 	SDL_Quit();
-
+	save_score(&scores);
+	free_table_score(&scores);
 	return EXIT_SUCCESS;
 }
 

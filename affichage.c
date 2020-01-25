@@ -133,6 +133,30 @@ void verif_quitter_jeu()
 	}
 }
 
+/*
+ * Tant que l'utilisateur ne veut pas quitter (croix ou echap),
+ * cette fonction ne s'arrête pas (voir fin du main)
+ */
+void wait_quit()
+{
+	SDL_Event event;
+	int not_quitting = 1;
+
+	while (not_quitting)
+	{
+		SDL_WaitEvent(&event);
+		if (event.type == SDL_QUIT)
+		{
+			not_quitting = !not_quitting;
+		}
+		else if (event.type == SDL_KEYDOWN)
+			if (event.key.keysym.sym == SDLK_ESCAPE)
+			{
+				not_quitting = !not_quitting;
+			}
+	}
+}
+
 /* Affiche un point dans le terminal */
 void print_point(Point p)
 {
@@ -391,13 +415,9 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite)
 	SDL_FreeSurface(texte3);
 }
 
-void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCUPÉRER LES SCORES DES JOUEURS
+void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant)
 {
-	// a enlever
-	int score_joueur1=5, score_joueur2=0;
-	char *pseudo_joueur1 = entre_nom_dans_terminal(); //LE PSEUDO EST DE 9 CARACTERE MAXIMUM
-	char *pseudo_joueur2 = entre_nom_dans_terminal();
-	// a enlever
+	int score_joueur1=joueurs[0].score, score_joueur2=joueurs[1].score;
 
 	/** AFFICHAGE DU FOND **/
 	SDL_Rect position;
@@ -413,7 +433,7 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	position_pion.x = 220;
 	position_pion.y = 350;
 
-	if (gagnant.JoueurT == HOMME)
+	if (joueurs[gagnant].JoueurT == HOMME)
 	{
 		//affichage pion homme
 		AfficherPion(ecran,&pion, sprite, position_pion, 1);
@@ -457,8 +477,8 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 
 	sprintf(score_vainqueur, "%d", score_joueur1);
 	sprintf(score_perdant, "%d", score_joueur2);
-	sprintf(pseudo_vainqueur, "%s", pseudo_joueur1);
-	sprintf(pseudo_perdant, "%s", pseudo_joueur2);
+	sprintf(pseudo_vainqueur, "%s", joueurs[0].nom);
+	sprintf(pseudo_perdant, "%s", joueurs[1].nom);
 
 
 	TTF_SetFontStyle(police, TTF_STYLE_BOLD | TTF_STYLE_UNDERLINE);
@@ -493,8 +513,6 @@ void afficheFinJeu(img ecran, Ressource sprite, Player gagnant) // IL FAUT RÉCU
 	SDL_FreeSurface(pseudoperdant);
 	SDL_FreeSurface(scorevainqueur);
 	SDL_FreeSurface(scoreperdant);
-	free(pseudo_joueur1);
-	free(pseudo_joueur1);
 }
 
 

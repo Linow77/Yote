@@ -33,7 +33,7 @@ void TireAuSortJoueur(Player joueurs[]) {
 }
 
 void Init_joueur(Player *player) {
-	*player = (Player) { HOMME, 0, 12, 0, NULL };
+	*player = (Player) { HOMME, 0, 12, 0, 0, NULL };
 }
 
 void Init_joueurs(Player players[]) {
@@ -538,3 +538,23 @@ char *entre_nom_dans_terminal()
 
 
 
+/*
+ * Donne un nom par défaut aux joueurs
+ */
+void joueurs_par_defaut(Player joueurs[])
+{
+	joueurs[0].nom = "Toto";
+	joueurs[1].nom = "Tata";
+}
+
+/*
+ * Affiche les champs d'un joueur : nom, score, nombre de pièces...
+ */
+void print_player(Player p)
+{
+	printf("Nom : %s\n", p.nom);
+	printf("Score : %d\n", p.score);
+	printf("Pièces en réserve : %d\n", p.piece_reserve);
+	printf("Pièces capturées : %d\n", p.piece_cap);
+	printf("Pièces sur le plateau : %d\n", p.piece_plateau);
+}
