@@ -161,10 +161,8 @@ int main()
 							JoueurAd=NbJoueurAdv(joueur);
 							AppliqueCoupV2(caseSelection, caseASupprimer, caseDeplacement, &joueurs[joueur], &joueurs[JoueurAd] );
 
-							// ON CHANGE LE JOUEUR POUR SUPPRIMER LE PION DE LADVERSAIRE
 							SupprimerPion(&case_vide,sprite, hgDelete, joueur_adv(joueur));
 
-							// ON REVIENT SUR LE JOUEUR INITIAL
 							infoPartie(ecran, joueurs,sprite, joueur_adv(joueur));
 							SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
 							SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
@@ -204,7 +202,7 @@ int main()
 									caseSelection=PointToCase(clic());
 								}
 
-								// on vérifie que caseSelection s'agit d'une case de l'adversaire et qu'elle n'est pas vide
+								// on vérifie que caseSelection est une case de l'adversaire et qu'elle n'est pas vide
 								if(plateau[caseSelection.x][caseSelection.y] != VIDE
 								&& plateau[caseSelection.x][caseSelection.y] != joueurs[joueur].JoueurT)
 								{
@@ -214,10 +212,8 @@ int main()
 									JoueurAd=NbJoueurAdv(joueur);
 									AppliqueCoupV3(caseSelection, &joueurs[joueur], &joueurs[JoueurAd]);
 
-									// ON CHANGE LE JOUEUR POUR SUPPRIMER LE NOUVEAU PION DE L'ADVERSAIRE
 									SupprimerPion(&case_vide,sprite, hgDelete, joueur_adv(joueur));
 
-									// ON REVIENT SUR LE JOUEUR INITIAL
 									infoPartie(ecran, joueurs,sprite, joueur);
 									SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
 									SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
@@ -235,6 +231,7 @@ int main()
 
 		if(estCoupValide)
 		{
+			JoueurAd = joueur;
 			Changer_joueur(&joueur);
 			// Pour le modeVariante le message game over s'affiche si le nombre de piece dans la reserve et dans le
 			// plateau sont égales à 0

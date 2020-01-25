@@ -12,7 +12,7 @@ void chargement (Ressource *sprite)
 	sprite->ecran_de_fin=SDL_LoadBMP("ecrandefin.bmp");
 }
 
-
+/* Convertit un point en une coordonnée d'une case du plateau */
 Case PointToCase(Point clic)
 {
 	Case case1;
@@ -30,6 +30,7 @@ Case PointToCase(Point clic)
 	return case1;
 }
 
+/* Convertit une case en un point */
 Point CaseToPointhg(Case case1)
 {
 	Point p;
@@ -40,6 +41,7 @@ Point CaseToPointhg(Case case1)
 }
 
 
+/* TODO à enlever */
 void UpdateEvents(Input* in)
 {
 		SDL_Event event;

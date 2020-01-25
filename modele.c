@@ -32,73 +32,21 @@ void TireAuSortJoueur(Player joueurs[]) {
 	}
 }
 
+/* Initialise une variable joueur */
 void Init_joueur(Player *player) {
 	*player = (Player) { HOMME, 0, 12, 0, 0, NULL };
 }
 
+/* Initialise un tableau de joueurs */
 void Init_joueurs(Player players[]) {
 	Init_joueur(&(players[0]));
 	Init_joueur(&(players[1]));
 }
 
-/* Placement d'un pion de la réserve
- * On suppose que la réserve n'est pas vide */
-/*
- * void PlacerPion(Player *p) {
-	Case c;
-
-	do {
-		RecupCoordonneesCLI(&c);// TODO: à remplacer
-	} while (!VerifCaseVide(c));
-
-	plateau[c.y][c.x] = p->JoueurT;
-	p->piece_reserve--;
-	p->piece_plateau++;
-}*/
-
-/* Le joueur choisit un pion du plateau */
-/*
-void ChoisirPion(Player *p, Case *pion) {
-	Case c;
-
-	do {
-		printf("Choisir pion\n");
-		RecupCoordonneesCLI(&c);// TODO: à remplacer
-		// on vérifie que le pion sélectionné est bien à soi
-	} while (!MemeType(c, p->JoueurT));
-
-	*pion = c;
-}
-*/
 
 int MemeType(Case c, TypeContents type) {
 	return plateau[c.y][c.x] == type;
 }
-
-// A renommer ?
-// Dans AppliqueCoup on déplace aussi le pion...
-/*
-void DeplacerPion(Player *p) {
-	Case pion, dest;
-
-	ChoisirPion(p, &pion);
-
-	// TODO: ChoisirDestination() ?
-	// {
-	do {
-		printf("Destination\n");
-		RecupCoordonneesCLI(&dest);// TODO: à remplacer
-		// TODO: Conditions à remplacer par autre chose:
-		// on vérifie que la destination est dans le
-		// tableau des mouvements possibles
-	} while (!(VerifCaseVide(dest) && VerifDeplacementOrthogonal(pion, dest)));
-	// }
-
-	AppliqueCoup(pion, dest, p->JoueurT);
-}
-*/
-
-
 
 
 void SetCase(Case *c, int x, int y)
@@ -127,7 +75,6 @@ int EqlCase(Case c1, Case c2)
 	return c1.x == c2.x && c1.y == c2.y;
 }
 
-// Tests
 
 
 
@@ -326,9 +273,11 @@ int rand_a_b(int a, int b) {
 
 
 
-/* Vérifie si un pion peut se déplacer
+/*
+ * Vérifie si un pion peut se déplacer
  * Il faut donc vérifier qu'au moins une case autour du pion
- * soit vide */
+ * soit vide
+ */
 int pion_peut_se_deplacer(Case c)
 {
 	if (c.x > 0)
@@ -353,8 +302,10 @@ TypeContents adv(TypeContents joueur)
 	else return HOMME;
 }
 
-/* Vérifie qu'un pion peut en manger un autre
- * On suppose que la case n'est pas vide */
+/*
+ * Vérifie qu'un pion peut en manger un autre
+ * On suppose que la case n'est pas vide
+ */
 int pion_peut_manger(Case c, TypeContents joueur)
 {
 	TypeContents a = adv(joueur);
