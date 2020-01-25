@@ -103,7 +103,7 @@ int Verif1Vs1(Input in);
 int Verif1VsIA(Input in);
 int VerifModeSimple(Input in);
 int VerifModeVariante(Input in);
-void infoPartie(img ecran, Player joueurs[],Ressource sprite);
+void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur);
 void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant);
 Point clic_souris(Input in);
 void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,

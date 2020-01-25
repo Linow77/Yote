@@ -69,14 +69,14 @@ int main()
 		else if (verif_mode_simple(c) &&(tour==2))
 		{
 			AfficheMenu(3,&tour,fond,ecran);
-			infoPartie(ecran, joueurs,sprite);
+			infoPartie(ecran, joueurs,sprite, joueur);
 		}
 
 		else if (verif_mode_variante(c) &&(tour==2))
 		{
 			estModeVariante = 1;
 			AfficheMenu(3,&tour,fond,ecran);
-			infoPartie(ecran, joueurs,sprite);
+			infoPartie(ecran, joueurs,sprite, joueur);
 		}
 
 		else if (verif_quitter(c) &&(tour==0))
@@ -150,7 +150,7 @@ int main()
 							SupprimerPion(&case_vide,sprite, hgDelete, joueur_adv(joueur));
 
 							// ON REVIENT SUR LE JOUEUR INITIAL
-							infoPartie(ecran, joueurs,sprite);
+							infoPartie(ecran, joueurs,sprite, joueur);
 							SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
 							SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 							SDL_Flip(ecran.image);
@@ -202,7 +202,7 @@ int main()
 									SupprimerPion(&case_vide,sprite, hgDelete, joueur_adv(joueur));
 
 									// ON REVIENT SUR LE JOUEUR INITIAL
-									infoPartie(ecran, joueurs,sprite);
+									infoPartie(ecran, joueurs,sprite, joueur);
 									SDL_BlitSurface(pion.image, NULL, ecran.image, &pion.position);
 									SDL_BlitSurface(case_vide.image, NULL, ecran.image, &case_vide.position);
 									SDL_Flip(ecran.image);

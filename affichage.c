@@ -363,12 +363,13 @@ int verif_mode_variante(Point clic)
 
 
 
-void infoPartie(img ecran, Player joueurs[],Ressource sprite)
+void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur)
 {
 	char pionM1[2] = "";  /*Tableau de char suffisamment grand pour contenir le nombre de pions mangés du J1*/
 	char pionM2[2] = "";  /*Tableau de char suffisamment grand pour contenir le nombre de pions mangés du J2*/
 	char pionR1[2] = "";  /*Tableau de char suffisamment grand pour contenir le nombre de pions restants du J1*/
 	char pionR2[2] = "";  /*Tableau de char suffisamment grand pour contenir le nombre de pions restants du J2*/
+
 
 	TTF_Font *police = NULL; //initialisation de la police
 
@@ -377,6 +378,9 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite)
 	SDL_Color couleurNoire = {0, 0, 0};
 	SDL_Surface *texte = NULL , *texte1 = NULL, *texte2 = NULL, *texte3 = NULL; //initialisation des surface de texte et d'effacement
 	SDL_Rect position,position1,position2,position3; //initialisation des positions des surfaces
+	img pion;
+	Point hgpion;
+
 
 	sprintf(pionR1, "%d", joueurs[1].piece_reserve); //on transforme "piece_reserve" en char et on le met dans le tab de char pionR1 car TTF_RenderText_Blended affiche des char
 	sprintf(pionM1, "%d", joueurs[1].piece_cap);
@@ -388,8 +392,12 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite)
 	texte2 = TTF_RenderText_Blended(police,pionR1, couleurNoire);
 	texte3 = TTF_RenderText_Blended(police,pionR2, couleurNoire);
 
+
 	position.x = 195;	position1.x = 780;	position2.x = 315;	position3.x = 640;
 	position.y = 20;	position1.y = 20;	position2.y = 65;	position3.y = 65;
+
+	hgpion.x = 445;
+	hgpion.y = 15;
 
 	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position); // efface le texte potentielment précedement
 	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position1);
@@ -405,6 +413,17 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite)
 
 	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position);
 
+	//AFFICHAGE DU JOUEUR ACTUEL (PION SUR LA PLANCHE)
+	if(joueur==-1){
+		// on vient de manger le pion on laisse le même pion affiché
+	}else if(joueur==0){	// ON INVERSE CAR L'AFFICHAGE SE FAIT APRES LE COUP JOUE IL FAUT DONC
+		joueur=1;	// INVERSER LES PIONS
+	}else if (joueur==1){
+		joueur=0;
+	}
+	AfficherPion(ecran,&pion,sprite,hgpion,joueur);
+
+
 	SDL_Flip(ecran.image);
 	TTF_CloseFont(police);
     TTF_Quit();
@@ -413,6 +432,7 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite)
 	SDL_FreeSurface(texte1);
 	SDL_FreeSurface(texte2);
 	SDL_FreeSurface(texte3);
+
 }
 
 void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant)
@@ -527,7 +547,7 @@ void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
 	Point hg1=CaseToPointhg(caseSelection);
 	AfficherPion(ecran, pion, sprite, hg1, joueur);
 	ChangerContenuCase(caseSelection, &joueurs[joueur]);
-	infoPartie(ecran, joueurs,sprite);
+	infoPartie(ecran, joueurs,sprite, joueur);
 	SDL_Flip(ecran.image);
 }
 
@@ -543,7 +563,7 @@ void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 	Point hg1 = CaseToPointhg(caseSelection);
 	Point hg2 = CaseToPointhg(caseDeplacement);
 
-	infoPartie(ecran, joueurs, sprite);
+	infoPartie(ecran, joueurs, sprite, *joueur);
 	AfficherPion(ecran, pion, sprite, hg2, *joueur);
 	SupprimerPion(case_vide, sprite, hg1, *joueur);
 }
