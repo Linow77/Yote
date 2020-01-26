@@ -283,10 +283,9 @@ int main()
 				estGameOver = 1;
 
 			}
-			else if(nbCoup>=10)
+			else if(nbCoup>10)
 			{ estGameOver = 1;
 
-				//TODO
 				// afficher Partie nulle a la fin
 				afficheFinJeu(ecran, sprite, joueurs, joueur,1);
 
