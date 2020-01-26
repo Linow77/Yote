@@ -14,6 +14,11 @@ typedef struct Case {
     int y;
 } Case;
 
+typedef struct Move {
+    Case ancienne_position;
+    Case nouvelle_position;
+} Move;
+
 typedef enum TypeContents {
     VIDE, HOMME, DEMON
 } TypeContents;
@@ -26,13 +31,9 @@ typedef struct Player {
     int piece_plateau;// - sur le plateau
 	unsigned int score;
     char *nom;
-    // int score;
+	Move deplacement;
 } Player;
 
-typedef struct Move {
-    Case ancienne_position;
-    Case nouvelle_position;
-} Move;
 
 
 TypeContents plateau[5][6];
@@ -75,10 +76,10 @@ void TireAuSortJoueur(Player joueurs[]);
 void ia_pioche_pion(Case *caseSelection);
 void set_case(Case *c, int x, int y);
 char *entre_nom_dans_terminal();
-//void entre_nom_dans_terminal(Player *joueur);
 void joueurs_par_defaut(Player joueurs[]);
 void print_player(Player p);
 void ia_pioche_pion_reserve( Player *JoueurAct, Player *JoueurAd, int *estReserveAdiminuer);
 int eql_case(Case c1, Case c2);
+int eql_move(Move m1, Move m2);
 #endif
 

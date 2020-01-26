@@ -34,7 +34,15 @@ void TireAuSortJoueur(Player joueurs[]) {
 
 /* Initialise une variable joueur */
 void Init_joueur(Player *player) {
-	*player = (Player) { HOMME, 0, 12, 0, 0, NULL };
+	Case s = { 0, 0 };
+	Case d = { 0, 0 };
+	Move m = { s, d };
+	player->JoueurT = HOMME;
+	player->piece_cap = 0;
+	player->piece_reserve = 12;
+	player->piece_plateau = 0;
+	player->score = 0;
+	player->deplacement = m;
 }
 
 /* Initialise un tableau de joueurs */
@@ -392,10 +400,10 @@ Case RecupCaseArriveeIA (Case caseDepart)
 
 /**  Permet de prendre un pion de la reserve de l'adversaire lorsque il posede aucun pion sur le plateau  **/
 void ia_pioche_pion_reserve( Player *JoueurAct, Player *JoueurAd, int *estReserveAdiminuer)
-{	
+{
 	JoueurAd->piece_reserve--;
 	JoueurAct->piece_cap++;
-	*estReserveAdiminuer=1;	
+	*estReserveAdiminuer=1;
 }
 
 /* Methode qui permet de selectionner une case sur le plateau pour l'IA
@@ -410,7 +418,7 @@ Case RecupCaseDeSelectionIA (Player joueur) {
 	int stop = 0;
 	int nombrePionHommePlateau = joueur.piece_plateau;
 
-	//D'abord on regarde la 1ere case du tableau que l'on peut manger et on la mange 
+	//D'abord on regarde la 1ere case du tableau que l'on peut manger et on la mange
 	for (i = 0; i < 6 && !stop; i++) {
 		for (j = 0; j < 5 && !stop; j++) {
 			if (plateau[i][j] == joueur.JoueurT) {
@@ -421,14 +429,14 @@ Case RecupCaseDeSelectionIA (Player joueur) {
 			}
 		}
 	}
-	
+
 	// si on a pas trouvé de case à manger
 	if(!stop) {
-		// Si le nombre de pion sur le plateau est supérieur ou égale à 4 ou inférieur à 4 avec une reserve vide 
-		// alors l'IA sélectionne un pion qui lui appartient pour le deplacer 
+		// Si le nombre de pion sur le plateau est supérieur ou égale à 4 ou inférieur à 4 avec une reserve vide
+		// alors l'IA sélectionne un pion qui lui appartient pour le deplacer
 		if (nombrePionHommePlateau >= 4 || (nombrePionHommePlateau <= 4 && joueur.piece_reserve == 0)) {
-			
-			//on selectionne le 1er pion qui peut se deplacer 
+
+			//on selectionne le 1er pion qui peut se deplacer
 			for (i = 0; i < 6 && !stop; i++) {
 				for (j = 0; j < 5 && !stop; j++) {
 					if (plateau[i][j] == joueur.JoueurT) {
@@ -483,8 +491,8 @@ void ia_pioche_pion(Case *caseSelection)
 			}
 		}
 	}
-	
-	
+
+
 }
 
 
@@ -540,5 +548,16 @@ void print_player(Player p)
 	printf("Pièces en réserve : %d\n", p.piece_reserve);
 	printf("Pièces capturées : %d\n", p.piece_cap);
 	printf("Pièces sur le plateau : %d\n", p.piece_plateau);
+}
+
+int eql_move(Move m1, Move m2)
+{
+	return eql_case(m1.ancienne_position, m2.nouvelle_position) &&
+		eql_case(m1.nouvelle_position, m2.ancienne_position);
+}
+
+int eql_case(Case c1, Case c2)
+{
+	return c1.x == c2.x && c1.y == c2.y;
 }
 
