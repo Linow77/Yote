@@ -463,7 +463,7 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur)
 
 }
 
-void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant)
+void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant, int egalite)
 {
 	int score_joueur1=joueurs[0].score, score_joueur2=joueurs[1].score;
 
@@ -501,16 +501,15 @@ void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant)
 
 	}
 
-	/** 	AFFICHAGES DU TABLEAU DE FIN 	**/
-	char victoire[9] = "victoire";
-	char defaite[8] = "defaite";
 	char pseudo_vainqueur[10] = "";
 	char pseudo_perdant[10] = "";
 	char score_vainqueur[2] = "";
 	char score_perdant[2] = "";
-
-
-
+	/** 	AFFICHAGES DU TABLEAU DE FIN 	**/
+	char victoire[9] = "victoire";
+	char defaite[8] = "defaite";
+	/**	AFFICHAGES DU TABLEAU DE FIN EN CAS D'EGALITE **/
+	char phrase_egalite[8] = "egalite";
 
 	TTF_Font *police = NULL; //initialisation de la police
 
@@ -520,8 +519,8 @@ void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant)
 
 	SDL_Color couleurBordeau = {139, 3, 3};
 	SDL_Color couleurNoire = {0, 0, 0};
-	SDL_Surface *textevictoire = NULL , *textedefaite = NULL, *pseudovainqueur = NULL, *pseudoperdant = NULL, *scorevainqueur = NULL, *scoreperdant = NULL; //initialisation des surface de texte et d'effacement
-	SDL_Rect position1,position2,position3, position4, position5, position6; //initialisation des positions des surfaces
+	SDL_Surface *textevictoire = NULL , *textedefaite = NULL, *pseudovainqueur = NULL, *pseudoperdant = NULL, *scorevainqueur = NULL, *scoreperdant = NULL, *texteegalite = NULL; //initialisation des surface de texte et d'effacement
+	SDL_Rect position1,position2,position3, position4, position5, position6,positionegalite; //initialisation des positions des surfaces
 
 	sprintf(score_vainqueur, "%d", score_joueur1);
 	sprintf(score_perdant, "%d", score_joueur2);
@@ -530,22 +529,41 @@ void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant)
 
 
 	TTF_SetFontStyle(police, TTF_STYLE_BOLD | TTF_STYLE_UNDERLINE);
-	textevictoire = TTF_RenderText_Blended(police,victoire, couleurBordeau); //on charge le texte avec la couleur et la police
-	textedefaite = TTF_RenderText_Blended(police,defaite, couleurNoire);
+
+	/** FIN DE PARTIE AVEC VAINQUEUR **/
+	if(egalite==0)
+	{
+		textevictoire = TTF_RenderText_Blended(police,victoire, couleurBordeau); //on charge le texte avec la couleur et la police
+		textedefaite = TTF_RenderText_Blended(police,defaite, couleurNoire);
+	}else{	/**FIN DE PARTIE AVEC EGALITE **/
+		texteegalite = TTF_RenderText_Blended(police,phrase_egalite, couleurNoire);
+	}
 
 	police = TTF_OpenFont("RuneicityDecorative001.ttf", 40); //on charge la police
 	TTF_SetFontStyle(police, TTF_STYLE_NORMAL);
-	pseudovainqueur = TTF_RenderText_Blended(police,pseudo_vainqueur, couleurBordeau);
+	
 	pseudoperdant = TTF_RenderText_Blended(police,pseudo_perdant, couleurNoire);
-	scorevainqueur = TTF_RenderText_Blended(police,score_vainqueur, couleurBordeau);
+	
 	scoreperdant = TTF_RenderText_Blended(police,score_perdant, couleurNoire);
 
 	position1.x = 150;	position2.x = 600;	position3.x = 150;	position4.x = 600; position5.x = 400;	position6.x = 850;
 	position1.y = 250;	position2.y = 250;	position3.y = 520;	position4.y = 520; position5.y = 520;	position6.y = 520;
 
+	positionegalite.x = 375;
+	positionegalite.y = 250;
+	/** FIN DE PARTIE AVEC VAINQUEUR **/
+	if(egalite==0)
+	{
+		pseudovainqueur = TTF_RenderText_Blended(police,pseudo_vainqueur, couleurBordeau);
+		scorevainqueur = TTF_RenderText_Blended(police,score_vainqueur, couleurBordeau);
+		SDL_BlitSurface(textevictoire, NULL, ecran.image, &position1); 
+		SDL_BlitSurface(textedefaite, NULL, ecran.image, &position2);
+	}else{	/** FIN DE PARTIE AVEC EGALITE **/
+		pseudovainqueur = TTF_RenderText_Blended(police,pseudo_vainqueur, couleurNoire);
+		scorevainqueur = TTF_RenderText_Blended(police,score_vainqueur, couleurNoire);
+		SDL_BlitSurface(texteegalite, NULL, ecran.image, &positionegalite);
+	}
 
-	SDL_BlitSurface(textevictoire, NULL, ecran.image, &position1); //on écrit le nouveau texte
-	SDL_BlitSurface(textedefaite, NULL, ecran.image, &position2);
 	SDL_BlitSurface(pseudovainqueur, NULL, ecran.image, &position3);
 	SDL_BlitSurface(pseudoperdant, NULL, ecran.image, &position4);
 	SDL_BlitSurface(scorevainqueur, NULL, ecran.image, &position5);
@@ -561,6 +579,7 @@ void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant)
 	SDL_FreeSurface(pseudoperdant);
 	SDL_FreeSurface(scorevainqueur);
 	SDL_FreeSurface(scoreperdant);
+	
 }
 
 

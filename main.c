@@ -278,7 +278,7 @@ int main()
 				print_player(joueurs[1]);
 				insert(&scores, joueurs[joueur].score, joueurs[joueur].nom);
 				save_score(&scores);
-				afficheFinJeu(ecran, sprite, joueurs, joueur);
+				afficheFinJeu(ecran, sprite, joueurs, joueur,1);
 
 				estGameOver = 1;
 
@@ -288,6 +288,7 @@ int main()
 
 				//TODO
 				// afficher Partie nulle a la fin
+				afficheFinJeu(ecran, sprite, joueurs, joueur,1);
 
 				}
 			aMangerAdversaire = 0;
