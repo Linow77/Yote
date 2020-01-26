@@ -79,5 +79,6 @@ char *entre_nom_dans_terminal();
 void joueurs_par_defaut(Player joueurs[]);
 void print_player(Player p);
 void ia_pioche_pion_reserve( Player *JoueurAct, Player *JoueurAd, int *estReserveAdiminuer);
+int eql_case(Case c1, Case c2);
 #endif
 
