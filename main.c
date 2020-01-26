@@ -111,7 +111,9 @@ int main()
 
 	// tant que le jeu n'est pas fini
 	while (tour == 3 && !estGameOver)
-	{	estCoupValide = 0;
+	{
+		estCoupValide = 0;
+		JoueurAd = joueur_adv(joueur);
 
 		// s'il s'agit du joueur HOMME contrôlé par l'IA
 		if(estVSIA && tour_de_homme(joueurs, joueur))
