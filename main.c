@@ -153,7 +153,7 @@ int main()
 				if(dans_le_plateau(caseDeplacement))
 				{
 
-					//si la case distation est vide et il s'agit d'un mouvement orthogonal ou le joueur va manger un pion adversaire
+					//si la case detination est vide et il s'agit d'un mouvement orthogonal ou le joueur va manger un pion adversaire
 					if(VerifCaseVide(caseDeplacement) && (VerifDeplacementOrthogonal(caseSelection,caseDeplacement)
 						|| VerifCoupValide(caseSelection, caseDeplacement, joueurs[joueur].JoueurT)))
 					{

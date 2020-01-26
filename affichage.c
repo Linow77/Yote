@@ -524,8 +524,13 @@ void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant, i
 
 	sprintf(score_vainqueur, "%d", score_joueur1);
 	sprintf(score_perdant, "%d", score_joueur2);
-	sprintf(pseudo_vainqueur, "%s", joueurs[0].nom);
-	sprintf(pseudo_perdant, "%s", joueurs[1].nom);
+	sprintf(pseudo_vainqueur, "%s", joueurs[gagnant].nom);
+	if(gagnant==0)
+	{
+		sprintf(pseudo_perdant, "%s", joueurs[1].nom);
+	}else{
+		sprintf(pseudo_perdant, "%s", joueurs[0].nom);
+	}
 
 
 	TTF_SetFontStyle(police, TTF_STYLE_BOLD | TTF_STYLE_UNDERLINE);
@@ -581,7 +586,6 @@ void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant, i
 	SDL_FreeSurface(scoreperdant);
 	
 }
-
 
 /*
  * Place un pion sur l'interface graphique et dans le plateau de jeu
