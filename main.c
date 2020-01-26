@@ -83,7 +83,6 @@ int main()
 
 		else if (verif_mode_simple(c) &&(tour==2))
 		{
-            printf("variante %d\n", estModeVariante);
 			AfficheMenu(3,&tour,fond,ecran, joueurs);
 			infoPartie(ecran, joueurs,sprite, 1);
 		}	//Ici on met 1 au lieu de joueur car le premier affichage est un démon,
@@ -92,9 +91,7 @@ int main()
 
 		else if (verif_mode_variante(c) &&(tour==2))
 		{
-            printf("variante %d\n", estModeVariante);
 			estModeVariante = 1;
-            printf("Variante %d\n", estModeVariante);
 			AfficheMenu(3,&tour,fond,ecran, joueurs);
 			infoPartie(ecran, joueurs,sprite, 1);
 		}
@@ -110,7 +107,7 @@ int main()
 
 
 	// tant que le jeu n'est pas fini
-	while (tour == 3 && !estGameOver)
+	while (!estGameOver)
 	{
 		estCoupValide = 0;
 		JoueurAd = joueur_adv(joueur);
@@ -274,8 +271,6 @@ int main()
 			{
 				Changer_joueur(&joueur);
 				joueurs[joueur].score++;
-				print_player(joueurs[0]);
-				print_player(joueurs[1]);
 				insert(&scores, joueurs[joueur].score, joueurs[joueur].nom);
 				save_score(&scores);
 				afficheFinJeu(ecran, sprite, joueurs, joueur);
@@ -297,8 +292,6 @@ int main()
 
 	wait_quit();
 	free_table_score(&scores);
-	//free(joueurs[0].nom);
-	//free(joueurs[1].nom);
 	SDL_Quit();
 	return EXIT_SUCCESS;
 }
