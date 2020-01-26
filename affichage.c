@@ -443,9 +443,8 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur)
 	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position);
 
 	//AFFICHAGE DU JOUEUR ACTUEL (PION SUR LA PLANCHE)
-	if(joueur==-1){
 		// on vient de manger le pion on laisse le même pion affiché
-	}else if(joueur==0){	// ON INVERSE CAR L'AFFICHAGE SE FAIT APRES LE COUP JOUE IL FAUT DONC
+	if(joueur==0){	// ON INVERSE CAR L'AFFICHAGE SE FAIT APRES LE COUP JOUE IL FAUT DONC
 		joueur=1;	// INVERSER LES PIONS
 	}else if (joueur==1){
 		joueur=0;
