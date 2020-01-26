@@ -57,7 +57,6 @@ int main()
 			joueurs_entrent_noms(estVSIA, joueurs);
 			joueurs[0].score = get_score_by_name(&scores, joueurs[0].nom);
 			joueurs[1].score = get_score_by_name(&scores, joueurs[1].nom);
-            c = clic();
 		}
 
 		// Si on clic sur 1 VS IA
@@ -68,15 +67,14 @@ int main()
 			joueurs_entrent_noms(estVSIA, joueurs);
 			joueurs[0].score = get_score_by_name(&scores, joueurs[0].nom);
 			joueurs[1].score = get_score_by_name(&scores, joueurs[1].nom);
-            c = clic();
 		}
 
-		if (verif_menu_score(c) && tour == 0)
+        else if (verif_menu_score(c) && tour == 0)
 		{
 			AfficheScore(fond,ecran,&tour,&scores);
 		}
 
-		if(verif_bouton_retour(c) && tour == 4)
+        else if(verif_bouton_retour(c) && tour == 4)
 		{
 			fond.image=SDL_LoadBMP("menu_principal.bmp");
 			affiche_menu(fond,ecran);
