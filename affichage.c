@@ -183,7 +183,7 @@ void joueurs_entrent_noms(int ia_mode, Player joueurs[])
 
 	if (ia_mode)
 	{
-		puts("Joueur 1, entrez votre pseudo");
+		puts("Joueur 1, entrez votre pseudo (9 caracteres maximum)");
 		joueurs[0].nom = entre_nom_dans_terminal();
 		joueurs[1].nom = "IA";
 	}
@@ -191,16 +191,16 @@ void joueurs_entrent_noms(int ia_mode, Player joueurs[])
 	{
 		if (rst % 2 == 0)
 		{
-			puts("Joueur 1, entrez votre pseudo");
+			puts("Joueur 1, entrez votre pseudo (9 caracteres maximum)");
 			joueurs[0].nom = entre_nom_dans_terminal();
-			puts("Joueur 2, entrez votre pseudo");
+			puts("Joueur 2, entrez votre pseudo (9 caracteres maximum)");
 			joueurs[1].nom = entre_nom_dans_terminal();
 		}
 		else
 		{
-			puts("Joueur 1, entrez votre pseudo");
+			puts("Joueur 1, entrez votre pseudo (9 caracteres maximum)");
 			joueurs[1].nom = entre_nom_dans_terminal();
-			puts("Joueur 2, entrez votre pseudo");
+			puts("Joueur 2, entrez votre pseudo (9 caracteres maximum)");
 			joueurs[0].nom = entre_nom_dans_terminal();
 		}
 		puts("Résultat du tirage au sort");
@@ -209,7 +209,7 @@ void joueurs_entrent_noms(int ia_mode, Player joueurs[])
 	printf("Joueur %s : %s | Joueur %s : %s\n",
 	joueurs[0].nom, types[joueurs[0].JoueurT],
 	joueurs[1].nom, types[joueurs[1].JoueurT]);
-	puts("Vous pouvez retourner dans l'interface graphique pour jouer c:");
+	puts("Vous pouvez retourner dans l'interface graphique pour jouer");
 }
 
 /* Vérifie qu'un point est dans une zone rectangulaire de la fenêtre */
