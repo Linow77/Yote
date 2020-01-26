@@ -1,3 +1,13 @@
+## Compiler et exécuter le jeu
+
+```
+make
+```
+```
+./game
+```
+
+
 ## TODO
 
 - enlever les fonctions inutilisées
@@ -28,4 +38,3 @@ jeu: main.c // METTRE LES FICHIERS.C
 	gcc -Wall main.c -o game -D_REENTRANT -I/usr/include/SDL  -L/usr/lib/x86_64-linux-gnu -lSDL -lSDL_image
 	// SUR LA DEUXIÈME LIGNE METTRE TOUS LES FICHIERS.C ET .H AVANT LE -o game
 ```
-Pour compiler le jeu écriver la commande: make
