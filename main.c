@@ -278,7 +278,7 @@ int main()
 				print_player(joueurs[1]);
 				insert(&scores, joueurs[joueur].score, joueurs[joueur].nom);
 				save_score(&scores);
-				afficheFinJeu(ecran, sprite, joueurs, joueur,1);
+				afficheFinJeu(ecran, sprite, joueurs, joueur,0);
 
 				estGameOver = 1;
 

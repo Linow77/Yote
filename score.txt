@@ -2,6 +2,9 @@ Pablo 44
 Bidule 33
 Toto 6
 Truc 3
-ee 2
-IA 1
+ee 3
+IA 2
 qq 1
+efz 1
+qf 1
+qa 1
