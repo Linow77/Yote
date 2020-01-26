@@ -55,6 +55,8 @@ int main()
 		{
 			AfficheMenu(2,&tour,fond,ecran, joueurs);
 			joueurs_entrent_noms(estVSIA, joueurs);
+			print_player(joueurs[0]);
+			print_player(joueurs[1]);
 			joueurs[0].score = get_score_by_name(&scores, joueurs[0].nom);
 			joueurs[1].score = get_score_by_name(&scores, joueurs[1].nom);
 		}
