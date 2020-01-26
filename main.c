@@ -57,6 +57,7 @@ int main()
 			joueurs_entrent_noms(estVSIA, joueurs);
 			joueurs[0].score = get_score_by_name(&scores, joueurs[0].nom);
 			joueurs[1].score = get_score_by_name(&scores, joueurs[1].nom);
+            c = clic();
 		}
 
 		// Si on clic sur 1 VS IA
@@ -67,6 +68,7 @@ int main()
 			joueurs_entrent_noms(estVSIA, joueurs);
 			joueurs[0].score = get_score_by_name(&scores, joueurs[0].nom);
 			joueurs[1].score = get_score_by_name(&scores, joueurs[1].nom);
+            c = clic();
 		}
 
 		if (verif_menu_score(c) && tour == 0)
@@ -82,13 +84,16 @@ int main()
 		}
 		else if (verif_mode_simple(c) &&(tour==2))
 		{
+            printf("variante %d\n", estModeVariante);
 			AfficheMenu(3,&tour,fond,ecran, joueurs);
 			infoPartie(ecran, joueurs,sprite, 1);
 		}
 
 		else if (verif_mode_variante(c) &&(tour==2))
 		{
+            printf("variante %d\n", estModeVariante);
 			estModeVariante = 1;
+            printf("Variante %d\n", estModeVariante);
 			AfficheMenu(3,&tour,fond,ecran, joueurs);
 			infoPartie(ecran, joueurs,sprite, 1);
 		}
