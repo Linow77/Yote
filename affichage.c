@@ -42,41 +42,6 @@ Point CaseToPointhg(Case case1)
 }
 
 
-/* TODO à enlever */
-void UpdateEvents(Input* in)
-{
-		SDL_Event event;
-		while(SDL_PollEvent(&event))
-		{
-				switch (event.type)
-				{
-				case SDL_KEYDOWN:
-						in->key[event.key.keysym.sym]=1;
-						break;
-				case SDL_KEYUP:
-						in->key[event.key.keysym.sym]=0;
-						break;
-				case SDL_MOUSEMOTION:
-						in->mousex=event.motion.x;
-						in->mousey=event.motion.y;
-						in->mousexrel=event.motion.xrel;
-						in->mouseyrel=event.motion.yrel;
-						break;
-				case SDL_MOUSEBUTTONDOWN:
-						in->mousebuttons[event.button.button]=1;
-						break;
-				case SDL_MOUSEBUTTONUP:
-						in->mousebuttons[event.button.button]=0;
-						break;
-				case SDL_QUIT:
-						in->quit = 1;
-						break;
-				default:
-						break;
-				}
-		}
-}
-
 /*
  * Laisse le joueur cliquer dans la fenêtre, et retourne les coordonnées
  * dans une variable de type Point
@@ -284,11 +249,6 @@ void SupprimerPion(img *caseVide, Ressource sprite, Point hg, int joueur)
 
 
 /** Permet de vérifier si l’utilisateur a cliqué sur le bouton quitter dans le premier menu **/
-int VerifQuitter(Input in)
-{
-	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONQUITTERX1)&&(in.mousex<BOUTTONQUITTERX2)&&(in.mousey>BOUTTONQUITTERY1)&&(in.mousey<BOUTTONQUITTERY2);
-}
-
 int verif_quitter(Point clic)
 {
 	Point hg = { BOUTTONQUITTERX1, BOUTTONQUITTERY1 };
@@ -297,11 +257,6 @@ int verif_quitter(Point clic)
 }
 
 /**  Permet de vérifier si l’utilisateur a cliqué sur le bouton jouer dans le premier menu  **/
-int VerifMenu1(Input in)
-{
-	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONJOUERX1)&&(in.mousex<BOUTTONJOUERX2)&&(in.mousey>BOUTTONJOUERY1)&&(in.mousey<BOUTTONJOUERY2);
-}
-
 int verif_menu1(Point clic)
 {
 	Point hg = { BOUTTONJOUERX1, BOUTTONJOUERY1 };
@@ -310,11 +265,6 @@ int verif_menu1(Point clic)
 }
 
 /**  Permet de vérifier si l’utilisateur a cliqué sur le bouton score dans le premier menu  **/
-int VerifMenuScore(Input in)
-{
-	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONSCOREX1)&&(in.mousex<BOUTTONSCOREX2)&&(in.mousey>BOUTTONSCOREY1)&&(in.mousey<BOUTTONSCOREY2);
-}
-
 int verif_menu_score(Point clic)
 {
 	Point hg = { BOUTTONSCOREX1, BOUTTONSCOREY1 };
@@ -323,11 +273,6 @@ int verif_menu_score(Point clic)
 }
 
 /**  Permet de vérifier si l’utilisateur a cliqué sur le bouton retour dans le menu score **/
-int VerifBoutonRetour(Input in)
-{
-	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONRETOURX1)&&(in.mousex<BOUTTONRETOURX2)&&(in.mousey>BOUTTONRETOURY1)&&(in.mousey<BOUTTONRETOURY2);
-}
-
 int verif_bouton_retour(Point clic)
 {
 	Point hg = { BOUTTONRETOURX1, BOUTTONRETOURY1 };
@@ -336,12 +281,6 @@ int verif_bouton_retour(Point clic)
 }
 
 /**  Permet de vérifier si l’utilisateur clique sur le bouton 1 VS 1 **/
-int Verif1Vs1(Input in)
-{
-	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTON1V1X1)&&(in.mousex<BOUTTON1V1X2)&&(in.mousey>BOUTTON1V1Y1)&&(in.mousey<BOUTTON1V1Y2);
-}
-
-/* Verif1VS1 */
 int verif_pvp(Point clic)
 {
 	Point hg = { BOUTTON1V1X1, BOUTTON1V1Y1 };
@@ -349,12 +288,6 @@ int verif_pvp(Point clic)
 	return verif_dans_rectangle(clic, hg, bd);
 }
 /**  Permet de vérifier si l’utilisateur clique sur le bouton 1 VS IA **/
-int Verif1VsIA(Input in)
-{
-	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTON1VSIAX1)&&(in.mousex<BOUTTON1VSIAX2)&&(in.mousey>BOUTTON1VSIAY1)&&(in.mousey<BOUTTON1VSIAY2);
-}
-
-/* Verif1VSIA */
 int verif_pvia(Point clic)
 {
 	Point hg = { BOUTTON1VSIAX1, BOUTTON1VSIAY1 };
@@ -363,10 +296,6 @@ int verif_pvia(Point clic)
 }
 
 /**  Permet de vérifier si l’utilisateur clique sur le bouton Mode simple **/
-int VerifModeSimple(Input in)
-{
-	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONSIMPLEX1)&&(in.mousex<BOUTTONSIMPLEX2)&&(in.mousey>BOUTTONSIMPLEY1)&&(in.mousey<BOUTTONSIMPLEY2);
-}
 int verif_mode_simple(Point clic)
 {
 	Point hg = { BOUTTONSIMPLEX1, BOUTTONSIMPLEY1 };
@@ -378,10 +307,6 @@ int verif_mode_simple(Point clic)
 
 
 /**  Permet de vérifier si l’utilisateur clique sur le bouton Mode variante **/
-int VerifModeVariante(Input in)
-{
-	return in.mousebuttons[SDL_BUTTON_LEFT]&&(in.mousex>BOUTTONVARIANTEX1)&&(in.mousex<BOUTTONVARIANTEX2)&&(in.mousey>BOUTTONVARIANTEY1)&&(in.mousey<BOUTTONVARIANTEY2);
-}
 int verif_mode_variante(Point clic)
 {
 	Point hg = { BOUTTONVARIANTEX1, BOUTTONVARIANTEY1 };
@@ -549,9 +474,9 @@ void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant, i
 
 	police = TTF_OpenFont("RuneicityDecorative001.ttf", 40); //on charge la police
 	TTF_SetFontStyle(police, TTF_STYLE_NORMAL);
-	
+
 	pseudoperdant = TTF_RenderText_Blended(police,pseudo_perdant, couleurNoire);
-	
+
 	scoreperdant = TTF_RenderText_Blended(police,score_perdant, couleurNoire);
 
 	position1.x = 150;	position2.x = 600;	position3.x = 150;	position4.x = 600; position5.x = 400;	position6.x = 850;
@@ -564,7 +489,7 @@ void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant, i
 	{
 		pseudovainqueur = TTF_RenderText_Blended(police,pseudo_vainqueur, couleurBordeau);
 		scorevainqueur = TTF_RenderText_Blended(police,score_vainqueur, couleurBordeau);
-		SDL_BlitSurface(textevictoire, NULL, ecran.image, &position1); 
+		SDL_BlitSurface(textevictoire, NULL, ecran.image, &position1);
 		SDL_BlitSurface(textedefaite, NULL, ecran.image, &position2);
 	}else{	/** FIN DE PARTIE AVEC EGALITE **/
 		pseudovainqueur = TTF_RenderText_Blended(police,pseudo_vainqueur, couleurNoire);
@@ -587,7 +512,7 @@ void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant, i
 	SDL_FreeSurface(pseudoperdant);
 	SDL_FreeSurface(scorevainqueur);
 	SDL_FreeSurface(scoreperdant);
-	
+
 }
 
 /*
@@ -625,11 +550,6 @@ void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 	SupprimerPion(case_vide, sprite, hg1, *joueur);
 }
 
-/* Retourne un Point là où le joueur a cliqué */
-Point clic_souris(Input in)
-{
-	return (Point) { in.mousex, in.mousey };
-}
 
 
 /** Permet d'afficher le menu convenable selon le NbTour passer en parametre **/
@@ -683,11 +603,6 @@ void AfficheMenu(int nbTour, int *tour, img fond, img ecran, Player joueurs[])
 
 }
 
-/** Permet de remet le compteur de clic à 0 pour pouvoir récuperer d'autres clic **/
-void RenitiliserClic( Input *in)
-{
-	in->mousebuttons[SDL_BUTTON_LEFT]=0;
-}
 
 /** Affiche le menu des scores **/
 void AfficheScore(img fond, img ecran,int *tour,TableScore *scores){

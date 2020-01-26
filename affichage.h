@@ -55,14 +55,7 @@
 //STRUCTURES
 
 /** EVENEMENT **/
-typedef struct
-{
-	char key[SDLK_LAST]; //clavier
-	int mousex,mousey; //coordonnés de la souris
-	int mousexrel,mouseyrel; //le vecteur déplacement souris
-	char mousebuttons[8]; //boutons de la souris
-    char quit;
-}Input;
+
 
 /** IMAGE / POSITION **/
 typedef struct
@@ -97,23 +90,13 @@ typedef struct
 void chargement (Ressource *sprite);
 Case PointToCase(Point clic);
 Point CaseToPointhg(Case case1);
-void UpdateEvents(Input* in);
 void chargement_objets(img* fond,img* ecran);
 void affiche_menu(img fond, img ecran);
 int VerifDansPlateau(Point clic);
 void AfficherPion(img ecran, img *pion, Ressource sprite, Point hg, int joueur);
 void SupprimerPion(img *caseVide, Ressource sprite, Point hg, int joueur);
-int VerifQuitter(Input in);
-int VerifMenu1(Input in);
-int VerifMenuScore(Input in);
-int VerifBoutonRetour(Input in);
-int Verif1Vs1(Input in);
-int Verif1VsIA(Input in);
-int VerifModeSimple(Input in);
-int VerifModeVariante(Input in);
 void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur);
 void afficheFinJeu(img ecran, Ressource sprite, Player joueurs[], int gagnant, int egalite);
-Point clic_souris(Input in);
 void placer_pion(int *estCoupValide, Case caseSelection, img ecran, img *pion,
 				 Ressource sprite, int joueur, Player joueurs[]);
 void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
@@ -121,7 +104,6 @@ void deplacer_pion(int *estCoupValide, Case caseSelection, Case caseDeplacement,
 				   img *pion, int *joueur,int permission);
 
 void AfficheMenu(int nbTour, int *tour, img fond, img ecran, Player joueurs[]);
-void RenitiliserClic(Input *in);
 void AfficheScore(img fond, img ecran,int *tour,TableScore *scores);
 
 void print_point(Point p);

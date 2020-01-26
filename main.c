@@ -13,7 +13,6 @@ int main()
 	Case caseSelection, caseDeplacement;
 	Player joueurs[2];
 	img fond,ecran,pion, case_vide;
-	Input in; //VARIABLE GESTION EVENEMENT
 	Ressource sprite;
 	srand(time(NULL));
 
@@ -33,8 +32,6 @@ int main()
 	//CHARGEMENT DES IMAGES & POSITIONS DES OBJETS
 	chargement_objets(&fond, &ecran);
 
-	//GESTION DES EVENEMENTS :
-	memset(&in,0,sizeof(in));
 
 	//On affiche le menu si la partie n'a pas commencée MENU 0
 	affiche_menu(fond,ecran);
