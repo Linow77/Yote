@@ -6,7 +6,7 @@
 
 int main()
 {
-	int tour= 0, joueur=0, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, permission= 0, JoueurAd;
+	int tour= 0, joueur=0, estCoupValide = 0, aMangerAdversaire = 0, estModeVariante = 0, estVSIA = 0, estGameOver = 0, permission= 0, estReserveAdiminuer=0, nbCoup=0,JoueurAd ;
 	Point hgDelete;
 	TableScore scores;
 
@@ -82,12 +82,15 @@ int main()
 			affiche_menu(fond,ecran);
 			tour=0;
 		}
+
 		else if (verif_mode_simple(c) &&(tour==2))
 		{
             printf("variante %d\n", estModeVariante);
 			AfficheMenu(3,&tour,fond,ecran, joueurs);
 			infoPartie(ecran, joueurs,sprite, 1);
-		}
+		}	//Ici on met 1 au lieu de joueur car le premier affichage est un démon,
+			// or l'affichage de infopartie se faisant après le tour joué, il faut prévoir
+			//le début de la partie
 
 		else if (verif_mode_variante(c) &&(tour==2))
 		{
@@ -107,12 +110,10 @@ int main()
 
 	} while (tour != 3);
 
-	//SI ON CLIC SUR SCORE (a faire)
 
 	// tant que le jeu n'est pas fini
 	while (tour == 3 && !estGameOver)
-	{
-		estCoupValide = 0;
+	{	estCoupValide = 0;
 
 		// s'il s'agit du joueur HOMME contrôlé par l'IA
 		if(estVSIA && tour_de_homme(joueurs, joueur))
@@ -126,7 +127,6 @@ int main()
 				caseSelection = PointToCase(clic());
 			} while (!dans_le_plateau(caseSelection));
 		}
-
 		//si la case de selection est vide on vérifie qu'il dispose d'une reserve de pièce suffisante
 		if(VerifCaseVide(caseSelection) && joueurs[joueur].piece_reserve > 0)
 		{
@@ -158,8 +158,7 @@ int main()
 						|| VerifCoupValide(caseSelection, caseDeplacement, joueurs[joueur].JoueurT)))
 					{
 						// DANS LE CAS OU LE JOUEUR VEUT MANGER LE PION DE L'ADVERSAIRE
-						if(VerifCoupValide(caseSelection, caseDeplacement, joueurs[joueur].JoueurT))
-						{
+						if(VerifCoupValide(caseSelection, caseDeplacement, joueurs[joueur].JoueurT)) {
 							permission =1;
 							aMangerAdversaire = 1;
 							Case caseASupprimer = DetermineCaseASupprimer(caseSelection, caseDeplacement);
@@ -192,8 +191,7 @@ int main()
 						//si le nombre de piece sur le plateau du joueur adverse est > 0 dans la mode simple
 						// oule nombre de piece sur dans le reseve du joueur adverse est > 0 dans la mode varinate
 						if((!estModeVariante && aMangerAdversaire && joueurs[JoueurAd].piece_plateau > 0) ||
-						(estModeVariante && aMangerAdversaire && joueurs[JoueurAd].piece_reserve > 0))
-						{
+							(estModeVariante && aMangerAdversaire && (joueurs[JoueurAd].piece_reserve > 0 || joueurs[JoueurAd].piece_plateau > 0))) {
 
 							estCoupValide = 0;
 							do {
@@ -202,15 +200,31 @@ int main()
 								// que l'on trouve dans le plateau
 								if(estVSIA && tour_de_homme(joueurs, joueur))
 								{
-									ia_pioche_pion(&caseSelection);
+									if(joueurs[JoueurAd].piece_plateau > 0)
+									{
+										ia_pioche_pion(&caseSelection);
+
+									} else if ( estModeVariante )
+									{
+										ia_pioche_pion_reserve(&joueurs[joueur],&joueurs[JoueurAd], &estReserveAdiminuer);
+										estCoupValide = 1;
+										infoPartie(ecran, joueurs,sprite, joueur);
+									}
 								}
-								else
-								{
-									caseSelection=PointToCase(clic());
+								else {
+									if(joueurs[JoueurAd].piece_plateau > 0)
+									{
+										caseSelection=PointToCase(clic());
+									}
+									else if (estModeVariante){
+										ia_pioche_pion_reserve(&joueurs[joueur],&joueurs[JoueurAd], &estReserveAdiminuer);
+										estCoupValide = 1;
+										infoPartie(ecran, joueurs,sprite, joueur);
+									}
 								}
 
 								// on vérifie que caseSelection est une case de l'adversaire et qu'elle n'est pas vide
-								if(plateau[caseSelection.x][caseSelection.y] != VIDE
+								if(!estReserveAdiminuer && plateau[caseSelection.x][caseSelection.y] != VIDE
 								&& plateau[caseSelection.x][caseSelection.y] != joueurs[joueur].JoueurT)
 								{
 									estCoupValide = 1;
@@ -227,6 +241,7 @@ int main()
 									SDL_Flip(ecran.image);
 								}
 
+								estReserveAdiminuer=0;
 							} while(!estCoupValide);
 
 						}
@@ -238,12 +253,22 @@ int main()
 
 		if(estCoupValide)
 		{
+			if (joueurs[JoueurAd].piece_plateau ==2 && joueurs[joueur].piece_plateau==2 && joueurs[JoueurAd].piece_reserve==0&&
+			 joueurs[joueur].piece_reserve==0) {
+			  nbCoup++;
+			  }
+
 			JoueurAd = joueur;
 			Changer_joueur(&joueur);
+
+
+
+
 			// Pour le modeVariante le message game over s'affiche si le nombre de piece dans la reserve et dans le
 			// plateau sont égales à 0
 			// Pour le mode simple le message game over s'affiche si le nombre de piece dans de le plateau est égale
 			// à 0
+
 			if( (estModeVariante && joueurs[joueur].piece_plateau == 0 && joueurs[joueur].piece_reserve == 0) ||
 				(!estModeVariante && joueurs[joueur].piece_plateau == 0 && aMangerAdversaire))
 			{
@@ -258,6 +283,13 @@ int main()
 				estGameOver = 1;
 
 			}
+			else if(nbCoup>=10)
+			{ estGameOver = 1;
+
+				//TODO
+				// afficher Partie nulle a la fin
+
+				}
 			aMangerAdversaire = 0;
 		}
 

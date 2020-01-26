@@ -363,6 +363,7 @@ Case RecupCaseArriveeIA (Case caseDepart)
 		caseArriveeIA.x = x;
 		caseArriveeIA.y = y + 2;
 
+
 	// si la case à gauche est vide alors on peut déplacer le pion vers la gauche
 	} else if(x-1 >= 0 && plateau[x-1][y] == VIDE ) {
 		caseArriveeIA.x = x -1;
@@ -388,6 +389,15 @@ Case RecupCaseArriveeIA (Case caseDepart)
 	return caseArriveeIA;
 }
 
+
+/**  Permet de prendre un pion de la reserve de l'adversaire lorsque il posede aucun pion sur le plateau  **/
+void ia_pioche_pion_reserve( Player *JoueurAct, Player *JoueurAd, int *estReserveAdiminuer)
+{	
+	JoueurAd->piece_reserve--;
+	JoueurAct->piece_cap++;
+	*estReserveAdiminuer=1;	
+}
+
 /* Methode qui permet de selectionner une case sur le plateau pour l'IA
  * Soit l'ia prend :
  *	- un pion, qui peut soit se déplacer soit manger (donc se déplacer)
@@ -400,33 +410,48 @@ Case RecupCaseDeSelectionIA (Player joueur) {
 	int stop = 0;
 	int nombrePionHommePlateau = joueur.piece_plateau;
 
-	// Si le nombre de pion sur le plateau est supérieur ou égale à 4
-	// alors l'IA sélectionne un pion qui lui appartient pour le déplacer
-	if (nombrePionHommePlateau >= 4) {
-		for (i = 0; i < 6 && !stop; i++) {
-			for (j = 0; j < 5 && !stop; j++) {
-				if (plateau[i][j] == joueur.JoueurT) {
-					set_case(&caseSelectionIA, i, j);
+	//D'abord on regarde la 1ere case du tableau que l'on peut manger et on la mange 
+	for (i = 0; i < 6 && !stop; i++) {
+		for (j = 0; j < 5 && !stop; j++) {
+			if (plateau[i][j] == joueur.JoueurT) {
+				set_case(&caseSelectionIA, i, j);
 
-					if (pion_peut_se_deplacer(caseSelectionIA) ||
-						pion_peut_manger(caseSelectionIA, joueur.JoueurT))
-						stop = !stop;
+				if (pion_peut_manger(caseSelectionIA, joueur.JoueurT))
+					stop = !stop;
+			}
+		}
+	}
+	
+	// si on a pas trouvé de case à manger
+	if(!stop) {
+		// Si le nombre de pion sur le plateau est supérieur ou égale à 4 ou inférieur à 4 avec une reserve vide 
+		// alors l'IA sélectionne un pion qui lui appartient pour le deplacer 
+		if (nombrePionHommePlateau >= 4 || (nombrePionHommePlateau <= 4 && joueur.piece_reserve == 0)) {
+			
+			//on selectionne le 1er pion qui peut se deplacer 
+			for (i = 0; i < 6 && !stop; i++) {
+				for (j = 0; j < 5 && !stop; j++) {
+					if (plateau[i][j] == joueur.JoueurT) {
+						set_case(&caseSelectionIA, i, j);
+
+						if (pion_peut_se_deplacer(caseSelectionIA))
+							stop = !stop;
+					}
 				}
 			}
+
+		}
+		else
+		{
+			do
+			{	printf("rand \n");
+				caseSelectionIA.x = rand_a_b(0, 5);
+				caseSelectionIA.y = rand_a_b(0, 4);
+			} while (!(pion_peut_manger(caseSelectionIA, joueur.JoueurT) ||
+					 (VerifCaseVide(caseSelectionIA) && joueur.piece_reserve > 0)));
 		}
 
 	}
-	else
-	{
-		do
-		{
-			caseSelectionIA.x = rand_a_b(0, 5);
-			caseSelectionIA.y = rand_a_b(0, 4);
-		} while (!(pion_peut_se_deplacer(caseSelectionIA) ||
-				 pion_peut_manger(caseSelectionIA, joueur.JoueurT) ||
-				 (VerifCaseVide(caseSelectionIA) && joueur.piece_reserve > 0)));
-	}
-
 	return caseSelectionIA;
 }
 
@@ -458,7 +483,11 @@ void ia_pioche_pion(Case *caseSelection)
 			}
 		}
 	}
+	
+	
 }
+
+
 
 
 /*
