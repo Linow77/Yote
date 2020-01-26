@@ -9,6 +9,7 @@ void chargement (Ressource *sprite)
 	sprite->pion_h=SDL_LoadBMP("pion_hommev3.bmp");
 	sprite->case_v=SDL_LoadBMP("cachev3.bmp");
 	sprite->cache_info=SDL_LoadBMP("cache_info.bmp");
+	sprite->cache_info2=SDL_LoadBMP("essai3.bmp");
 	sprite->ecran_de_fin=SDL_LoadBMP("ecrandefin.bmp");
 }
 
@@ -439,11 +440,13 @@ void infoPartie(img ecran, Player joueurs[],Ressource sprite,int joueur)
 	SDL_BlitSurface(texte3, NULL, ecran.image, &position1);
 
 	position.x=position.x+35;
-
 	SDL_BlitSurface(sprite.cache_info, NULL, ecran.image, &position);
 
+	position.x=position.x+118;
+	position.y=65;
+	SDL_BlitSurface(sprite.cache_info2, NULL, ecran.image, &position);
+
 	//AFFICHAGE DU JOUEUR ACTUEL (PION SUR LA PLANCHE)
-		// on vient de manger le pion on laisse le même pion affiché
 	if(joueur==0){	// ON INVERSE CAR L'AFFICHAGE SE FAIT APRES LE COUP JOUE IL FAUT DONC
 		joueur=1;	// INVERSER LES PIONS
 	}else if (joueur==1){

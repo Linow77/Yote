@@ -79,6 +79,7 @@ typedef struct
 	SDL_Surface* pion_h;
 	SDL_Surface* case_v;
 	SDL_Surface* cache_info;
+	SDL_Surface* cache_info2;
 	SDL_Surface* ecran_de_fin;
 }Ressource ;
 
